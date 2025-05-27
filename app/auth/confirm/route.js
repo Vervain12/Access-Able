@@ -5,7 +5,7 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url)
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type')
-  const next = searchParams.get('next') ?? '/'
+  const next = searchParams.get('next') ?? '/search'
 
   if (token_hash && type) {
     const supabase = await createClient()
@@ -15,7 +15,8 @@ export async function GET(request) {
       token_hash,
     })
     if (!error) {
-      redirect(next)
+      // Redirecting with params - enabling disability choice modal
+      redirect(`${next}?fromConfirm=true`)
     }
   }
 
