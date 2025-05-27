@@ -29,6 +29,10 @@ export default function Home() {
       <button onClick={()=>{redirect('/auth')}}>
         Signup
       </button>
+
+      <button onClick={()=>{redirect('/search')}}>
+        Go To Map
+      </button>
    </div>
   );
 }
