@@ -68,6 +68,9 @@ export default function Search() {
 
   return (
     <div style={{ background: "#f5f5f5", minHeight: "100vh", padding: 20 }}>
+       {fromConfirm && (
+          <DisabilityChoice/>                
+        )}
       <div
         style={{
           width: 400,
