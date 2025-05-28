@@ -3,6 +3,8 @@ import { useState } from "react";
 import Location from "../components/location";
 import Slider from "@mui/material/Slider";
 import dynamic from "next/dynamic";
+import DisabilityChoice from "../components/disability-choice"
+import { useSearchParams } from "next/navigation"
 
 const DynamicMapView = dynamic(() => import("../components/map"), {
   ssr: false,
@@ -16,8 +18,8 @@ export default function Search() {
   const [distance, setDistance] = useState(10); // Default distance in km
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null); 
-
-  
+  const searchParams = useSearchParams();
+  const fromConfirm = searchParams.get('fromConfirm');
 
   const handleSearch = async (e) => {
     e.preventDefault();
