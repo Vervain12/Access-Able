@@ -140,4 +140,5 @@ const paragraphStyle = {
     fontSize: '1rem', 
     lineHeight: '1.5', 
     marginBottom: '24px', 
+
 };
