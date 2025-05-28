@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Location from "../components/location";
 import Slider from "@mui/material/Slider";
 import dynamic from "next/dynamic";
@@ -10,7 +10,8 @@ const DynamicMapView = dynamic(() => import("../components/map"), {
   ssr: false,
 });
 
-export default function Search() {
+// Separate component to avoid error (Added a suspense boundary)
+function SearchContent() {
   const [query, setQuery] = useState("");
   const [showMap, setShowMap] = useState(false);
   const [results, setResults] = useState([]);
@@ -167,5 +168,35 @@ export default function Search() {
         </div>
       )}
     </div>
+  );
+}
+
+// Loading fallback component
+function SearchLoading() {
+  return (
+    <div style={{ background: "#f5f5f5", minHeight: "100vh", padding: 20 }}>
+      <div
+        style={{
+          width: 400,
+          margin: "0 auto",
+          background: "white",
+          padding: 16,
+          borderRadius: 8,
+          borderBottom: "5px solid #D0D0D0",
+          textAlign: "center",
+          color: "black"
+        }}
+      >
+        Loading search...
+      </div>
+    </div>
+  );
+}
+
+export default function Search() {
+  return (
+    <Suspense fallback={<SearchLoading />}>
+      <SearchContent />
+    </Suspense>
   );
 }
