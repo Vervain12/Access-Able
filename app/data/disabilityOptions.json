@@ -1,0 +1,14 @@
+[
+  {
+    "value": "visual",
+    "label": "Visual Impairment"
+  },
+  {
+    "value": "hearing",
+    "label": "Hearing Impairment"
+  },
+  {
+    "value": "mobility",
+    "label": "Mobility Disability"
+  }
+]

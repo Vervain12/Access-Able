@@ -1,6 +1,8 @@
 import getBoundingBox from "./bounding-box";
 
-export const QueryLocation = async (q, distance, userLat, userLon) => {
+export async function POST(req) {
+    const { q, distance, userLat, userLon } = await req.json();
+
     const apiUrl = "https://overpass-api.de/api/interpreter";
 
     const bbox = getBoundingBox(userLat, userLon, distance);
@@ -9,6 +11,7 @@ export const QueryLocation = async (q, distance, userLat, userLon) => {
         [out:json][timeout:25];
         (
         nwr["amenity"="${q}"](${bbox});
+        nwr["name"~"${q}",i](${bbox});
         );
         out geom;
         >;`;
@@ -17,13 +20,13 @@ export const QueryLocation = async (q, distance, userLat, userLon) => {
         const response = await fetch(apiUrl, {
             method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded',
               },
               body: `data=${encodeURIComponent(query)}`,
         });
 
         const data = await response.json();
-        return data;
+        return new Response(JSON.stringify(data), { status: 200 });
     }
     catch (e) {
         console.error("Error fetching data: ", e);

@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { QueryLocation } from "../api/search/search-locations";
 import Location from "../components/location";
 import Slider from "@mui/material/Slider";
 import dynamic from "next/dynamic";
@@ -30,12 +29,20 @@ export default function Search() {
         const lon = position.coords.longitude;
         setLatitude(lat);
         setLongitude(lon);
-        const queryResults = await QueryLocation(
-          query,
-          distance,
-          lat,
-          lon
-        );
+        const response = await fetch("api/overpass/search", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            q: query,
+            distance: distance,
+            userLat: lat,
+            userLon: lon,
+          }),
+        });
+
+        const queryResults = await response.json();
         setResults(queryResults.elements);
       },
       (error) => {
