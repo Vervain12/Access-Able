@@ -17,7 +17,7 @@ export async function GET(request) {
     })
     if (!error) {
       // Redirecting with params - enabling disability choice modal
-      redirect(`${next}?fromConfirm=true`)
+      redirect(`${next}?fromConfirm=true`) // TODO: Protect this route with middleware
     }
   }
 

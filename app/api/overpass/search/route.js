@@ -1,4 +1,4 @@
-import getBoundingBox from "./bounding-box";
+import getBoundingBox from "../../../components/bounding-box";
 
 export async function POST(req) {
     const { q, distance, userLat, userLon } = await req.json();

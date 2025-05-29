@@ -1,14 +1,18 @@
 "use client";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Location from "../components/location";
 import Slider from "@mui/material/Slider";
 import dynamic from "next/dynamic";
+import DisabilityChoice from "../components/disability-choice"
+import { useSearchParams } from "next/navigation"
+import Header from "../components/header";
 
 const DynamicMapView = dynamic(() => import("../components/map"), {
   ssr: false,
 });
 
-export default function Search() {
+// Separate component to avoid error (Added a suspense boundary)
+function SearchContent() {
   const [query, setQuery] = useState("");
   const [showMap, setShowMap] = useState(false);
   const [results, setResults] = useState([]);
@@ -16,8 +20,8 @@ export default function Search() {
   const [distance, setDistance] = useState(10); // Default distance in km
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null); 
-
-  
+  const searchParams = useSearchParams();
+  const fromConfirm = searchParams.get('fromConfirm');
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -67,10 +71,115 @@ export default function Search() {
   };
 
   return (
-    <div style={{ background: "#f5f5f5", minHeight: "100vh", padding: 20 }}>
-       {fromConfirm && (
-          <DisabilityChoice/>                
+    <div>
+        <Header/>
+
+      <div style={{ background: "#f5f5f5", minHeight: "100vh", padding: 20 }}>
+        {fromConfirm && (
+            <DisabilityChoice/>                
+          )}
+        <div
+          style={{
+            width: 400,
+            margin: "0 auto",
+            background: "white",
+            padding: 16,
+            borderRadius: 8,
+            borderBottom: "5px solid #D0D0D0",
+          }}
+        >
+          <input
+            style={{
+              width: "90%",
+              height: 40,
+              marginBottom: 16,
+              borderRadius: 8,
+              border: "1px solid #ddd",
+              padding: 8,
+              color: "black",
+            }}
+            placeholder="Enter query"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+
+          <div style={{ display: "flex", gap: 20 }}>
+            <button
+              onClick={handleSearch}
+              style={{
+                background: "#3498db",
+                color: "white",
+                padding: 12,
+                borderRadius: 8,
+                border: "none",
+                fontWeight: "bold",
+              }}
+            >
+              Search
+            </button>
+            <button
+              onClick={handleShowMap}
+              style={{
+                background: "#3498db",
+                color: "white",
+                padding: 12,
+                borderRadius: 8,
+                border: "none",
+                fontWeight: "bold",
+              }}
+            >
+              Toggle Map
+            </button>
+
+            <div>
+              <Slider
+                aria-label="Distance"
+                value={distance}
+                defaultValue={1}
+                step={0.5}
+                min={0.5}
+                max={20}
+                onChange={(e) => setDistance(e.target.value)}
+
+                // Uncomment the following lines if you want to display the value label
+                // valueLabelFormat={(distance) => distance.toFixed(1) + " km"}
+                // valueLabelDisplay="auto"
+              >
+                Search Radius
+              </Slider>
+              <span style={{ color: "black" }}>
+                <p>Search Radius</p>
+              </span>
+              <span style={{ color: "black" }}>
+                <p>{distance.toFixed(1) + " km"}</p>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {showMap ? (
+          <DynamicMapView results={results} selectedLocation={selectedLocation} userLat={latitude} userLon={longitude}/>
+        ) : (
+          // Code to display the list of locations
+          <div style={{ width: "90%", margin: "30px auto", color: "black" }}>
+            {results.map((item) => (
+              <Location
+                key={item.id}
+                name={item.tags?.name || "Unnamed Place"}
+                id={item.id}
+              />
+            ))}
+          </div>
         )}
+      </div>
+    </div>  
+    );
+}
+
+// Loading fallback component
+function SearchLoading() {
+  return (
+    <div style={{ background: "#f5f5f5", minHeight: "100vh", padding: 20 }}>
       <div
         style={{
           width: 400,
@@ -79,91 +188,20 @@ export default function Search() {
           padding: 16,
           borderRadius: 8,
           borderBottom: "5px solid #D0D0D0",
+          textAlign: "center",
+          color: "black"
         }}
       >
-        <input
-          style={{
-            width: "90%",
-            height: 40,
-            marginBottom: 16,
-            borderRadius: 8,
-            border: "1px solid #ddd",
-            padding: 8,
-            color: "black",
-          }}
-          placeholder="Enter query"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-
-        <div style={{ display: "flex", gap: 20 }}>
-          <button
-            onClick={handleSearch}
-            style={{
-              background: "#3498db",
-              color: "white",
-              padding: 12,
-              borderRadius: 8,
-              border: "none",
-              fontWeight: "bold",
-            }}
-          >
-            Search
-          </button>
-          <button
-            onClick={handleShowMap}
-            style={{
-              background: "#3498db",
-              color: "white",
-              padding: 12,
-              borderRadius: 8,
-              border: "none",
-              fontWeight: "bold",
-            }}
-          >
-            Toggle Map
-          </button>
-
-          <div>
-            <Slider
-              aria-label="Distance"
-              value={distance}
-              defaultValue={1}
-              step={0.5}
-              min={0.5}
-              max={20}
-              onChange={(e) => setDistance(e.target.value)}
-
-              // Uncomment the following lines if you want to display the value label
-              // valueLabelFormat={(distance) => distance.toFixed(1) + " km"}
-              // valueLabelDisplay="auto"
-            >
-              Search Radius
-            </Slider>
-            <span style={{ color: "black" }}>
-              <p>Search Radius</p>
-            </span>
-            <span style={{ color: "black" }}>
-              <p>{distance.toFixed(1) + " km"}</p>
-            </span>
-          </div>
-        </div>
+        Loading search...
       </div>
-
-      {showMap ? (
-        <DynamicMapView results={results} selectedLocation={selectedLocation} userLat={latitude} userLon={longitude}/>
-      ) : (
-        // Code to display the list of locations
-        <div style={{ width: "90%", margin: "30px auto", color: "black" }}>
-          {results.map((item) => (
-            <Location
-              key={item.id}
-              name={item.tags?.name || "Unnamed Place"}
-              id={item.id}
-            />
-          ))}
-        </div>
-      )}
     </div>
+  );
+}
+
+export default function Search() {
+  return (
+    <Suspense fallback={<SearchLoading />}>
+      <SearchContent />
+    </Suspense>
   );
 }
