@@ -9,3 +9,4 @@ export default function getBoundingBox(lat, lon, distanceKm) {
 
   return `${south},${west},${north},${east}`;
 }
+
