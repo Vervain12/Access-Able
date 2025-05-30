@@ -17,7 +17,7 @@ export default function Header() {
         <Toolbar sx={{ justifyContent: 'center' }}>
           <Box sx={{ flexGrow: 1, gap: 3, display: 'flex', justifyContent: 'center' }}>
             <Button 
-              onClick={() => {router.push('/search')}}
+              onClick={() => {router.push('/search/list')}}
               sx={{
                 color: 'white',
                 fontWeight: 'bold',
@@ -27,7 +27,20 @@ export default function Header() {
                 }
               }}
             >
-              Search
+              List
+            </Button>
+            <Button 
+              onClick={() => {router.push('/search/map')}}
+              sx={{
+                color: 'white',
+                fontWeight: 'bold',
+                fontSize: '1rem',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                }
+              }}
+            >
+              Map
             </Button>
             <Button 
               onClick={() => {router.push('/reviews')}}
