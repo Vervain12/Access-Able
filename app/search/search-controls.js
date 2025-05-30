@@ -1,9 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Slider from "@mui/material/Slider";
 
-export default function SearchControls({setResults, setLatitude, setLongitude}) {
-  const [query, setQuery] = useState("");
+export default function SearchControls({
+  setResults,
+  setLatitude,
+  setLongitude,
+  initialQuery = "",
+}) {
+  const [query, setQuery] = useState(initialQuery);
   const [distance, setDistance] = useState(10); // Default distance in km
+
+  useEffect(() => {
+    setQuery(initialQuery);
+  }, [initialQuery]);
+
+  function clearStorage() {
+    setQuery("");
+    setResults([]);
+
+    sessionStorage.clear();
+  }
 
   async function handleSearch(
     e,
@@ -37,6 +53,12 @@ export default function SearchControls({setResults, setLatitude, setLongitude}) 
 
         const queryResults = await response.json();
         setResults(queryResults.elements);
+
+        sessionStorage.setItem("query", query);
+        sessionStorage.setItem(
+          "results",
+          JSON.stringify(queryResults.elements)
+        );
       },
       (error) => {
         console.error("Geolocation error:", error);
@@ -55,34 +77,51 @@ export default function SearchControls({setResults, setLatitude, setLongitude}) 
           border: "1px solid #ddd",
           padding: 8,
           color: "black",
+          marginLeft: 10
         }}
         placeholder="Enter query"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
 
-      <button
-        onClick={(e) =>
-          handleSearch(
-            e,
-            query,
-            distance,
-            setResults,
-            setLatitude,
-            setLongitude
-          )
-        }
-        style={{
-          background: "#3498db",
-          color: "white",
-          padding: 12,
-          borderRadius: 8,
-          border: "none",
-          fontWeight: "bold",
-        }}
-      >
-        Search
-      </button>
+      <div style={{width: 300, justifyContent: "space-evenly", display: "flex", gap: 10}}>
+        <button
+          onClick={(e) =>
+            handleSearch(
+              e,
+              query,
+              distance,
+              setResults,
+              setLatitude,
+              setLongitude
+            )
+          }
+          style={{
+            background: "#3498db",
+            color: "white",
+            padding: 12,
+            borderRadius: 8,
+            border: "none",
+            fontWeight: "bold",
+          }}
+        >
+          Search
+        </button>
+
+        <button
+          onClick={(e) => clearStorage()}
+          style={{
+            background: "#3498db",
+            color: "white",
+            padding: 12,
+            borderRadius: 8,
+            border: "none",
+            fontWeight: "bold",
+          }}
+        >
+          Clear
+        </button>
+      </div>
 
       <Slider
         aria-label="Distance"

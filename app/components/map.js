@@ -3,7 +3,12 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useState } from "react";
 
-export default function MapView({ results, selectedLocation, userLat, userLon }) {
+export default function MapView({
+  results,
+  selectedLocation,
+  userLat,
+  userLon,
+}) {
   const [chosenLocation, setChosenLocation] = useState(selectedLocation);
 
   const customIcon = new L.Icon({
@@ -33,21 +38,23 @@ export default function MapView({ results, selectedLocation, userLat, userLon })
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-        {results.map(
-          (item) =>
-            item.lat &&
-            item.lon && (
-              <Marker
-                key={item.id}
-                position={[item.lat, item.lon]}
-                icon={customIcon}
-                title={item.tags?.name}
-                eventHandlers={{ click: () => setChosenLocation(item) }}
-              >
-                <Popup>{item.tags?.name || "Unnamed Place"}</Popup>
-              </Marker>
-            )
-        )}
+        {results
+          .filter((place) => place.tags && place.tags.name)
+          .map(
+            (item) =>
+              item.lat &&
+              item.lon && (
+                <Marker
+                  key={item.id}
+                  position={[item.lat, item.lon]}
+                  icon={customIcon}
+                  title={item.tags?.name}
+                  eventHandlers={{ click: () => setChosenLocation(item) }}
+                >
+                  <Popup>{item.tags?.name || "Unnamed Place"}</Popup>
+                </Marker>
+              )
+          )}
       </MapContainer>
 
       {chosenLocation && (

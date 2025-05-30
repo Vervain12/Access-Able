@@ -6,15 +6,17 @@ export async function POST(req) {
     const apiUrl = "https://overpass-api.de/api/interpreter";
 
     const bbox = getBoundingBox(userLat, userLon, distance);
+
+    const normalizedQuery = q.toLowerCase();
     
     const query = `
         [out:json][timeout:25];
         (
-        nwr["amenity"="${q}"](${bbox});
+        nwr["amenity"="${normalizedQuery}"](${bbox});
         nwr["name"~"${q}",i](${bbox});
         );
-        out geom;
-        >;`;
+        out body;
+        `;
 
     try {
         const response = await fetch(apiUrl, {
