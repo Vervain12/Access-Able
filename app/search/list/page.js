@@ -6,17 +6,22 @@ import { useSearchParams } from "next/navigation";
 import Header from "../../components/header";
 import SearchControls from "../search-controls";
 
-
-
 // Separate component to avoid error (Added a suspense boundary)
 function SearchContent() {
   const [results, setResults] = useState([]);
+  const [query, setQuery] = useState("");
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const searchParams = useSearchParams();
   const fromConfirm = searchParams.get("fromConfirm");
 
   useEffect(() => {
+    const storedResults = sessionStorage.getItem("results");
+    const storedQuery = sessionStorage.getItem("query");
+
+    if (storedQuery) setQuery(storedQuery);
+    if (storedResults) setResults(JSON.parse(storedResults));
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setLatitude(position.coords.latitude);
@@ -47,23 +52,25 @@ function SearchContent() {
           }}
         >
           <div style={{ display: "flex", gap: 20 }}>
-            
             <SearchControls
+              initialQuery={query}
               setResults={setResults}
               setLatitude={setLatitude}
               setLongitude={setLongitude}
             />
           </div>
         </div>
-          <div style={{ width: "90%", margin: "30px auto", color: "black" }}>
-            {results.map((item) => (
+        <div style={{ width: "90%", margin: "30px auto", color: "black" }}>
+          {results
+            .filter((place) => place.tags && place.tags.name)
+            .map((item) => (
               <Location
                 key={item.id}
                 name={item.tags?.name || "Unnamed Place"}
                 id={item.id}
               />
             ))}
-          </div>
+        </div>
       </div>
     </div>
   );

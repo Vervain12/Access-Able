@@ -10,10 +10,17 @@ const DynamicMapView = dynamic(() => import("../../components/map"), {
 
 export default function MapPage() {
   const [results, setResults] = useState([]);
+  const [query, setQuery] = useState("");
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
 
   useEffect(() => {
+    const storedResults = sessionStorage.getItem("results");
+    const storedQuery = sessionStorage.getItem("query");
+    
+    if (storedQuery) setQuery(storedQuery);
+    if (storedResults) setResults(JSON.parse(storedResults));
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setLatitude(position.coords.latitude);
@@ -32,12 +39,13 @@ export default function MapPage() {
       <div style={{ background: "#f5f5f5", padding: 20 }}>
         <div style={{ display: "flex", gap: 20, justifyContent: "center" }}>
           <SearchControls
+            initialQuery={query}
             setResults={setResults}
             setLatitude={setLatitude}
             setLongitude={setLongitude}
           />
         </div>
-        {!latitude !== null && longitude !== null && (
+        {latitude !== null && longitude !== null && (
           <DynamicMapView
             results={results}
             userLat={latitude}
