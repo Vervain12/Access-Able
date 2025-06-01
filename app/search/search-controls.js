@@ -8,7 +8,7 @@ export default function SearchControls({
   initialQuery = "",
 }) {
   const [query, setQuery] = useState(initialQuery);
-  const [distance, setDistance] = useState(10); // Default distance in km
+  const [distance, setDistance] = useState(1.5); // Default distance in km
 
   useEffect(() => {
     setQuery(initialQuery);

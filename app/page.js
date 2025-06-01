@@ -9,6 +9,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 export default function Home() {
+
   return (
     <div style={containerStyle}>
       <div style={contentStyle}>
@@ -24,13 +25,13 @@ export default function Home() {
           </Button>
           
           <Button 
-            onClick={() => {redirect('/map')}}
+            onClick={() => {redirect('/search/map')}}
             variant="contained"
             style={buttonStyle}
           >
             Continue as Guest
           </Button>
-          
+          {/*
           <Button 
             onClick={() => {redirect('/search/list')}}
             variant="contained"
@@ -45,7 +46,7 @@ export default function Home() {
             style={buttonStyle}
           >
             Testing: Go to search (map)
-          </Button>
+          </Button>*/}
         </div>
       </div>
     </div>

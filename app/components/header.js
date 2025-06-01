@@ -1,12 +1,10 @@
+'use client'
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import { useRouter } from "next/navigation";
-
-// Notes: I have no idea how to make the header toggle the map / list view
-// I tried search params - I think only the params used the first time you route matter
-// Maybe we can have a secondary header switch the views instead?
 
 export default function Header() {
     const router = useRouter();

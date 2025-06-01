@@ -34,24 +34,26 @@ export default function MapPage() {
     );
   }, []);
   return (
-    <div style={{background: "white", minHeight: "100vh", padding: 20}}>
-      <Header />
-      <div style={{ background: "#f5f5f5", padding: 20 }}>
-        <div style={{ display: "flex", gap: 20, justifyContent: "center" }}>
-          <SearchControls
-            initialQuery={query}
-            setResults={setResults}
-            setLatitude={setLatitude}
-            setLongitude={setLongitude}
-          />
+    <div>
+    <Header />      
+      <div style={{background: "white", minHeight: "100vh", padding: 20}}>
+        <div style={{ background: "#f5f5f5", padding: 20 }}>
+          <div style={{ display: "flex", gap: 20, justifyContent: "center" }}>
+            <SearchControls
+              initialQuery={query}
+              setResults={setResults}
+              setLatitude={setLatitude}
+              setLongitude={setLongitude}
+            />
+          </div>
+          {latitude !== null && longitude !== null && (
+            <DynamicMapView
+              results={results}
+              userLat={latitude}
+              userLon={longitude}
+            />
+          )}
         </div>
-        {latitude !== null && longitude !== null && (
-          <DynamicMapView
-            results={results}
-            userLat={latitude}
-            userLon={longitude}
-          />
-        )}
       </div>
     </div>
   );

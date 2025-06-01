@@ -1,10 +1,12 @@
 "use client";
 import { useRouter } from "next/navigation";
 
-const Location = ({ name, id }) => {
+const LocationSelect = ({ name, id, item }) => {
   const router = useRouter();
 
   const handleClick = () => {
+    sessionStorage.removeItem('selectedLocation');
+    sessionStorage.setItem('selectedLocation', JSON.stringify(item));
     router.push(`/location/${id}`);
   };
 
@@ -30,4 +32,4 @@ const Location = ({ name, id }) => {
   );
 };
 
-export default Location;
+export default LocationSelect;

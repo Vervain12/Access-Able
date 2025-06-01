@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, Suspense } from "react";
-import Location from "../../components/location";
+import LocationSelect from "../../components/location-select";
 import DisabilityChoice from "../../components/disability-choice";
 import { useSearchParams } from "next/navigation";
 import Header from "../../components/header";
@@ -37,10 +37,10 @@ function SearchContent() {
 
   return (
     <div>
-      <Header />
-
+      <Header/>
+      {fromConfirm && <DisabilityChoice />}      
       <div style={{ background: "#f5f5f5", minHeight: "100vh", padding: 20 }}>
-        {fromConfirm && <DisabilityChoice />}
+
         <div
           style={{
             width: 400,
@@ -64,10 +64,11 @@ function SearchContent() {
           {results
             .filter((place) => place.tags && place.tags.name)
             .map((item) => (
-              <Location
+              <LocationSelect
                 key={item.id}
                 name={item.tags?.name || "Unnamed Place"}
                 id={item.id}
+                item={item}
               />
             ))}
         </div>

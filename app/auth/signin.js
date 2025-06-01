@@ -1,5 +1,6 @@
 'use server'
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "../../utils/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -17,6 +18,6 @@ export async function signin (formData){
         return;
     }
 
-    redirect('/search');
-
+    revalidatePath('/search/list');
+    redirect('/search/list');
 }

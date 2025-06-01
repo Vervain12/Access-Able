@@ -17,13 +17,15 @@ export async function signup (formData){
         }
     }
 
-    const { error } = await supabase.auth.signUp(userData);
+    const { data, error } = await supabase.auth.signUp(userData);
 
     if (error) {
         redirect('/error');
     }
 
-    // Redirect after signup to sharing disability info - edits profile
+    if (data.user) {
+        return true;
+    }
+
     revalidatePath('/', 'layout');
-    redirect('/');
 }

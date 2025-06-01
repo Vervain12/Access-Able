@@ -1,10 +1,9 @@
-
 'use server'
 
 import { createClient } from "@/utils/supabase/client"
 
 // Disability info editing + profile editing
-// May be moved to /api later
+// TODO: Move this to api
 
 export async function updateDisabilityInfo(userId, disabilities) {
     const supabase = await createClient();

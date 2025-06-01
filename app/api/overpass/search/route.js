@@ -13,7 +13,7 @@ export async function POST(req) {
         [out:json][timeout:25];
         (
         nwr["amenity"="${normalizedQuery}"](${bbox});
-        nwr["name"~"${q}",i](${bbox});
+        nwr["name"~"${normalizedQuery}",i](${bbox});
         );
         out body;
         `;

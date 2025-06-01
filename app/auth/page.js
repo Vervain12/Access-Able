@@ -1,4 +1,5 @@
 'use client'
+
 import { signup } from "./signup"
 import { signin } from "./signin";
 import { useState } from "react"
@@ -7,19 +8,36 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import SignupMessage from "../components/signup-message";
 
 export default function LoginPage (){
-    // Possible placeholder for now; Signup needs the extra page with disability options
+
     const [toggleSignup, setToggleSignup] = useState(true);
+    const [showMessage, setShowMessage] = useState(false);
     const handleAuthToggle = () => {
         setToggleSignup(!toggleSignup);
     }
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        
+        if (toggleSignup) {
+            const result = await signup(formData);
+            if (result) {
+                setShowMessage(true);
+            }
+        } else {
+            await signin(formData);
+        }
+    }
+
     return (
         <div style={containerStyle}>
             <div style={contentStyle}>
                 <h1 style={headingStyle}>Access Able</h1>
                 
-                <form style={formStyle}>
+                <form style={formStyle} onSubmit={handleSubmit}>
                     {toggleSignup ?
                     <div style={inputContainerStyle}>
                         <label htmlFor="username" style={labelStyle}>Username:</label>
@@ -38,7 +56,6 @@ export default function LoginPage (){
                     </div>
                     
                     <Button 
-                        formAction={toggleSignup ? signup : signin}
                         variant="contained"
                         style={buttonStyle}
                         type="submit"
@@ -51,6 +68,9 @@ export default function LoginPage (){
                     {toggleSignup ? "Already have an account? Sign in" : "No account? Sign up"}
                 </div>
             </div>
+            {showMessage && (
+                <SignupMessage />
+            )}
         </div>
     )
 }
