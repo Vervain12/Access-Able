@@ -6,6 +6,7 @@ export default function SearchControls({
   setLatitude,
   setLongitude,
   initialQuery = "",
+  setLoading,
 }) {
   const [query, setQuery] = useState(initialQuery);
   const [distance, setDistance] = useState(1.5); // Default distance in km
@@ -31,6 +32,8 @@ export default function SearchControls({
   ) {
     e.preventDefault();
     setResults([]);
+
+    setLoading(true);
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
@@ -59,15 +62,18 @@ export default function SearchControls({
           "results",
           JSON.stringify(queryResults.elements)
         );
+        setLoading(false);
       },
       (error) => {
         console.error("Geolocation error:", error);
         // Fallback to a default bounding box if needed
+        setLoading(false);
       }
     );
   }
   return (
     <div>
+      <form onSubmit={handleSearch}>
       <input
         style={{
           width: "90%",
@@ -144,6 +150,7 @@ export default function SearchControls({
       <span style={{ color: "black" }}>
         <p>{distance.toFixed(1) + " km"}</p>
       </span>
+      </form>
     </div>
   );
 }

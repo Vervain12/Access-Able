@@ -12,8 +12,8 @@ export async function POST(req) {
     const query = `
         [out:json][timeout:25];
         (
-        nwr["amenity"="${normalizedQuery}"](${bbox});
-        nwr["name"~"${normalizedQuery}",i](${bbox});
+        node["amenity"="${normalizedQuery}"](${bbox});
+        node["name"~"${normalizedQuery}",i](${bbox});
         );
         out body;
         `;
