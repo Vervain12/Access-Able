@@ -11,16 +11,25 @@ export default function SearchControls({
   const [query, setQuery] = useState(initialQuery);
   const [distance, setDistance] = useState(1.5); // Default distance in km
 
+  // Transfers query from list to map or map to list
   useEffect(() => {
     setQuery(initialQuery);
   }, [initialQuery]);
 
+  // Clears stored variables (clear button)
   function clearStorage() {
     setQuery("");
     setResults([]);
 
     sessionStorage.clear();
   }
+
+  // Handles keydown events for pressing enter to search
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch(e, query, distance, setResults, setLatitude, setLongitude);
+    }
+  };
 
   async function handleSearch(
     e,
@@ -35,6 +44,7 @@ export default function SearchControls({
 
     setLoading(true);
 
+    // Get location for bounding box and query
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const lat = position.coords.latitude;
@@ -73,84 +83,91 @@ export default function SearchControls({
   }
   return (
     <div>
-      <form onSubmit={handleSearch}>
-      <input
-        style={{
-          width: "90%",
-          height: 40,
-          marginBottom: 16,
-          borderRadius: 8,
-          border: "1px solid #ddd",
-          padding: 8,
-          color: "black",
-          marginLeft: 10
-        }}
-        placeholder="Enter query"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
-
-      <div style={{width: 300, justifyContent: "space-evenly", display: "flex", gap: 10}}>
-        <button
-          onClick={(e) =>
-            handleSearch(
-              e,
-              query,
-              distance,
-              setResults,
-              setLatitude,
-              setLongitude
-            )
-          }
+      <div onKeyDown={handleKeyDown}>
+        <input
           style={{
-            background: "#3498db",
-            color: "white",
-            padding: 12,
+            width: "90%",
+            height: 40,
+            marginBottom: 16,
             borderRadius: 8,
-            border: "none",
-            fontWeight: "bold",
+            border: "1px solid #ddd",
+            padding: 8,
+            color: "black",
+            marginLeft: 10,
+          }}
+          placeholder="Enter query"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+
+        <div
+          style={{
+            width: 300,
+            justifyContent: "space-evenly",
+            display: "flex",
+            gap: 10,
           }}
         >
-          Search
-        </button>
+          <button
+            onClick={(e) =>
+              handleSearch(
+                e,
+                query,
+                distance,
+                setResults,
+                setLatitude,
+                setLongitude
+              )
+            }
+            style={{
+              background: "#3498db",
+              color: "white",
+              padding: 12,
+              borderRadius: 8,
+              border: "none",
+              fontWeight: "bold",
+            }}
+          >
+            Search
+          </button>
 
-        <button
-          onClick={(e) => clearStorage()}
-          style={{
-            background: "#3498db",
-            color: "white",
-            padding: 12,
-            borderRadius: 8,
-            border: "none",
-            fontWeight: "bold",
-          }}
+          <button
+            onClick={(e) => clearStorage()}
+            style={{
+              background: "#3498db",
+              color: "white",
+              padding: 12,
+              borderRadius: 8,
+              border: "none",
+              fontWeight: "bold",
+            }}
+          >
+            Clear
+          </button>
+        </div>
+
+        <Slider
+          aria-label="Distance"
+          value={distance}
+          defaultValue={1}
+          step={0.5}
+          min={0.5}
+          max={20}
+          onChange={(e) => setDistance(e.target.value)}
+
+          // Uncomment the following lines if you want to display the value label
+          // valueLabelFormat={(distance) => distance.toFixed(1) + " km"}
+          // valueLabelDisplay="auto"
         >
-          Clear
-        </button>
+          Search Radius
+        </Slider>
+        <span style={{ color: "black" }}>
+          <p>Search Radius</p>
+        </span>
+        <span style={{ color: "black" }}>
+          <p>{distance.toFixed(1) + " km"}</p>
+        </span>
       </div>
-
-      <Slider
-        aria-label="Distance"
-        value={distance}
-        defaultValue={1}
-        step={0.5}
-        min={0.5}
-        max={20}
-        onChange={(e) => setDistance(e.target.value)}
-
-        // Uncomment the following lines if you want to display the value label
-        // valueLabelFormat={(distance) => distance.toFixed(1) + " km"}
-        // valueLabelDisplay="auto"
-      >
-        Search Radius
-      </Slider>
-      <span style={{ color: "black" }}>
-        <p>Search Radius</p>
-      </span>
-      <span style={{ color: "black" }}>
-        <p>{distance.toFixed(1) + " km"}</p>
-      </span>
-      </form>
     </div>
   );
 }
