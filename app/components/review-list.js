@@ -1,7 +1,7 @@
-// takes either user_id to find a list of users reviews or location_id to find location reviews
 import { useState, useEffect } from "react"
 import { GetLocationReviews } from "../services/review-services";
 import { Stack, Box, Rating } from "@mui/material";
+import { ReviewComponent } from "./review-component";
 
 export default function ReviewList({ location_id }) {
     const [loading, setLoading] = useState(true);
@@ -29,17 +29,7 @@ export default function ReviewList({ location_id }) {
             <div>
                 <Stack spacing={2}>
                     {reviews.map(item => (
-                        <Box key={item.review_id} sx={{display: 'flex', flexDirection: 'column', color: 'black', width: '25%', height: '25%', background: ''}}>
-                            <h2>User: {item.display_name}</h2> 
-                            <Rating 
-                                name="rating" 
-                                value={item.rating}
-                                readOnly
-                                size="large" 
-                            />
-                            <p>{item.review_text}</p>
-                            <p>{new Date(item.created_at).toLocaleDateString()}</p>
-                        </Box>
+                        <ReviewComponent key={item.review_id} review={item} />
                     ))}
                 </Stack>
             </div>}

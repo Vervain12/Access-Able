@@ -23,9 +23,7 @@ export async function POST(request) {
             .insert([body])
             .select()
 
-        if (error) {
-            return NextResponse.json({ error: error.message }, { status: 400 })
-        }
+        if (error) throw error;
 
         return NextResponse.json({ data }, { status: 201 })
     } catch (error) {
