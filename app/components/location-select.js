@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 
-const LocationSelect = ({ name, id, item }) => {
+const LocationSelect = ({ name, id, item, distance }) => {
   const router = useRouter();
 
   const handleClick = () => {
@@ -25,8 +25,9 @@ const LocationSelect = ({ name, id, item }) => {
         cursor: "pointer",
       }}
     >
-      <span style={{ fontSize: 16, fontWeight: "bold" }}>
+      <span style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", fontSize: 16, fontWeight: "bold" }}>
         {name || "Unknown Location"}
+        <p>Distance: {distance.toFixed(2)}km</p>
       </span>
     </button>
   );

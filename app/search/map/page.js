@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import SearchControls from "../search-controls";
+import GetPosition from "../get-position";
 import Header from "../../components/header";
 import { CircularProgress } from "@mui/material";
 
@@ -16,25 +17,8 @@ export default function MapPage() {
   const [longitude, setLongitude] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const storedResults = sessionStorage.getItem("results");
-    const storedQuery = sessionStorage.getItem("query");
+  GetPosition(setQuery, setResults, setLatitude, setLongitude);
 
-    if (storedQuery) setQuery(storedQuery);
-    if (storedResults) setResults(JSON.parse(storedResults));
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setLatitude(position.coords.latitude);
-        setLongitude(position.coords.longitude);
-      },
-      (error) => {
-        console.error("Geolocation error:", error);
-        setLatitude(0);
-        setLongitude(0);
-      }
-    );
-  }, []);
   return (
     <div>
       <Header />
