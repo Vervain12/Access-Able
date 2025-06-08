@@ -24,6 +24,19 @@ export default function SearchControls({
     sessionStorage.clear();
   }
 
+  // Function for getting distance to a location. Might slow down the query, but necessary for sorting results by distance
+  function haversineDistance(lat1, lon1, lat2, lon2) {
+    const toRad = (x) => (x * Math.PI) / 180;
+    const R = 6371; // Radius of Earth in km
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
   // Handles keydown events for pressing enter to search
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -65,13 +78,23 @@ export default function SearchControls({
         });
 
         const queryResults = await response.json();
-        setResults(queryResults.elements);
+
+        // Remove duplicate locations
+        const deduplicated = new Map();
+        queryResults.elements.forEach((location) => {
+          deduplicated.set(location.id, location);
+        });
+        const finalResults = Array.from(deduplicated.values());
+
+        finalResults.forEach((location) => {
+          location.distance = haversineDistance(lat, lon, location.lat, location.lon);
+        });
+        finalResults.sort((a, b) => a.distance - b.distance);
+
+        setResults(finalResults);
 
         sessionStorage.setItem("query", query);
-        sessionStorage.setItem(
-          "results",
-          JSON.stringify(queryResults.elements)
-        );
+        sessionStorage.setItem("results", JSON.stringify(finalResults));
         setLoading(false);
       },
       (error) => {
@@ -149,7 +172,7 @@ export default function SearchControls({
         <Slider
           aria-label="Distance"
           value={distance}
-          defaultValue={1}
+          defaultValue={10}
           step={0.5}
           min={0.5}
           max={20}

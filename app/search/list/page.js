@@ -5,6 +5,7 @@ import DisabilityChoice from "../../components/disability-choice";
 import { useSearchParams } from "next/navigation";
 import Header from "../../components/header";
 import SearchControls from "../search-controls";
+import GetPosition from "../get-position";
 import { Pagination, Stack, CircularProgress } from "@mui/material";
 
 // Separate component to avoid error (Added a suspense boundary)
@@ -19,29 +20,7 @@ function SearchContent() {
   const searchParams = useSearchParams();
   const fromConfirm = searchParams.get("fromConfirm");
 
-  useEffect(() => {
-    const storedResults = sessionStorage.getItem("results");
-    const storedQuery = sessionStorage.getItem("query");
-
-    if (storedQuery) setQuery(storedQuery);
-    if (storedResults) setResults(JSON.parse(storedResults));
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setLatitude(position.coords.latitude);
-        setLongitude(position.coords.longitude);
-      },
-      (error) => {
-        console.error("Geolocation error:", error);
-        setLatitude(0);
-        setLongitude(0);
-      }
-    );
-  }, []);
-
-  useEffect(() => {
-    setPage(1);
-  }, [results]);
+  GetPosition(setQuery, setResults, setLatitude, setLongitude);
 
   const filteredResults = results.filter(
     (place) => place.tags && place.tags.name
@@ -95,6 +74,7 @@ function SearchContent() {
                 name={item.tags?.name || "Unnamed Place"}
                 id={item.id}
                 item={item}
+                distance={item.distance}
               />
             ))
           )}

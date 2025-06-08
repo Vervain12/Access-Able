@@ -7,13 +7,15 @@ export async function POST(req) {
 
     const bbox = getBoundingBox(userLat, userLon, distance);
 
-    const normalizedQuery = q.toLowerCase();
+    const spaceQuery = q.toLowerCase();
+    const underscoreQuery = q.toLowerCase().replace(" ", "_");
     
     const query = `
         [out:json][timeout:25];
         (
-        node["amenity"="${normalizedQuery}"](${bbox});
-        node["name"~"${normalizedQuery}",i](${bbox});
+        node["amenity"="${spaceQuery}"](${bbox});
+        node["amenity"="${underscoreQuery}"](${bbox});
+        node["name"~"${spaceQuery}",i](${bbox});
         );
         out body;
         `;
