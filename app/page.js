@@ -31,22 +31,6 @@ export default function Home() {
           >
             Continue as Guest
           </Button>
-          {/*
-          <Button 
-            onClick={() => {redirect('/search/list')}}
-            variant="contained"
-            style={buttonStyle}
-          >
-            Testing: Go to search (list)
-          </Button>
-
-          <Button 
-            onClick={() => {redirect('/search/map')}}
-            variant="contained"
-            style={buttonStyle}
-          >
-            Testing: Go to search (map)
-          </Button>*/}
         </div>
       </div>
     </div>

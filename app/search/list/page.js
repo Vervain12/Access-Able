@@ -40,6 +40,7 @@ function SearchContent() {
   return (
     <div>
       <Header />
+      {/*Refreshing should remove fromconfirm somehow*/}
       {fromConfirm && <DisabilityChoice />}
       <div style={{ background: "#f5f5f5", minHeight: "100vh", padding: 20 }}>
         <div

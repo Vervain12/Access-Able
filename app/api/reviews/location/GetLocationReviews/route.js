@@ -23,7 +23,7 @@ export async function GET(request) {
             .eq('location_id', location_id)
 
         if (error) {
-            return NextResponse.json({ error: error.message }, { status: 400 })
+            return NextResponse.json({ error: "Error fetching reviews." }, { status: 400 })
         }
 
         return NextResponse.json({ data }, { status: 200 })
