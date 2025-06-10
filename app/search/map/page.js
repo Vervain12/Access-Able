@@ -12,7 +12,7 @@ const DynamicMapView = dynamic(() => import("../../components/map"), {
 
 export default function MapPage() {
   const [results, setResults] = useState([]);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(sessionStorage.getItem("query") || "");
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [loading, setLoading] = useState(false);
