@@ -1,23 +1,46 @@
 "use client";
+export const dynamic = "force-dynamic";
 import { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
+import loadDynamic from "next/dynamic";
 import SearchControls from "../search-controls";
 import GetPosition from "../get-position";
 import Header from "../../components/header";
 import { CircularProgress } from "@mui/material";
 
-const DynamicMapView = dynamic(() => import("../../components/map"), {
+const DynamicMapView = loadDynamic(() => import("../../components/map"), {
   ssr: false,
 });
 
 export default function MapPage() {
   const [results, setResults] = useState([]);
-  const [query, setQuery] = useState(sessionStorage.getItem("query") || "");
+  const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = sessionStorage.getItem("query");
+      if (stored) setQuery(stored);
+    }
+  }, []);
+
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  GetPosition(setQuery, setResults, setLatitude, setLongitude);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    
+  }, []);
+
+  
+
+  useEffect(() => {
+    GetPosition(setQuery, setResults, setLatitude, setLongitude);
+  }, []);
+
+  if (!mounted) return null;
+
 
   return (
     <div>
