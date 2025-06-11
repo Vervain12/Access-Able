@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 import { useState, useEffect, Suspense } from "react";
 import LocationSelect from "../../components/location-select";
 import DisabilityChoice from "../../components/disability-choice";
@@ -11,7 +12,14 @@ import { Pagination, Stack, CircularProgress } from "@mui/material";
 // Separate component to avoid error (Added a suspense boundary)
 function SearchContent() {
   const [results, setResults] = useState([]);
-  const [query, setQuery] = useState(sessionStorage.getItem("query") || "");
+  const [query, setQuery] = useState("");
+
+useEffect(() => {
+  if (typeof window !== "undefined") {
+    const stored = sessionStorage.getItem("query");
+    if (stored) setQuery(stored);
+  }
+}, []);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [page, setPage] = useState(1);
