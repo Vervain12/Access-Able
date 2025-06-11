@@ -55,4 +55,4 @@ jobs:
           app-name: 'Access-Able'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_14CB2693B86942E79ED409C1D9729D8B }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_69B2353AB735487AA71F3BD2EC90C2C1 }}
