@@ -1,21 +1,18 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
-export default function GetPosition(
-  setQuery,
-  setResults,
-  setLatitude,
-  setLongitude
-) {
+export default function useGetPosition() {
+  const [query, setQuery] = useState(null);
+  const [results, setResults] = useState(null);
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+
   useEffect(() => {
-    // It doesn't really make sense for checking storage for results and query to be here logically, 
-    // but both the map and list had these lines so this is just cleaner
     const storedResults = sessionStorage.getItem("results");
     const storedQuery = sessionStorage.getItem("query");
 
     if (storedQuery) setQuery(storedQuery);
     if (storedResults) setResults(JSON.parse(storedResults));
 
-    // Get user's current position
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setLatitude(position.coords.latitude);
@@ -28,4 +25,6 @@ export default function GetPosition(
       }
     );
   }, []);
+
+  return { query, setQuery, results, setResults, latitude, setLatitude, longitude, setLongitude };
 }
