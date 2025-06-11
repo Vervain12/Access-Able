@@ -11,7 +11,7 @@ import { Pagination, Stack, CircularProgress } from "@mui/material";
 // Separate component to avoid error (Added a suspense boundary)
 function SearchContent() {
   const [results, setResults] = useState([]);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(sessionStorage.getItem("query") || "");
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [page, setPage] = useState(1);

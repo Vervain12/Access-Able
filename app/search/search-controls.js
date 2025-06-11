@@ -5,16 +5,31 @@ export default function SearchControls({
   setResults,
   setLatitude,
   setLongitude,
-  initialQuery = "",
+  initialQuery,
   setLoading,
 }) {
-  const [query, setQuery] = useState(initialQuery);
-  const [distance, setDistance] = useState(1.5); // Default distance in km
+
+  const stored = sessionStorage.getItem("query");
+  const [query, setQuery] = useState(stored || "");
+
+  const [distance, setDistance] = useState(() => {
+    const stored = sessionStorage.getItem("distance");
+    return stored ? parseFloat(stored) : 10; // default to 10km if none saved
+  });
+
+  useEffect(() => {
+  sessionStorage.setItem("distance", distance.toString());
+}, [distance]);
+
 
   // Transfers query from list to map or map to list
-  useEffect(() => {
-    setQuery(initialQuery);
-  }, [initialQuery]);
+  useEffect(
+    (e) => {
+      setQuery(initialQuery);
+      handleSearch(e, initialQuery, distance, setResults, setLatitude, setLongitude);
+    },
+    [initialQuery]
+  );
 
   // Clears stored variables (clear button)
   function clearStorage() {
@@ -52,10 +67,13 @@ export default function SearchControls({
     setLatitude,
     setLongitude
   ) {
-    e.preventDefault();
     setResults([]);
 
     setLoading(true);
+
+    if (query === "") {
+      query = "restaurant";
+    }
 
     // Get location for bounding box and query
     navigator.geolocation.getCurrentPosition(
@@ -87,7 +105,12 @@ export default function SearchControls({
         const finalResults = Array.from(deduplicated.values());
 
         finalResults.forEach((location) => {
-          location.distance = haversineDistance(lat, lon, location.lat, location.lon);
+          location.distance = haversineDistance(
+            lat,
+            lon,
+            location.lat,
+            location.lon
+          );
         });
         finalResults.sort((a, b) => a.distance - b.distance);
 
@@ -99,7 +122,6 @@ export default function SearchControls({
       },
       (error) => {
         console.error("Geolocation error:", error);
-        // Fallback to a default bounding box if needed
         setLoading(false);
       }
     );
