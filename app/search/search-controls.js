@@ -7,6 +7,7 @@ export default function SearchControls({
   setLongitude,
   initialQuery,
   setLoading,
+  setPage,
 }) {
 
   const stored = sessionStorage.getItem("query");
@@ -25,7 +26,7 @@ export default function SearchControls({
   // Transfers query from list to map or map to list
   useEffect(
     (e) => {
-      setQuery(initialQuery);
+      setQuery(initialQuery || "");
       setResults(sessionStorage.getItem("results")
         ? JSON.parse(sessionStorage.getItem("results"))
         : []
@@ -69,16 +70,20 @@ export default function SearchControls({
     distance,
     setResults,
     setLatitude,
-    setLongitude
+    setLongitude,
   ) {
     setResults([]);
 
     setLoading(true);
 
+    if (setPage !== null && setPage !== undefined)
+    setPage(1);
+
     if (query === "" || query === null) {
       setLoading(false);
       return;
     }
+
 
     // Get location for bounding box and query
     navigator.geolocation.getCurrentPosition(

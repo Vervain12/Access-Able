@@ -47,6 +47,7 @@ export default function MapPage() {
               setLatitude={setLatitude}
               setLongitude={setLongitude}
               setLoading={setLoading}
+              setPage={null}
             />
           </div>
 
