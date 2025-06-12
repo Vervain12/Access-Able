@@ -26,17 +26,21 @@ export default function SearchControls({
   useEffect(
     (e) => {
       setQuery(initialQuery);
-      handleSearch(e, initialQuery, distance, setResults, setLatitude, setLongitude);
+      setResults(sessionStorage.getItem("results")
+        ? JSON.parse(sessionStorage.getItem("results"))
+        : []
+      );
     },
     [initialQuery]
   );
 
   // Clears stored variables (clear button)
   function clearStorage() {
+    sessionStorage.setItem("query", "");
+    sessionStorage.setItem("results", JSON.stringify([]));
     setQuery("");
     setResults([]);
 
-    sessionStorage.clear();
   }
 
   // Function for getting distance to a location. Might slow down the query, but necessary for sorting results by distance
@@ -71,8 +75,9 @@ export default function SearchControls({
 
     setLoading(true);
 
-    if (query === "") {
-      query = "restaurant";
+    if (query === "" || query === null) {
+      setLoading(false);
+      return;
     }
 
     // Get location for bounding box and query

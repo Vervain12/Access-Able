@@ -23,7 +23,7 @@ export default function MapView({
     <div
       style={{
         width: "90%",
-        height: 450,
+        height: 550,
         margin: "30px auto",
         border: "2px solid #3498db",
         borderRadius: 8,
@@ -57,37 +57,7 @@ export default function MapView({
           )}
       </MapContainer>
 
-      {chosenLocation && (
-        <div
-          style={{
-            bottom: 50,
-            left: 20,
-            right: 20,
-            backgroundColor: "blue",
-            padding: 10,
-            borderRadius: 10,
-            shadowColor: "#000",
-            shadowOpacity: 0.3,
-            shadowRadius: 3,
-          }}
-        >
-          <p style={{ fontSize: 16, fontWeight: "bold" }}>
-            {chosenLocation.tags?.name ||
-              chosenLocation.tags?.brand ||
-              chosenLocation.tags?.description ||
-              chosenLocation.tags?.operator ||
-              "Unnamed Place"}
-          </p>
-          <p>ID: {chosenLocation.id}</p>
-          <p>Website:</p>
-          <a href={chosenLocation.tags?.website}>
-            {chosenLocation.tags?.website || "N/A"}
-          </a>
-          <p>
-            Hours of Operation: {chosenLocation.tags?.opening_hours || "N/A"}
-          </p>
-        </div>
-      )}
+      
     </div>
   );
 }
