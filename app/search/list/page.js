@@ -68,6 +68,7 @@ useEffect(() => {
               setLatitude={setLatitude}
               setLongitude={setLongitude}
               setLoading={setLoading}
+              setPage={setPage}
             />
           </div>
         </div>
