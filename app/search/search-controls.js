@@ -15,12 +15,12 @@ export default function SearchControls({
 
   const [distance, setDistance] = useState(() => {
     const stored = sessionStorage.getItem("distance");
-    return stored ? parseFloat(stored) : 10; // default to 10km if none saved
+    return stored ? parseFloat(stored) : 2.5; // default to 10km if none saved
   });
 
   useEffect(() => {
-  sessionStorage.setItem("distance", distance.toString());
-}, [distance]);
+    sessionStorage.setItem("distance", distance.toString());
+  }, [distance]);
 
 
   // Transfers query from list to map or map to list

@@ -3,11 +3,12 @@ import { useState, useEffect } from "react"
 import Header from "@/app/components/header";
 import { Box } from "@mui/material";
 import ReviewForm from "./review-form";
-import ReviewList from "@/app/components/review-list";
+import { ReviewList } from "@/app/components/review-list";
 
 export default function LocationPage() {
     const [locationInfo, setLocationInfo] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [hasReview, setHasReview] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -23,17 +24,6 @@ export default function LocationPage() {
         fetchData();
     }, [])
 
-    const formatAddress = (locationInfo) => {
-        
-        const tags = locationInfo.tags;
-        const parts = [];
-        if (tags['addr:housenumber']) parts.push(tags['addr:housenumber']);
-        if (tags['addr:street']) parts.push(tags['addr:street']);
-        if (tags['addr:postcode']) parts.push(tags['addr:postcode']);
-        
-        return parts.join(' ');
-    };
-
     return (
         <div style={{backgroundColor: 'white', color: 'black', minHeight: '100vh'}}>
             <Header />
@@ -45,8 +35,7 @@ export default function LocationPage() {
                         {locationInfo ? (
                             <div>
                                 <h1>{locationInfo.tags.name || 'Unnamed Location'}</h1>
-                                {formatAddress(locationInfo) && <p>Address: {formatAddress(locationInfo)}</p>}
-                                {locationInfo.tags.shopType && <p>Type: {locationInfo.shopType}</p>}
+
                                 {locationInfo.tags.website && (
                                     <p>
                                         Website: <a href={locationInfo.tags.website} target="_blank" rel="noopener noreferrer">
@@ -63,8 +52,8 @@ export default function LocationPage() {
                         )}
                     </Box>
                     <div>
-                        <ReviewForm location_id={locationInfo.id} />
-                        <ReviewList location_id={locationInfo.id} />
+                        <ReviewForm location_id={locationInfo.id} hasReview={hasReview} location_name={locationInfo.tags.name}/>
+                        <ReviewList location_id={locationInfo.id} setHasReview={setHasReview} />
                     </div>
                 </>
             )

@@ -34,11 +34,11 @@ export async function updateSession(request) {
 
   if (
     !user &&
-    request.nextUrl.pathname.startsWith('/profile')
+    (request.nextUrl.pathname.startsWith('/profile') || request.nextUrl.pathname.startsWith('/reviews'))
   ) {
     // Redirect from profile page to login if no user
     const url = request.nextUrl.clone()
-    url.pathname = '/login'
+    url.pathname = '/auth'
     return NextResponse.redirect(url)
   }
 

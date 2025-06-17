@@ -14,6 +14,7 @@ export default function LoginPage (){
 
     const [toggleSignup, setToggleSignup] = useState(true);
     const [showMessage, setShowMessage] = useState(false);
+    const [signInError, setSignInError] = useState(false);
     const handleAuthToggle = () => {
         setToggleSignup(!toggleSignup);
     }
@@ -28,7 +29,12 @@ export default function LoginPage (){
                 setShowMessage(true);
             }
         } else {
-            await signin(formData);
+            const error = await signin(formData);
+            if (error) {
+                setSignInError(true);
+            } else {
+                setSignInError(false);
+            }
         }
     }
 
@@ -62,6 +68,9 @@ export default function LoginPage (){
                     >
                         {toggleSignup ? "Sign Up" : "Sign In"}
                     </Button>
+                    <p style={errorStyle}>
+                        {!toggleSignup && signInError ? "Incorrect username and/or password." : ""}
+                    </p>
                 </form>
                 
                 <div style={toggleTextStyle} onClick={handleAuthToggle}>
@@ -149,3 +158,7 @@ const buttonStyle = {
     padding: '12px 24px',
     marginTop: '8px'
 };
+
+const errorStyle = {
+    color: 'red'
+}

@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react"
-import { GetLocationReviews } from "../services/review-services";
-import { Stack, Box, Rating } from "@mui/material";
+import { GetLocationReviews, GetUserReviews } from "../services/review-services";
+import { Stack, Box, Rating, CircularProgress, Typography } from "@mui/material";
 import { ReviewComponent } from "./review-component";
+import { createClient } from "@/utils/supabase/client";
 
-export default function ReviewList({ location_id }) {
+export function ReviewList({ location_id, setHasReview }) {
     const [loading, setLoading] = useState(true);
     const [reviews, setReviews] = useState([]);
 
@@ -13,14 +14,28 @@ export default function ReviewList({ location_id }) {
             try {
                 const result = await GetLocationReviews(location_id);
                 setReviews(result);
+                
+                // Checking if the user has a review already
+                const supabase = await createClient();
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user && result.some(e => e.user_id === user.id)) {
+                    setHasReview(true);
+                } else if (!user) {
+                    // Locking guests out of review submission
+                    setHasReview(true);
+                }
+                
                 setLoading(false);
                 console.log(result);
-            } catch {
-                console.log("An error has occured when attempting to fetch location reviews.")
+            } catch (error) {
+                console.log("An error has occurred when attempting to fetch location reviews.");
+                console.error(error);
+                setLoading(false);
             }
         }
+        
         fetchLocationReviews();
-    },[location_id])
+    }, [location_id])
 
     return (
         <div>
@@ -35,4 +50,65 @@ export default function ReviewList({ location_id }) {
             </div>}
         </div>
     )
+}
+
+export function UserReviewList() {
+    // Review list for the /reviews page
+    const [loading, setLoading] = useState(true);
+    const [reviews, setReviews] = useState([]);
+    
+    useEffect(() => {
+        setLoading(true);
+        const fetchUserReviews = async () => {
+            try {
+                const supabase = await createClient();
+                const { data: { user } } = await supabase.auth.getUser();
+
+                const result = await GetUserReviews(user.id);
+                setReviews(result);
+                setLoading(false);
+                console.log(result);
+            } catch (error) {
+                console.log("An error has occurred when attempting to fetch location reviews.");
+                console.error(error);
+                setLoading(false);
+            }
+        }
+        
+        fetchUserReviews();
+    }, [])
+
+    return (
+        <Box sx={{ p: 2 }}>
+            {loading ? (
+                <Box display="flex" justifyContent="center" p={2}>
+                    <CircularProgress />
+                </Box>
+            ) : reviews.length === 0 ? (
+                <Box display="flex" justifyContent="center" p={4}>
+                    <Typography variant="body1" color="text.secondary">
+                        No reviews yet, search a location to begin contributing!
+                    </Typography>
+                </Box>
+            ) : (
+                <Box 
+                    sx={{ 
+                        overflowX: 'auto',
+                        pb: 1,
+                    }}
+                >
+                    <Stack spacing={2} direction="row" sx={{ minWidth: 'max-content' }}>
+                        {reviews.map(item => (
+                            <ReviewComponent 
+                                key={item.review_id} 
+                                review={item} 
+                                location_name={item.location_name}
+                            />
+                        ))}
+                    </Stack>
+                </Box>
+            )}
+        </Box>
+    )
+
 }
