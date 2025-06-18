@@ -5,33 +5,31 @@ export async function POST(request) {
     try {
         const body = await request.json();
         const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
 
-        const { user_id, location_id, rating, review_text } = body;
+        const { review_id, rating, review_text } = body;
 
-        if (!user_id || !location_id || !rating || !review_text) {
+        if (!review_id || !rating || !review_text) {
             return NextResponse.json(
-                { error: 'Insufficient information to create a review.' }, 
+                { error: 'Insufficient information to update a review.' }, 
                 { status: 400 }
             )
         }
 
-        const {data, error} = await supabase
+        const { data, error } = await supabase
             .from('reviews')
-            .insert([body])
-            .select()
-
+            .update({ 
+                review_text: review_text, 
+                rating: rating,
+            })
+            .eq('review_id', review_id)
+            .eq('user_id', user.id) 
+            .select();
+            
         if (error) throw error;
-
-        
 
         return NextResponse.json({ data }, { status: 201 })
     } catch (error) {
-        if (error.code === '23505') {
-            return Response.json(
-                { error: 'DUPLICATE_REVIEW', message: 'You have already reviewed this location' },
-                { status: 409 }
-            );
-        }
         return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
   }
 

@@ -5,9 +5,12 @@ import { CreateReview } from "@/app/services/review-services";
 import { useDropzone } from "react-dropzone";
 import { UploadImages } from "@/app/services/review-services";
 
-export default function ReviewForm({ location_id }) {
-    const [rating, setRating] = useState(2); 
+// Notes: Currently the submit button is disabled when users already have a review
+
+export default function ReviewForm({ location_id, location_name, hasReview }) {
+    const [rating, setRating] = useState(null); 
     const [files, setFiles] = useState([]);
+
     const { getRootProps, getInputProps, acceptedFiles, fileRejections, isDragActive } = useDropzone({
         accept: {
             'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.bmp', '.webp']
@@ -20,7 +23,7 @@ export default function ReviewForm({ location_id }) {
         }
     });
 
-
+    //Add location name and lat/lon to this. lat/lon is an object
     const handleSubmit = async (event) => {
         event.preventDefault();
         const formData = new FormData(event.target);
@@ -29,9 +32,19 @@ export default function ReviewForm({ location_id }) {
             review_id: reviewId,
             location_id: location_id,
             rating: rating,
-            review_text: formData.get('review_text')
+            review_text: formData.get('review_text'),
+            location_name: location_name
         }
-        await CreateReview(reviewData);
+        const result = await CreateReview(reviewData);
+
+        if (result.error) {
+            if (result.error === 'DUPLICATE_REVIEW'){
+                console.log("You already have a review for this location.");
+            } else {
+                console.log("There was an error when submitting a review.");
+            }
+            return;
+        }
 
         if (files.length > 0 && reviewId) {
             const fileData = new FormData();
@@ -41,8 +54,10 @@ export default function ReviewForm({ location_id }) {
             fileData.append('review_id', reviewId);
 
             await UploadImages(fileData);
+        } else {
+            const errorMessage = result.error.toLowerCase();
+            console.log(errorMessage);
         }
-
     }
    
     return (
@@ -109,6 +124,7 @@ export default function ReviewForm({ location_id }) {
                         variant="contained"
                         style={buttonStyle}
                         type="submit"
+                        disabled={hasReview}
                     >Submit</Button>
                 </Box>
             </Box>

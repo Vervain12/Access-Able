@@ -15,7 +15,7 @@ export async function signin (formData){
 
     if (error) {
         console.error("Sign in error:", error);
-        return;
+        return error;
     }
 
     revalidatePath('/search/list');
