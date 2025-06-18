@@ -51,17 +51,8 @@ useEffect(() => {
       {/*Refreshing should remove fromconfirm somehow*/}
       {fromConfirm && <DisabilityChoice />}
       <div style={{ background: "#f5f5f5", minHeight: "100vh", padding: 20 }}>
-        <div
-          style={{
-            width: 400,
-            margin: "0 auto",
-            background: "white",
-            padding: 16,
-            borderRadius: 8,
-            borderBottom: "5px solid #D0D0D0",
-          }}
-        >
-          <div style={{ display: "flex", gap: 20 }}>
+        <div style={{ background: "#f5f5f5", padding: 20 }}>
+          <div style={{ display: "flex", gap: 20, justifyContent: "center" }}>
             <SearchControls
               initialQuery={query}
               setResults={setResults}

@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import Slider from "@mui/material/Slider";
+import FilterSelect from "../components/SearchControls/filter-select";
+import SearchInput from "../components/SearchControls/search-input";
 
 export default function SearchControls({
   setResults,
@@ -9,45 +11,40 @@ export default function SearchControls({
   setLoading,
   setPage,
 }) {
-
-  const stored = sessionStorage.getItem("query");
-  const [query, setQuery] = useState(stored || "");
-
+  const storedQ = sessionStorage.getItem("query");
+  const [query, setQuery] = useState(storedQ || "");
   const [distance, setDistance] = useState(() => {
     const stored = sessionStorage.getItem("distance");
-    return stored ? parseFloat(stored) : 10; // default to 10km if none saved
+    return stored ? parseFloat(stored) : 10;
   });
 
+  // State for showing filter modal
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState("");
+
   useEffect(() => {
-  sessionStorage.setItem("distance", distance.toString());
-}, [distance]);
+    sessionStorage.setItem("distance", distance.toString());
+  }, [distance]);
 
-
-  // Transfers query from list to map or map to list
-  useEffect(
-    (e) => {
-      setQuery(initialQuery || "");
-      setResults(sessionStorage.getItem("results")
+  useEffect(() => {
+    setQuery(initialQuery || "");
+    setResults(
+      sessionStorage.getItem("results")
         ? JSON.parse(sessionStorage.getItem("results"))
         : []
-      );
-    },
-    [initialQuery]
-  );
+    );
+  }, [initialQuery]);
 
-  // Clears stored variables (clear button)
   function clearStorage() {
     sessionStorage.setItem("query", "");
     sessionStorage.setItem("results", JSON.stringify([]));
     setQuery("");
     setResults([]);
-
   }
 
-  // Function for getting distance to a location. Might slow down the query, but necessary for sorting results by distance
   function haversineDistance(lat1, lon1, lat2, lon2) {
     const toRad = (x) => (x * Math.PI) / 180;
-    const R = 6371; // Radius of Earth in km
+    const R = 6371;
     const dLat = toRad(lat2 - lat1);
     const dLon = toRad(lon2 - lon1);
     const a =
@@ -57,7 +54,6 @@ export default function SearchControls({
     return R * c;
   }
 
-  // Handles keydown events for pressing enter to search
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       handleSearch(e, query, distance, setResults, setLatitude, setLongitude);
@@ -70,28 +66,24 @@ export default function SearchControls({
     distance,
     setResults,
     setLatitude,
-    setLongitude,
+    setLongitude
   ) {
     setResults([]);
-
     setLoading(true);
-
-    if (setPage !== null && setPage !== undefined)
-    setPage(1);
+    if (setPage !== null && setPage !== undefined) setPage(1);
 
     if (query === "" || query === null) {
       setLoading(false);
       return;
     }
 
-
-    // Get location for bounding box and query
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const lat = position.coords.latitude;
         const lon = position.coords.longitude;
         setLatitude(lat);
         setLongitude(lon);
+
         const response = await fetch("/api/overpass/search", {
           method: "POST",
           headers: {
@@ -107,7 +99,6 @@ export default function SearchControls({
 
         const queryResults = await response.json();
 
-        // Remove duplicate locations
         const deduplicated = new Map();
         queryResults.elements.forEach((location) => {
           deduplicated.set(location.id, location);
@@ -125,7 +116,6 @@ export default function SearchControls({
         finalResults.sort((a, b) => a.distance - b.distance);
 
         setResults(finalResults);
-
         sessionStorage.setItem("query", query);
         sessionStorage.setItem("results", JSON.stringify(finalResults));
         setLoading(false);
@@ -136,28 +126,29 @@ export default function SearchControls({
       }
     );
   }
+
   return (
     <div>
-      <div onKeyDown={handleKeyDown}>
-        <input
-          style={{
-            width: "90%",
-            height: 40,
-            marginBottom: 16,
-            borderRadius: 8,
-            border: "1px solid #ddd",
-            padding: 8,
-            color: "black",
-            marginLeft: 10,
-          }}
-          placeholder="Enter query"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
+      <div
+        style={{
+          width: 1050,
+          justifyContent: "center",
+          margin: "0 auto",
+          background: "white",
+          padding: 16,
+          borderRadius: 8,
+          borderBottom: "5px solid #D0D0D0",
+        }}
+      >
+        <SearchInput
+          query={query}
+          setQuery={setQuery}
+          onKeyDown={handleKeyDown}
         />
 
         <div
           style={{
-            width: 300,
+            width: "100%",
             justifyContent: "space-evenly",
             display: "flex",
             gap: 10,
@@ -187,7 +178,7 @@ export default function SearchControls({
           </button>
 
           <button
-            onClick={(e) => clearStorage()}
+            onClick={clearStorage}
             style={{
               background: "#3498db",
               color: "white",
@@ -199,29 +190,30 @@ export default function SearchControls({
           >
             Clear
           </button>
+
+          <button
+            onClick={() => setShowFilters(true)}
+            style={{
+              background: "#3498db",
+              color: "white",
+              padding: 12,
+              borderRadius: 8,
+              border: "none",
+              fontWeight: "bold",
+            }}
+          >
+            Filters
+          </button>
         </div>
 
-        <Slider
-          aria-label="Distance"
-          value={distance}
-          defaultValue={10}
-          step={0.5}
-          min={0.5}
-          max={20}
-          onChange={(e) => setDistance(e.target.value)}
-
-          // Uncomment the following lines if you want to display the value label
-          // valueLabelFormat={(distance) => distance.toFixed(1) + " km"}
-          // valueLabelDisplay="auto"
-        >
-          Search Radius
-        </Slider>
-        <span style={{ color: "black" }}>
-          <p>Search Radius</p>
-        </span>
-        <span style={{ color: "black" }}>
-          <p>{distance.toFixed(1) + " km"}</p>
-        </span>
+        <FilterSelect
+          open={showFilters}
+          selectedFilter={selectedFilter}
+          setSelectedFilter={setSelectedFilter}
+          setShowFilters={setShowFilters}
+          distance={distance}
+          setDistance={setDistance}
+        />
       </div>
     </div>
   );
