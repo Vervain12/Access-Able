@@ -15,21 +15,12 @@ export default function SearchControls({
   const [query, setQuery] = useState(storedQ || "");
   const [distance, setDistance] = useState(() => {
     const stored = sessionStorage.getItem("distance");
-<<<<<<< JimboBranch
     return stored ? parseFloat(stored) : 10;
   });
 
   // State for showing filter modal
   const [showFilters, setShowFilters] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("");
-=======
-    return stored ? parseFloat(stored) : 2.5; // default to 10km if none saved
-  });
-
-  useEffect(() => {
-    sessionStorage.setItem("distance", distance.toString());
-  }, [distance]);
->>>>>>> master
 
   useEffect(() => {
     sessionStorage.setItem("distance", distance.toString());
