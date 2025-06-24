@@ -3,7 +3,7 @@
 import { signOut } from "../services/account-services-client"
 import { Button } from "@mui/material"
 
-export default function() {
+export default function ProfilePage() {
     const reloadAfterSignout = async () => {
         await signOut();
     }
