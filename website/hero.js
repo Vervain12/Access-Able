@@ -47,6 +47,7 @@ function SearchSection() {
     const handleSearch = (e) => {
         e.preventDefault()
         if (searchQuery.trim()) {
+            sessionStorage.setItem("query", searchQuery);
             redirect(`/search/map?q=${encodeURIComponent(searchQuery)}`)
         } else {
             redirect("/search/map")

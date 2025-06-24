@@ -1,13 +1,18 @@
 "use client"
-import { Modal, Button, Box, TextField, Rating, CircularProgress } from "@mui/material";
+import { Modal, Button, Box, TextField, Rating, CircularProgress, Icon } from "@mui/material";
 import { useState } from "react";
 import { UpdateReview } from "../services/review-services";
+import { DeleteReview } from "../services/review-services";
+import { Stack } from "@mui/material";
 
 export default function EditReviewPopup({ reviewInfo, images }) {
     const [openModal, setOpen] = useState(false);
+    const [openDeleteModal, setOpenDelete] = useState(false);
     const [rating, setRating] = useState(reviewInfo.rating); 
     const handleClose = () => setOpen(false);
     const handleOpen = () => setOpen(true);
+    const handleCloseDelete = () => setOpenDelete(false);
+    const handleOpenDelete = () => setOpenDelete(true);    
     const [updating, setUpdating] = useState(false);
 
     const handleUpdate = async (event) => {
@@ -27,6 +32,15 @@ export default function EditReviewPopup({ reviewInfo, images }) {
 
     const handleImages = async () => {
 
+    }
+
+    const handleDelete = async () => {
+        try{
+            await DeleteReview({ review_id: reviewInfo.review_id });
+            window.location.reload();            
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (
@@ -81,6 +95,20 @@ export default function EditReviewPopup({ reviewInfo, images }) {
                                 onChange={(event, newValue) => setRating(newValue)}
                                 size="large" 
                             />
+                        </Box>
+                        
+                        <Box sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            gap: 2,
+                            marginBottom: 2
+                        }}>
+                            <Button
+                                variant="contained"
+                                type="button"
+                                sx={buttonStyle}
+                                onClick={handleOpenDelete}
+                            >Delete</Button>
                             <Button
                                 variant="contained"
                                 type="submit"
@@ -90,24 +118,62 @@ export default function EditReviewPopup({ reviewInfo, images }) {
                     </form>
                     
                     {images && images.length > 0 && (
-                        <Box sx={{ mt: 2 }}>
+                        <Box sx={{ 
+                            mt: 2,
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(2, 1fr)',
+                            gap: 1
+                        }}>
                             {images.map((image, index) => (
-                                <img
+                                <Box
                                     key={index}
-                                    src={image.url}
-                                    alt={`Review image ${index + 1}`}
-                                    style={{
+                                    sx={{
                                         width: '100%',
-                                        maxHeight: '200px',
-                                        objectFit: 'cover',
+                                        height: '120px',
+                                        overflow: 'hidden',
+                                        border: '1px solid #ddd',
                                         borderRadius: '4px',
-                                        marginBottom: '8px'
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
                                     }}
-                                />
+                                >
+                                    <img
+                                        src={image.url}
+                                        alt={`Review image ${index + 1}`}
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover',
+                                        }}
+                                    />
+                                </Box>
                             ))}
                         </Box>
                     )}
                 </Box>
+            </Modal>
+
+            <Modal open={openDeleteModal}>
+                    <Box sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: 2,
+                        bgcolor: 'white',
+                        p: 4,
+                        borderRadius: 2
+                    }}>
+                        <h2 style={headingStyle}>Are you sure you want to delete this review?</h2>
+                        <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 3 }}>
+                            <Button onClick={handleCloseDelete} variant="contained">No</Button>
+                            <Button onClick={handleDelete} variant="contained">Yes</Button>
+                        </Stack>
+                    </Box>
             </Modal>
 
             {/*Playing around with modals, I'll probably change this later*/}
@@ -139,4 +205,10 @@ const buttonStyle = {
     width: '30%',
     height: '20%',
     padding: '12px 24px',
+};
+
+const headingStyle = {
+    color: 'black',
+    fontSize: '1.1rem', 
+    fontWeight: '600', 
 };

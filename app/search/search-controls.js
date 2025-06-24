@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Slider from "@mui/material/Slider";
 import FilterSelect from "../components/SearchControls/filter-select";
 import SearchInput from "../components/SearchControls/search-input";
+import { useSearchParams } from "next/navigation";
 
 export default function SearchControls({
   setResults,
@@ -11,33 +12,76 @@ export default function SearchControls({
   setLoading,
   setPage,
 }) {
-  const storedQ = sessionStorage.getItem("query");
-  const [query, setQuery] = useState(storedQ || "");
-  const [distance, setDistance] = useState(() => {
-    const stored = sessionStorage.getItem("distance");
-    return stored ? parseFloat(stored) : 10;
-  });
+  const searchParams = useSearchParams();
+  const heroQuery = searchParams?.get('q') || null;
+  
+  // Safe sessionStorage access
+  const getStoredValue = (key, defaultValue) => {
+    if (typeof window !== 'undefined') {
+      const stored = sessionStorage.getItem(key);
+      return stored ? (key === 'distance' ? parseFloat(stored) : stored) : defaultValue;
+    }
+    return defaultValue;
+  };
+
+  const setStoredValue = (key, value) => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem(key, value);
+    }
+  };
+
+  const [query, setQuery] = useState("");
+  const [distance, setDistance] = useState(2.5);
+  const [isClient, setIsClient] = useState(false);
+
+  // Initialize client-side values after hydration
+  useEffect(() => {
+    setIsClient(true);
+    const storedQ = getStoredValue("query", "");
+    const storedDistance = getStoredValue("distance", 2.5);
+    
+    setQuery(storedQ);
+    setDistance(storedDistance);
+    
+    // Set initial results from storage
+    const storedResults = getStoredValue("results", "[]");
+    try {
+      const parsedResults = JSON.parse(storedResults);
+      setResults(parsedResults);
+    } catch (e) {
+      setResults([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    const performHeroQuery = async () => {
+      if (heroQuery && isClient) {
+        setQuery(heroQuery);
+        await handleSearch(null, heroQuery, distance, setResults, setLatitude, setLongitude);        
+      }
+    }
+    performHeroQuery();
+  }, [heroQuery, isClient]);
 
   // State for showing filter modal
   const [showFilters, setShowFilters] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("");
 
   useEffect(() => {
-    sessionStorage.setItem("distance", distance.toString());
-  }, [distance]);
+    if (isClient) {
+      setStoredValue("distance", distance.toString());
+    }
+  }, [distance, isClient]);
 
   useEffect(() => {
-    setQuery(initialQuery || "");
-    setResults(
-      sessionStorage.getItem("results")
-        ? JSON.parse(sessionStorage.getItem("results"))
-        : []
-    );
+    if (initialQuery) {
+      setQuery(initialQuery);
+    }
   }, [initialQuery]);
 
   function clearStorage() {
-    sessionStorage.setItem("query", "");
-    sessionStorage.setItem("results", JSON.stringify([]));
+    setStoredValue("query", "");
+    setStoredValue("results", JSON.stringify([]));
     setQuery("");
     setResults([]);
   }
@@ -116,8 +160,8 @@ export default function SearchControls({
         finalResults.sort((a, b) => a.distance - b.distance);
 
         setResults(finalResults);
-        sessionStorage.setItem("query", query);
-        sessionStorage.setItem("results", JSON.stringify(finalResults));
+        setStoredValue("query", query);
+        setStoredValue("results", JSON.stringify(finalResults));
         setLoading(false);
       },
       (error) => {

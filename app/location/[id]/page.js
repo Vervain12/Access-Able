@@ -4,6 +4,7 @@ import Header from "@/app/components/header";
 import { Box } from "@mui/material";
 import ReviewForm from "./review-form";
 import { ReviewList } from "@/app/components/review-list";
+import { CircularProgress } from "@mui/material";
 
 export default function LocationPage() {
     const [locationInfo, setLocationInfo] = useState(null);
@@ -26,7 +27,6 @@ export default function LocationPage() {
 
     return (
         <div style={{backgroundColor: 'white', color: 'black', minHeight: '100vh'}}>
-            <Header />
             {loading ? (
                 <div>Loading...</div>
             ) : (

@@ -29,6 +29,25 @@ export async function CreateReview(reviewData) {
     return result;
 }
 
+export async function DeleteReview({ review_id }) {
+    const response = await fetch(`/api/reviews/user/DeleteReview?review_id=${review_id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+        console.log('Review Deletion Success:', result.data);
+    } else {
+        console.error('Review Deletion Error:', result.error);
+        throw new Error(result.error);
+    }
+    return result;
+}
+
 export async function UpdateReview(reviewData) {
 
     const response = await fetch('/api/reviews/user/EditUserReview', {
@@ -57,7 +76,6 @@ export async function GetLocationReviews(location_id) {
         headers: {
             'Content-Type': 'application/json',
         },
-
     })
 
     if (!response.ok) {
@@ -72,6 +90,24 @@ export async function GetLocationReviews(location_id) {
 export async function GetUserReviews(user_id) {
 
     const response = await fetch(`/api/reviews/user/GetUserReviews?user_id=${user_id}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+
+    })
+
+    if (!response.ok) {
+        console.error('Error fetching reviews:', response.statusText);
+        return null;
+    }
+
+    const result = await response.json();
+    return result.data || [];
+}
+
+export async function getRelatedReviews(user_id) {
+    const response = await fetch(`/api/reviews/user/GetRelatedReviews?user_id=${user_id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

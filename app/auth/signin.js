@@ -1,11 +1,8 @@
-'use server'
+'use client'
 
-import { revalidatePath } from "next/cache";
-import { createClient } from "../../utils/supabase/server";
-import { redirect } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 
-export async function signin (formData){
-
+export async function signin(formData) {
     const supabase = await createClient();
 
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -18,6 +15,5 @@ export async function signin (formData){
         return error;
     }
 
-    revalidatePath('/search/list');
-    redirect('/search/list');
+    window.location.href = "/search/list";
 }

@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import { useRouter } from "next/navigation";
 
 export default function Header() {
-    const router = useRouter();
+  const router = useRouter();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -51,7 +51,7 @@ export default function Header() {
                 }
               }}
             >
-              Reviews
+              My Reviews
             </Button>
             <Button 
               onClick={() => {router.push('/profile')}}

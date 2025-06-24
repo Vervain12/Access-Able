@@ -5,14 +5,32 @@ import Link from "next/link"
 import { Menu, Accessibility, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { redirect } from "next/navigation"
+import { createClient } from "@/utils/supabase/client"
 
 export function Navigation() {
     const [isOpen, setIsOpen] = useState(false)
+    const [signedIn, setSignedIn] = useState(false);
+
+    useEffect(() => {
+        const checkSignIn = async () => {
+            const supabase = await createClient();
+            const { data: { user } } = await supabase.auth.getUser();
+            console.log(user?.id);
+            if (user) {
+                setSignedIn(true);
+            }
+        }
+        checkSignIn();
+    },[])
 
     const navItems = [
         { href: "/", label: "Home" },
         { href: "/about", label: "About" },
         { href: "/contact", label: "Contact" },
+        { href: "/search/list", label: "Search" },
+        { href: "/search/map", label: "Map" },
+        { href: "/reviews", label: "My Reviews" },
+        { href: "/profile", label: "Profile" },
     ]
 
     // Prevent body scroll when menu is open
@@ -31,43 +49,51 @@ export function Navigation() {
     return (
         <header className="sticky top-0 z-50 w-full bg-white shadow-md">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex h-16 items-center justify-between">
+                <div className="relative flex h-16 items-center justify-between">
+                    {/* Logo - Fixed left */}
                     <Link href="/" className="flex items-center space-x-2">
                         <Accessibility className="h-8 w-8 text-brand-primary" />
                         <span className="text-xl font-display text-brand-neutral-900">Access Able</span>
                     </Link>
 
-                    {/* Desktop Navigation */}
-                    <nav className="hidden md:flex items-center space-x-6">
-                        {navItems.map((item) => (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                className="text-sm font-medium text-brand-neutral-900 transition-colors hover:text-brand-primary"
-                            >
-                                {item.label}
-                            </Link>
-                        ))}
+                    {/* Desktop Navigation - Absolutely centered */}
+                    <nav className="hidden md:flex items-center absolute left-1/2 transform -translate-x-1/2">
+                        <div className="flex items-center space-x-6">
+                            {navItems.map((item) => (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    className="text-sm font-medium text-brand-neutral-900 transition-colors hover:text-brand-primary"
+                                >
+                                    {item.label}
+                                </Link>
+                            ))}
+                        </div>
                     </nav>
 
-                    <div className="hidden md:flex items-center space-x-4">
-                        <Button
-                            variant="outline"
-                            className="border-brand-secondary text-brand-secondary hover:bg-brand-secondary hover:text-white"
-                            onClick={() => redirect("/search/map")}
-                        >
-                            Continue as Guest
-                        </Button>
-                        <Button className="bg-brand-primary hover:bg-brand-primary/90" onClick={() => redirect("/auth")}>
-                            Login / Signup
+                    {/* Right side content */}
+                    <div className="flex items-center">
+                        {!signedIn && (
+                            <div className="hidden md:flex items-center space-x-4">
+                                <Button
+                                    variant="outline"
+                                    className="border-brand-secondary text-brand-secondary hover:bg-brand-secondary hover:text-white"
+                                    onClick={() => redirect("/search/map")}
+                                >
+                                    Continue as Guest
+                                </Button>
+                                <Button className="bg-brand-primary hover:bg-brand-primary/90" onClick={() => redirect("/auth")}>
+                                    Login / Signup
+                                </Button>
+                            </div>                        
+                        )}
+
+                        {/* Mobile Navigation Button */}
+                        <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
+                            <Menu className="h-6 w-6" />
+                            <span className="sr-only">Toggle navigation menu</span>
                         </Button>
                     </div>
-
-                    {/* Mobile Navigation Button */}
-                    <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
-                        <Menu className="h-6 w-6" />
-                        <span className="sr-only">Toggle navigation menu</span>
-                    </Button>
                 </div>
             </div>
 
@@ -104,28 +130,29 @@ export function Navigation() {
                                 {item.label}
                             </Link>
                         ))}
-
-                        <div className="flex flex-col space-y-2 pt-4 border-t border-gray-200 mt-2">
-                            <Button
-                                variant="outline"
-                                className="w-full border-brand-secondary text-brand-secondary hover:bg-brand-secondary hover:text-white"
-                                onClick={() => {
-                                    redirect("/search/map")
-                                    setIsOpen(false)
-                                }}
-                            >
-                                Continue as Guest
-                            </Button>
-                            <Button
-                                className="w-full bg-brand-primary hover:bg-brand-primary/90"
-                                onClick={() => {
-                                    redirect("/auth")
-                                    setIsOpen(false)
-                                }}
-                            >
-                                Login / Signup
-                            </Button>
-                        </div>
+                        {!signedIn && (
+                            <div className="flex flex-col space-y-2 pt-4 border-t border-gray-200 mt-2">
+                                <Button
+                                    variant="outline"
+                                    className="w-full border-brand-secondary text-brand-secondary hover:bg-brand-secondary hover:text-white"
+                                    onClick={() => {
+                                        redirect("/search/map")
+                                        setIsOpen(false)
+                                    }}
+                                >
+                                    Continue as Guest
+                                </Button>
+                                <Button
+                                    className="w-full bg-brand-primary hover:bg-brand-primary/90"
+                                    onClick={() => {
+                                        redirect("/auth")
+                                        setIsOpen(false)
+                                    }}
+                                >
+                                    Login / Signup
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

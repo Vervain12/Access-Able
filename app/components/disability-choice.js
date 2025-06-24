@@ -63,8 +63,8 @@ export default function DisabilityChoice(){
                     <h2 style={headingStyle}>Would you like to share your disabilities?</h2>
                     <p style={paragraphStyle}>This helps us provide personalized accessibility features.</p>
                     <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 3 }}>
-                        <Button onClick={handleOpenModalTwo} variant="contained">Yes</Button>
                         <Button onClick={handleCloseModalOne} variant="contained">No</Button>
+                        <Button onClick={handleOpenModalTwo} variant="contained">Yes</Button>
                     </Stack>
                 </Box>
             </Modal>

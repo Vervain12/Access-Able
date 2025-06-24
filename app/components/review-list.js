@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { GetLocationReviews, GetUserReviews } from "../services/review-services";
+import { GetLocationReviews, GetUserReviews, getRelatedReviews } from "../services/review-services";
 import { Stack, Box, Rating, CircularProgress, Typography } from "@mui/material";
 import { ReviewComponent } from "./review-component";
 import { createClient } from "@/utils/supabase/client";
@@ -40,7 +40,9 @@ export function ReviewList({ location_id, setHasReview }) {
     return (
         <div>
             {loading ? 
-            <div>Reviews loading...</div> :
+            <Box display="flex" justifyContent="center" p={2}>
+                <CircularProgress />
+            </Box> :
             <div>
                 <Stack spacing={2}>
                     {reviews.map(item => (
@@ -52,7 +54,7 @@ export function ReviewList({ location_id, setHasReview }) {
     )
 }
 
-export function UserReviewList() {
+export function UserReviewList({relatedBool}) {
     // Review list for the /reviews page
     const [loading, setLoading] = useState(true);
     const [reviews, setReviews] = useState([]);
@@ -63,11 +65,14 @@ export function UserReviewList() {
             try {
                 const supabase = await createClient();
                 const { data: { user } } = await supabase.auth.getUser();
-
-                const result = await GetUserReviews(user.id);
-                setReviews(result);
+                if (relatedBool) {
+                    const result = await getRelatedReviews(user.id);
+                    setReviews(result);
+                } else {
+                    const result = await GetUserReviews(user.id);
+                    setReviews(result);
+                }
                 setLoading(false);
-                console.log(result);
             } catch (error) {
                 console.log("An error has occurred when attempting to fetch location reviews.");
                 console.error(error);
@@ -80,11 +85,12 @@ export function UserReviewList() {
 
     return (
         <Box sx={{ p: 2 }}>
+            {relatedBool ? <h2>Users Like You:</h2> : <h2>My Reviews:</h2>}
             {loading ? (
                 <Box display="flex" justifyContent="center" p={2}>
                     <CircularProgress />
                 </Box>
-            ) : reviews.length === 0 ? (
+            ) : reviews.length === 0 && !relatedBool ? (
                 <Box display="flex" justifyContent="center" p={4}>
                     <Typography variant="body1" color="text.secondary">
                         No reviews yet, search a location to begin contributing!
@@ -96,13 +102,14 @@ export function UserReviewList() {
                         overflowX: 'auto',
                         pb: 1,
                     }}
-                >
+                > 
                     <Stack spacing={2} direction="row" sx={{ minWidth: 'max-content' }}>
-                        {reviews.map(item => (
+                        {reviews?.map(item => (
                             <ReviewComponent 
                                 key={item.review_id} 
                                 review={item} 
                                 location_name={item.location_name}
+                                relatedBool={relatedBool}
                             />
                         ))}
                     </Stack>

@@ -6,8 +6,8 @@ import { UserReviewList } from "../components/review-list";
 export default function Reviews() {
     return (
         <div>
-            <Header />
-            <UserReviewList />
+            <UserReviewList relatedBool={false}/>
+            <UserReviewList relatedBool={true}/>
         </div>
     )
 }

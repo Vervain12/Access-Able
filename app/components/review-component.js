@@ -5,7 +5,7 @@ import { Rating } from "@mui/material"
 import { createClient } from "@/utils/supabase/client"
 import EditReviewPopup from "./edit-review"
 
-export const ReviewComponent = ({ review, location_name }) => {
+export const ReviewComponent = ({ review, location_name, relatedBool }) => {
    const [images, setImages] = useState([]);
    const [userId, setUserId] = useState("");
    
@@ -30,9 +30,13 @@ export const ReviewComponent = ({ review, location_name }) => {
        }}>
            <CardContent>
                <Typography variant="subtitle1" component="h2" gutterBottom sx={{ fontWeight: 'bold' }}>
-                   {location_name ? `Location: ${location_name}` : `User: ${review.display_name}`}
+                   {relatedBool && location_name && `User: ${review.display_name}`}
                </Typography>
-               
+
+               <Typography variant="subtitle1" component="h2" gutterBottom sx={{ fontWeight: 'bold' }}>
+                    {location_name ? `Location: ${location_name}` : `User: ${review.display_name}`}
+               </Typography>
+                              
                <Rating
                    name="rating"
                    value={review.rating}
@@ -41,7 +45,7 @@ export const ReviewComponent = ({ review, location_name }) => {
                    sx={{ mb: 1 }}
                />
                
-               <Typography variant="body1" paragraph sx={{ lineHeight: 1.6 }}>
+               <Typography variant="body1" sx={{ lineHeight: 1.6 }}>
                    {review.review_text}
                </Typography>
                
@@ -57,11 +61,11 @@ export const ReviewComponent = ({ review, location_name }) => {
                                src={image.url}
                                alt={`Review image ${index + 1}`}
                                style={{
-                                   width: '100%',
+                                   width: 'auto',
                                    maxHeight: '200px',
-                                   objectFit: 'cover',
+                                   maxWidth: '100%',
                                    borderRadius: '4px',
-                                   marginBottom: '8px'
+                                   marginBottom: '8px',
                                }}
                            />
                        ))}

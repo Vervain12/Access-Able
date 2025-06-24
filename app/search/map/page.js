@@ -37,9 +37,8 @@ export default function MapPage() {
 
   return (
     <div>
-      <Header />
-      <div style={{ background: "white", minHeight: "100vh", padding: 20 }}>
-        <div style={{ background: "#f5f5f5", padding: 20 }}>
+      <div style={{ background: "#f5f5f5", minHeight: "100vh", padding: 20 }}>
+        <div style={{ padding: 20 }}>
           <div style={{ display: "flex", gap: 20, justifyContent: "center" }}>
             <SearchControls
               initialQuery={query}

@@ -33,6 +33,7 @@ export async function POST(req) {
         return new Response(JSON.stringify(data), { status: 200 });
     }
     catch (e) {
-        console.error("Error fetching data: ", e);
+        console.error("Error fetching data: ", e); // This wont do anything, we need to return a Response
+        return new Response(JSON.stringify(data), { status: 500 }); // Probably need more error possibilities than this
     }
 }
