@@ -8,6 +8,7 @@ import EditReviewPopup from "./edit-review";
 export const ReviewComponent = ({ review, location_name, relatedBool }) => {
   const [images, setImages] = useState([]);
   const [userId, setUserId] = useState("");
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
   useEffect(() => {
     const FetchImagesAndUser = async () => {
@@ -23,13 +24,29 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
     FetchImagesAndUser();
   }, [review]);
 
-  // TTS  using native Web Speech API
-  const speakText = (text) => {
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "en-GB";
-    utterance.pitch = 1;
-    utterance.rate = 1;
-    window.speechSynthesis.speak(utterance);
+  const toggleSpeech = (text) => {
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+    } else {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-GB";
+      utterance.pitch = 0.8; 
+      utterance.rate = 0.9; 
+      utterance.volume = 0.5; 
+      
+      setIsSpeaking(true);
+      
+      utterance.onend = () => {
+        setIsSpeaking(false);
+      };
+      
+      utterance.onerror = () => {
+        setIsSpeaking(false);
+      };
+      
+      window.speechSynthesis.speak(utterance);
+    }
   };
 
   return (
@@ -70,7 +87,6 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
           sx={{ mb: 1 }}
         />
 
-        {/*  Review text + speaker button */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <Typography variant="body1" sx={{ lineHeight: 1.6, m: 0 }}>
             {review.review_text}
@@ -84,7 +100,7 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
               userSelect: "none",
               "&:hover": { opacity: 0.7 },
             }}
-            onClick={() => speakText(review.review_text)}
+            onClick={() => toggleSpeech(review.review_text)}
             aria-label="Read review out loud"
             role="button"
           >

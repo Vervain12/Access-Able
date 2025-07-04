@@ -4,7 +4,7 @@ import Header from "@/app/components/header";
 import { Box } from "@mui/material";
 import ReviewForm from "./review-form";
 import { ReviewList } from "@/app/components/review-list";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Rating } from "@mui/material";
 
 export default function LocationPage() {
     const [locationInfo, setLocationInfo] = useState(null);
@@ -35,6 +35,12 @@ export default function LocationPage() {
                         {locationInfo ? (
                             <div>
                                 <h1>{locationInfo.tags.name || 'Unnamed Location'}</h1>
+                                <Rating 
+                                    name="rating" 
+                                    value={locationInfo.rating || 0}
+                                    readOnly
+                                    size="small" 
+                                />
 
                                 {locationInfo.tags.website && (
                                     <p>
@@ -43,8 +49,11 @@ export default function LocationPage() {
                                         </a>
                                     </p>
                                 )}
-                                {locationInfo.openingHours && (
-                                    <p>Opening Hours: {locationInfo.openingHours}</p>
+                                {locationInfo.tags.opening_hours && (
+                                    <p>Opening Hours: {locationInfo.tags.opening_hours}</p>
+                                )}
+                                {locationInfo.tags.phone && (
+                                    <p>Phone: {locationInfo.tags.phone}</p>
                                 )}
                             </div>
                         ) : (

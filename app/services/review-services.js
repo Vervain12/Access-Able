@@ -24,7 +24,7 @@ export async function CreateReview(reviewData) {
         console.log('Review Success:', result.data);
     } else {
         console.error('Review Error:', result.error);
-        throw new Error(result.error);
+        return result;
     }
     return result;
 }
@@ -43,7 +43,6 @@ export async function DeleteReview({ review_id }) {
         console.log('Review Deletion Success:', result.data);
     } else {
         console.error('Review Deletion Error:', result.error);
-        throw new Error(result.error);
     }
     return result;
 }
@@ -64,7 +63,6 @@ export async function UpdateReview(reviewData) {
         console.log('Review Modified Successfully:', result.data);
     } else {
         console.error('Review Modify Error:', result.error);
-        throw new Error(result.error);
     }
     return result;
 }

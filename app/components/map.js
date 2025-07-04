@@ -1,15 +1,21 @@
 "use client";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { Button, Rating } from "@mui/material";
 import "leaflet/dist/leaflet.css";
 import { useState } from "react";
-
+import { useRouter } from "next/navigation";
 export default function MapView({
   results,
   selectedLocation,
   userLat,
   userLon,
 }) {
-  const [chosenLocation, setChosenLocation] = useState(selectedLocation);
+  const router = useRouter();
+  const handleClick = (item) => {
+    sessionStorage.removeItem('selectedLocation');
+    sessionStorage.setItem('selectedLocation', JSON.stringify(item));
+    router.push(`/location/${item.id}`);
+  };
 
   const customIcon = new L.Icon({
     iconUrl: "/customMarker.png",
@@ -49,15 +55,25 @@ export default function MapView({
                   position={[item.lat, item.lon]}
                   icon={customIcon}
                   title={item.tags?.name}
-                  eventHandlers={{ click: () => setChosenLocation(item) }}
                 >
-                  <Popup>{item.tags?.name || "Unnamed Place"}</Popup>
+                  <Popup style={{ display: "flex", flexDirection: "column", gap: "8px", fontSize: 18, fontWeight: "bold", alignItems: "center"}}>
+                    <h2 style={{ fontSize: 22, margin: 0 }}>{item.tags?.name || "Unnamed Place"}</h2>
+                    <Rating 
+                        name="rating" 
+                        value={item.rating || 0}
+                        readOnly
+                        size="small" 
+                    />
+                    <Button
+                      onClick={() => handleClick(item)}
+                      variant="contained"
+                      size="small"
+                      style={{ textTransform: "none", alignSelf: "center" }}>More Info</Button>
+                  </Popup>
                 </Marker>
               )
           )}
       </MapContainer>
-
-      
     </div>
   );
 }

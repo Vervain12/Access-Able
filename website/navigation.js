@@ -24,11 +24,8 @@ export function Navigation() {
     },[])
 
     const navItems = [
-        { href: "/", label: "Home" },
-        { href: "/about", label: "About" },
-        { href: "/contact", label: "Contact" },
-        { href: "/search/list", label: "Search" },
         { href: "/search/map", label: "Map" },
+        { href: "/suggestions", label: "Suggested Places" },
         { href: "/reviews", label: "My Reviews" },
         { href: "/profile", label: "Profile" },
     ]

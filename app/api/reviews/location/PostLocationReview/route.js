@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+import { textCheck } from "../../content-safety";
 
 export async function POST(request) {
     try {
@@ -15,14 +16,23 @@ export async function POST(request) {
             )
         }
 
+        const contentResults = await textCheck({ text: review_text });
+        console.log(contentResults);
+
+        for (const category of contentResults) {
+            const severity = category.severity;
+
+            if (severity >= 1) {
+                return NextResponse.json({ error: 'CONTENT_POLICY_VIOLATION', message: 'Content violates safety guidelines.' }, { status: 422 })
+            }
+        }
+
         const {data, error} = await supabase
             .from('reviews')
             .insert([body])
             .select()
 
         if (error) throw error;
-
-        
 
         return NextResponse.json({ data }, { status: 201 })
     } catch (error) {

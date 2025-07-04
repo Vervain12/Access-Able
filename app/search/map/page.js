@@ -7,6 +7,8 @@ import useGetPosition from "../get-position";
 import Header from "../../components/header";
 import { CircularProgress } from "@mui/material";
 import SearchControls from "../search-controls";
+import { useSearchParams } from "next/navigation";
+import DisabilityChoice from "@/app/components/disability-choice";
 
 const DynamicMapView = loadDynamic(() => import("../../components/map"), {
   ssr: false,
@@ -27,6 +29,8 @@ export default function MapPage() {
 
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const searchParams = useSearchParams();
+  const fromConfirm = searchParams.get("fromConfirm");
 
   // Only render after mounted (if you want)
   useEffect(() => {
@@ -37,6 +41,8 @@ export default function MapPage() {
 
   return (
     <div>
+      {/*Refreshing should remove fromconfirm somehow*/}
+      {fromConfirm && <DisabilityChoice />}
       <div style={{ background: "#f5f5f5", minHeight: "100vh", padding: 20 }}>
         <div style={{ padding: 20 }}>
           <div style={{ display: "flex", gap: 20, justifyContent: "center" }}>

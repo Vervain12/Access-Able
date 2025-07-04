@@ -9,7 +9,11 @@ export default function EditReviewPopup({ reviewInfo, images }) {
     const [openModal, setOpen] = useState(false);
     const [openDeleteModal, setOpenDelete] = useState(false);
     const [rating, setRating] = useState(reviewInfo.rating); 
-    const handleClose = () => setOpen(false);
+    const [errorMessage, setErrorMessage] = useState("");
+    const handleClose = () => {
+        setOpen(false);
+        setErrorMessage("");
+    };
     const handleOpen = () => setOpen(true);
     const handleCloseDelete = () => setOpenDelete(false);
     const handleOpenDelete = () => setOpenDelete(true);    
@@ -19,12 +23,32 @@ export default function EditReviewPopup({ reviewInfo, images }) {
         event.preventDefault();
         setUpdating(true);
         const formData = new FormData(event.target);
+        
+        const reviewText = formData.get('review_text');
+        if (!reviewText || !rating) {
+            setErrorMessage("Text and rating must be input to update a review.");
+            setUpdating(false);
+            return;
+        }
+        
         const reviewData = {
             review_id: reviewInfo.review_id,
             rating: rating,
             review_text: formData.get('review_text'),
         }
         const result = await UpdateReview(reviewData);
+
+        if (result.error) {
+            if (result.error === 'CONTENT_POLICY_VIOLATION'){
+                console.log("Content violates safety guidelines.")
+                setErrorMessage("Content violates safety guidelines.");
+            } else {
+                console.log("There was an error when updating the review.");
+                setErrorMessage("There was an error when updating the review.");
+            }
+            setUpdating(false);
+            return;
+        }
 
         handleClose();
         setUpdating(false);
@@ -114,6 +138,14 @@ export default function EditReviewPopup({ reviewInfo, images }) {
                                 type="submit"
                                 sx={buttonStyle}
                             >Save</Button>
+                        </Box>
+                        <Box sx={{
+                            display: 'flex',
+                            justifyContent: 'center'
+                        }}>
+                            <p style={errorStyle}>
+                                {errorMessage}
+                            </p>
                         </Box>
                     </form>
                     
@@ -211,4 +243,8 @@ const headingStyle = {
     color: 'black',
     fontSize: '1.1rem', 
     fontWeight: '600', 
+};
+
+const errorStyle = {
+    color: 'red',
 };

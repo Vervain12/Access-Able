@@ -3,12 +3,12 @@ import { useRouter } from "next/navigation";
 
 const LocationSelect = ({ name, id, item, distance }) => {
   const router = useRouter();
-
+  
   const handleClick = () => {
     sessionStorage.removeItem('selectedLocation');
     sessionStorage.setItem('selectedLocation', JSON.stringify(item));
     router.push(`/location/${id}`);
-  };
+  }; 
 
   return (
     <button

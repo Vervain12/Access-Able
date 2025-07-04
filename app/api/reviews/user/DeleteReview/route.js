@@ -16,12 +16,32 @@ export async function DELETE(request) {
             )
         }
 
+        const { data: files, error: listError } = await supabase
+            .storage
+            .from('reviews')
+            .list(review_id);
+        
+        if (files && files.length > 0) {
+            const filePaths = files.map(file => `${review_id}/${file.name}`);
+            
+            const { data: deleteData, error: deleteError } = await supabase
+                .storage
+                .from('reviews')
+                .remove(filePaths);
+
+            if (deleteError) {
+                console.error('Error deleting files:', deleteError);
+            } else {
+                console.log('Successfully deleted files:', deleteData);
+            }
+        }
+
         const { data, error } = await supabase
             .from('reviews')
             .delete()
             .eq('review_id', review_id)
             .select();
-            
+        
         if (error) throw error;
 
         return NextResponse.json({ data }, { status: 201 })

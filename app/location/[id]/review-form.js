@@ -1,5 +1,6 @@
 'use client'
-import { FormHelperText, FormControl, InputLabel, Input, TextField, Rating, Box, Button, Modal } from "@mui/material";
+import { FormHelperText, FormControl, InputLabel, Input, TextField, Rating, Box, Button, Modal, IconButton } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 import { useState, useEffect } from "react"
 import { CreateReview } from "@/app/services/review-services";
 import { useDropzone } from "react-dropzone";
@@ -33,7 +34,10 @@ export default function ReviewForm({ location_id, location_name, hasReview }) {
         }
     });
 
-    //Add location name and lat/lon to this. lat/lon is an object
+    const removeFile = (index) => {
+        setFiles(files.filter((_, i) => i !== index));
+    }
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         const formData = new FormData(event.target);
@@ -57,10 +61,13 @@ export default function ReviewForm({ location_id, location_name, hasReview }) {
         if (result.error) {
             if (result.error === 'DUPLICATE_REVIEW'){
                 console.log("You already have a review for this location.");
+                setErrorMessage("You already have a review for this location.");
+            } else if (result.error === 'CONTENT_POLICY_VIOLATION'){
+                console.log("Content violates safety guidelines.")
+                setErrorMessage("Content violates safety guidelines.");
             } else {
                 console.log("There was an error when submitting a review.");
             }
-            setErrorMessage("");
             return;
         }
 
@@ -73,7 +80,7 @@ export default function ReviewForm({ location_id, location_name, hasReview }) {
 
             await UploadImages(fileData);
         } else {
-            const errorMessage = result.error.toLowerCase();
+            const errorMessage = result.error;
             console.log(errorMessage);
         }
         setErrorMessage("");
@@ -128,16 +135,34 @@ export default function ReviewForm({ location_id, location_name, hasReview }) {
                                             {files.length > 0 ? (
                                                 <div className="flex flex-row overflow-x-scroll">
                                                     {files.map((file, index) => (
-                                                        <img
-                                                            key={index}
-                                                            src={URL.createObjectURL(file)}
-                                                            alt={file.name}
-                                                            style={{
-                                                                width: '100px', 
-                                                                height: '100px', 
-                                                                objectFit: 'cover',
-                                                            }} 
-                                                        />
+                                                        <div key={index} style={{ position: 'relative', margin: '0 5px' }}>
+                                                            <img
+                                                                src={URL.createObjectURL(file)}
+                                                                alt={file.name}
+                                                                style={{
+                                                                    width: '100px', 
+                                                                    height: '100px', 
+                                                                    objectFit: 'cover',
+                                                                }} 
+                                                            />
+                                                            <IconButton
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    removeFile(index);
+                                                                }}
+                                                                sx={{
+                                                                    position: 'absolute',
+                                                                    top: '-5px',
+                                                                    right: '-8px',
+                                                                    color: 'error.main',
+                                                                    width: '24px',
+                                                                    height: '24px',
+                                                                }}
+                                                                size="small"
+                                                            >
+                                                                <CloseIcon fontSize="small" />
+                                                            </IconButton>
+                                                        </div>
                                                     ))}
                                                 </div>
                                             ) : (

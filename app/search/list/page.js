@@ -13,20 +13,18 @@ import { Pagination, Stack, CircularProgress } from "@mui/material";
 function SearchContent() {
   const [results, setResults] = useState([]);
   const [query, setQuery] = useState("");
-
-useEffect(() => {
-  if (typeof window !== "undefined") {
-    const stored = sessionStorage.getItem("query");
-    if (stored) setQuery(stored);
-  }
-}, []);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const itemsPerPage = 20;
-  const searchParams = useSearchParams();
-  const fromConfirm = searchParams.get("fromConfirm");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = sessionStorage.getItem("query");
+      if (stored) setQuery(stored);
+    }
+  }, []);
 
   GetPosition(setQuery, setResults, setLatitude, setLongitude);
 
@@ -47,8 +45,6 @@ useEffect(() => {
 
   return (
     <div>
-      {/*Refreshing should remove fromconfirm somehow*/}
-      {fromConfirm && <DisabilityChoice />}
       <div style={{ background: "#f5f5f5", minHeight: "100vh", padding: 20 }}>
         <div style={{ padding: 20 }}>
           <div style={{ display: "flex", gap: 20, justifyContent: "center" }}>
