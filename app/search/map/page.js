@@ -9,12 +9,13 @@ import { CircularProgress } from "@mui/material";
 import SearchControls from "../search-controls";
 import { useSearchParams } from "next/navigation";
 import DisabilityChoice from "@/app/components/disability-choice";
+import { Suspense } from "react";
 
 const DynamicMapView = loadDynamic(() => import("../../components/map"), {
   ssr: false,
 });
 
-export default function MapPage() {
+function MapContent() {
   // Get all needed state & setters from the hook
   const {
     query,
@@ -85,5 +86,35 @@ export default function MapPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Loading fallback component
+function MapLoading() {
+  return (
+    <div style={{ background: "#f5f5f5", minHeight: "100vh", padding: 20 }}>
+      <div
+        style={{
+          width: 400,
+          margin: "0 auto",
+          background: "white",
+          padding: 16,
+          borderRadius: 8,
+          borderBottom: "5px solid #D0D0D0",
+          textAlign: "center",
+          color: "black",
+        }}
+      >
+        Loading Map...
+      </div>
+    </div>
+  );
+}
+
+export default function MapPage() {
+  return (
+    <Suspense fallback={<MapLoading />}>
+      <MapContent />
+    </Suspense>
   );
 }

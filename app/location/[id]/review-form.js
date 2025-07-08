@@ -49,6 +49,27 @@ export default function ReviewForm({ location_id, location_name, hasReview }) {
             return;
         }
 
+        if (files.length > 0 && reviewId) {
+            const fileData = new FormData();
+            files.forEach((file) => {
+                fileData.append('images', file);
+            });
+            fileData.append('review_id', reviewId);
+
+            const imageResult = await UploadImages(fileData);
+
+            if (imageResult.error) {
+                if (imageResult.error === 'CONTENT_POLICY_VIOLATION'){
+                    console.log("Image content violates safety guidelines.")
+                    setErrorMessage("Image content violates safety guidelines.");
+                } else {
+                    console.log("There was an error when uploading the review images.");
+                    setErrorMessage("There was an error when uploading the review images.");
+                }
+                return;
+            }
+        }
+
         const reviewData = {
             review_id: reviewId,
             location_id: location_id,
@@ -69,19 +90,6 @@ export default function ReviewForm({ location_id, location_name, hasReview }) {
                 console.log("There was an error when submitting a review.");
             }
             return;
-        }
-
-        if (files.length > 0 && reviewId) {
-            const fileData = new FormData();
-            files.forEach((file) => {
-                fileData.append('images', file);
-            });
-            fileData.append('review_id', reviewId);
-
-            await UploadImages(fileData);
-        } else {
-            const errorMessage = result.error;
-            console.log(errorMessage);
         }
         setErrorMessage("");
         window.location.reload();
@@ -166,7 +174,7 @@ export default function ReviewForm({ location_id, location_name, hasReview }) {
                                                     ))}
                                                 </div>
                                             ) : (
-                                                <div>Upload your files here!</div>
+                                                <div>Upload your images here!</div>
                                             )}
                                         </div>
                                     </div>

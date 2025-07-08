@@ -42,8 +42,12 @@ export async function DELETE(request) {
             .eq('review_id', review_id)
             .select();
         
-        if (error) throw error;
+        if (error) {
+            throw error;
+        } else {
+            console.log('Successfully deleted review:', data);
 
+        }
         return NextResponse.json({ data }, { status: 201 })
     } catch (error) {
         return NextResponse.json({ error: 'Invalid request' }, { status: 400 })

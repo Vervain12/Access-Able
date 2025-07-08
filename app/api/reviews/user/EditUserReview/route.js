@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
-import { textCheck } from "../../content-safety";
+import { textCheck } from "../../../api-components/content-safety";
 
 export async function POST(request) {
     try {

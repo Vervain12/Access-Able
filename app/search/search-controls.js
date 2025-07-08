@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Slider from "@mui/material/Slider";
-import FilterSelect from "../components/SearchControls/filter-select";
-import SearchInput from "../components/SearchControls/search-input";
+import FilterSelect from "../components/searchcontrols/filter-select";
+import SearchInput from "../components/searchcontrols/search-input";
 import { useSearchParams } from "next/navigation";
 
 export default function SearchControls({
@@ -128,6 +128,7 @@ export default function SearchControls({
         setLatitude(lat);
         setLongitude(lon);
 
+        //Move this to a backend service component
         const response = await fetch("/api/overpass/search", {
           method: "POST",
           headers: {

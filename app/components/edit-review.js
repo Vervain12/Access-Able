@@ -1,28 +1,110 @@
 "use client"
-import { Modal, Button, Box, TextField, Rating, CircularProgress, Icon } from "@mui/material";
-import { useState } from "react";
-import { UpdateReview } from "../services/review-services";
-import { DeleteReview } from "../services/review-services";
+import { Modal, Button, Box, TextField, Rating, CircularProgress, Icon, IconButton } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
+import { useState, useEffect } from "react";
+import { UpdateReview, DeleteReview, DeleteSpecificImages, UploadImages } from "../services/review-services";
 import { Stack } from "@mui/material";
+import { useDropzone } from "react-dropzone";
 
 export default function EditReviewPopup({ reviewInfo, images }) {
     const [openModal, setOpen] = useState(false);
     const [openDeleteModal, setOpenDelete] = useState(false);
     const [rating, setRating] = useState(reviewInfo.rating); 
     const [errorMessage, setErrorMessage] = useState("");
+    const [files, setFiles] = useState([]);
+    const [displayImages, setDisplayImages] = useState([]);
+    const [filesToDelete, setFilesToDelete] = useState([]);
+    const [newFiles, setNewFiles] = useState([]);
+    const [updating, setUpdating] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleCloseDelete = () => setOpenDelete(false);
+    const handleOpenDelete = () => setOpenDelete(true);    
     const handleClose = () => {
         setOpen(false);
         setErrorMessage("");
     };
-    const handleOpen = () => setOpen(true);
-    const handleCloseDelete = () => setOpenDelete(false);
-    const handleOpenDelete = () => setOpenDelete(true);    
-    const [updating, setUpdating] = useState(false);
+
+    useEffect(() => {
+        if (images && images.length > 0) {
+            const imageDisplay = images.map((image, index) => ({
+                url: image.url,
+                isExisting: true,
+                index: index
+            }));
+            setDisplayImages(imageDisplay);
+        }
+    }, [reviewInfo, images]);
+
+    useEffect(() => {
+        console.log("New files:", newFiles);
+    }, [newFiles])
+
+    const { getRootProps, getInputProps, acceptedFiles, fileRejections, isDragActive } = useDropzone({
+        accept: {
+            'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.bmp', '.webp']
+        },
+        maxFiles: 5, 
+        maxSize: 5 * 1024 * 1024, //5MB file size
+        onDrop: (acceptedFiles) => {
+            setNewFiles(acceptedFiles);
+
+            const newFileDisplay = acceptedFiles.map((file, index) => ({
+                url: URL.createObjectURL(file),
+                isExisting: false,
+                file: file,
+                index: files.length + index
+            }));
+            
+            setDisplayImages(prev => [...prev, ...newFileDisplay]);
+        }
+    });
+
+    const removeImage = (index, isExisting) => {
+        if (isExisting) {
+            const imageToDelete = images[displayImages[index].index];
+            setFilesToDelete(prev => [...prev, imageToDelete]);
+            setDisplayImages(prev => prev.filter((_, i) => i !== index));
+        } else {
+            const displayItem = displayImages[index];
+            setFiles(prev => prev.filter(file => file !== displayItem.file));
+            setDisplayImages(prev => prev.filter((_, i) => i !== index));
+        }
+    };
 
     const handleUpdate = async (event) => {
         event.preventDefault();
         setUpdating(true);
         const formData = new FormData(event.target);
+
+        if (filesToDelete.length > 0) {
+            const deleteResult  = await DeleteSpecificImages(filesToDelete);
+
+            if (deleteResult?.error) {
+                console.log("There was an error when deleting images.");
+                setErrorMessage("There was an error when updating the review.");
+            }
+        }
+
+        if (newFiles.length > 0) {
+            const fileData = new FormData();
+            newFiles.forEach((file) => {
+                fileData.append('images', file);
+            });
+            fileData.append('review_id', reviewInfo.review_id);
+
+            const imageResult = await UploadImages(fileData);
+            if (imageResult.error) {
+                if (imageResult.error === 'CONTENT_POLICY_VIOLATION'){
+                    console.log("Image content violates safety guidelines.")
+                    setErrorMessage("Image content violates safety guidelines.");
+                } else {
+                    console.log("There was an error when updating the review images.");
+                    setErrorMessage("There was an error when updating the review images.");
+                }
+                setUpdating(false);
+                return;
+            }
+        } 
         
         const reviewText = formData.get('review_text');
         if (!reviewText || !rating) {
@@ -52,11 +134,11 @@ export default function EditReviewPopup({ reviewInfo, images }) {
 
         handleClose();
         setUpdating(false);
+        if (!errorMessage) {
+            window.location.reload();            
+        }
     }
 
-    const handleImages = async () => {
-
-    }
 
     const handleDelete = async () => {
         try{
@@ -105,6 +187,51 @@ export default function EditReviewPopup({ reviewInfo, images }) {
                                 fullWidth
                                 rows={4}
                             /> 
+                            
+                            {/*Dropzone*/}
+                            <div {...getRootProps({className: "dropzone"})} style={{ width: '100%' }}>
+                                <input className="input-zone" {...getInputProps()} />
+                                <div className="text-center">
+                                    <div className="dropzone-content border-2 p-5 border-dashed">
+                                        {displayImages.length > 0 ? (
+                                            <div className="flex flex-row overflow-x-scroll">
+                                                {displayImages.map((image, index) => (
+                                                    <div key={index} style={{ position: 'relative', margin: '0 5px' }}>
+                                                        <img
+                                                            src={image.url}
+                                                            alt={`Review image ${index + 1}`}
+                                                            style={{
+                                                                width: '100px', 
+                                                                height: '100px', 
+                                                                objectFit: 'cover',
+                                                            }} 
+                                                        />
+                                                        <IconButton
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                removeImage(index, image.isExisting);
+                                                            }}
+                                                            sx={{
+                                                                position: 'absolute',
+                                                                top: '-5px',
+                                                                right: '-8px',
+                                                                color: 'error.main',
+                                                                width: '24px',
+                                                                height: '24px',
+                                                            }}
+                                                            size="small"
+                                                        >
+                                                            <CloseIcon fontSize="small" />
+                                                        </IconButton>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div>Upload your images here!</div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
                         </Box>
                         <Box sx={{
                             display: 'flex',
@@ -148,41 +275,6 @@ export default function EditReviewPopup({ reviewInfo, images }) {
                             </p>
                         </Box>
                     </form>
-                    
-                    {images && images.length > 0 && (
-                        <Box sx={{ 
-                            mt: 2,
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(2, 1fr)',
-                            gap: 1
-                        }}>
-                            {images.map((image, index) => (
-                                <Box
-                                    key={index}
-                                    sx={{
-                                        width: '100%',
-                                        height: '120px',
-                                        overflow: 'hidden',
-                                        border: '1px solid #ddd',
-                                        borderRadius: '4px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                    }}
-                                >
-                                    <img
-                                        src={image.url}
-                                        alt={`Review image ${index + 1}`}
-                                        style={{
-                                            width: '100%',
-                                            height: '100%',
-                                            objectFit: 'cover',
-                                        }}
-                                    />
-                                </Box>
-                            ))}
-                        </Box>
-                    )}
                 </Box>
             </Modal>
 

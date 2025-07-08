@@ -22,11 +22,12 @@ export async function CreateReview(reviewData) {
 
     if (response.ok) {
         console.log('Review Success:', result.data);
+        return result;
     } else {
         console.error('Review Error:', result.error);
         return result;
     }
-    return result;
+
 }
 
 export async function DeleteReview({ review_id }) {
@@ -110,7 +111,6 @@ export async function getRelatedReviews(user_id) {
         headers: {
             'Content-Type': 'application/json',
         },
-
     })
 
     if (!response.ok) {
@@ -127,14 +127,15 @@ export async function UploadImages(data) {
         method: 'POST',
         body: data
     });
-    
+
     const result = await response.json();
 
     if (response.ok) {
-        console.log('Image Upload Success:', result.data);
+        console.log('Review Success:', result.data);
+        return result;
     } else {
-        console.error('Image Upload Error:', result.error);
-        throw new Error(result.error);
+        console.error('Review Error:', result.error);
+        return result;
     }
 }
 
@@ -148,6 +149,24 @@ export async function GetImages(review_id) {
 
     if (!response.ok) {
         console.error('Error fetching review images:', response.statusText);
+        return null;
+    }
+
+    const result = await response.json();
+    return result || [];
+}
+
+export async function DeleteSpecificImages(images) {
+    const response = await fetch('/api/reviews/user/DeleteImages', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ images }),
+    });
+
+    if (!response.ok) {
+        console.error('Error deleting images:', response.statusText);
         return null;
     }
 
