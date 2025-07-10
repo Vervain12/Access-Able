@@ -12,8 +12,8 @@ export default function MapView({
 }) {
   const router = useRouter();
   const handleClick = (item) => {
-    sessionStorage.removeItem('selectedLocation');
-    sessionStorage.setItem('selectedLocation', JSON.stringify(item));
+    sessionStorage.removeItem("selectedLocation");
+    sessionStorage.setItem("selectedLocation", JSON.stringify(item));
     router.push(`/location/${item.id}`);
   };
 
@@ -26,15 +26,7 @@ export default function MapView({
   });
 
   return (
-    <div
-      style={{
-        width: "90%",
-        height: 550,
-        margin: "30px auto",
-        border: "2px solid #3498db",
-        borderRadius: 8,
-      }}
-    >
+    <div className="w-full h-full m-30 m-auto border-2">
       <MapContainer
         center={[userLat, userLon]}
         zoom={13}
@@ -56,19 +48,24 @@ export default function MapView({
                   icon={customIcon}
                   title={item.tags?.name}
                 >
-                  <Popup style={{ display: "flex", flexDirection: "column", gap: "8px", fontSize: 18, fontWeight: "bold", alignItems: "center"}}>
-                    <h2 style={{ fontSize: 22, margin: 0 }}>{item.tags?.name || "Unnamed Place"}</h2>
-                    <Rating 
-                        name="rating" 
-                        value={item.rating || 0}
-                        readOnly
-                        size="small" 
+                  <Popup className="flex flex-col gap-8 font-size-18 font-weight-bold align-items-center">
+                    <h2 style={{ fontSize: 22, margin: 0 }}>
+                      {item.tags?.name || "Unnamed Place"}
+                    </h2>
+                    <Rating
+                      name="rating"
+                      value={item.rating || 0}
+                      readOnly
+                      size="small"
                     />
                     <Button
                       onClick={() => handleClick(item)}
                       variant="contained"
                       size="small"
-                      style={{ textTransform: "none", alignSelf: "center" }}>More Info</Button>
+                      style={{ textTransform: "none", alignSelf: "center" }}
+                    >
+                      More Info
+                    </Button>
                   </Popup>
                 </Marker>
               )
