@@ -16,7 +16,6 @@ const DynamicMapView = loadDynamic(() => import("../../components/map"), {
 });
 
 function MapContent() {
-  // Get all needed state & setters from the hook
   const {
     query,
     setQuery,
@@ -33,7 +32,6 @@ function MapContent() {
   const searchParams = useSearchParams();
   const fromConfirm = searchParams.get("fromConfirm");
 
-  // Only render after mounted (if you want)
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -41,53 +39,47 @@ function MapContent() {
   if (!mounted) return null;
 
   return (
-    <div>
-      {/*Refreshing should remove fromconfirm somehow*/}
-      {fromConfirm && <DisabilityChoice />}
-      <div style={{ background: "#f5f5f5", minHeight: "100vh", padding: 20 }}>
-        <div style={{ padding: 20 }}>
-          <div style={{ display: "flex", gap: 20, justifyContent: "center" }}>
-            <SearchControls
-              initialQuery={query}
-              setResults={setResults}
-              setLatitude={setLatitude}
-              setLongitude={setLongitude}
-              setLoading={setLoading}
-              setPage={null}
-            />
-          </div>
-
-          <div style={{ position: "relative", height: "80vh", marginTop: 20 }}>
-            {loading && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "30%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  zIndex: 1000,
-                  backgroundColor: "rgba(255, 255, 255, 0.7)",
-                  padding: 20,
-                  borderRadius: 10,
-                }}
-              >
-                <CircularProgress />
-              </div>
-            )}
-
-            {latitude !== null && longitude !== null && (
-              <DynamicMapView
-                results={results}
-                userLat={latitude}
-                userLon={longitude}
-              />
-            )}
-          </div>
-        </div>
+    <div className="relative w-screen h-screen overflow-hidden">
+      {/* Map layer */}
+      <div className="absolute inset-0 z-0">
+        {latitude !== null && longitude !== null && (
+          <DynamicMapView
+            results={results}
+            userLat={latitude}
+            userLon={longitude}
+          />
+        )}
       </div>
+
+      {/* Controls overlay */}
+      <div className="absolute top-5 left-1/2 transform -translate-x-1/2 z-10 p-4 rounded-lg">
+        <SearchControls
+          initialQuery={query}
+          setResults={setResults}
+          setLatitude={setLatitude}
+          setLongitude={setLongitude}
+          setLoading={setLoading}
+          setPage={null}
+        />
+      </div>
+
+      {/* DisabilityChoice overlay */}
+      {fromConfirm && (
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
+          <DisabilityChoice />
+        </div>
+      )}
+
+      {/* Loading overlay */}
+      {loading && (
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 bg-white bg-opacity-70 p-6 rounded-xl shadow-md">
+          <CircularProgress />
+        </div>
+      )}
     </div>
   );
 }
+
 
 // Loading fallback component
 function MapLoading() {

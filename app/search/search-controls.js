@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Slider from "@mui/material/Slider";
+import FilterButton from "../components/searchcontrols/filter-buttons";
 import FilterSelect from "../components/searchcontrols/filter-select";
 import SearchInput from "../components/searchcontrols/search-input";
 import { useSearchParams } from "next/navigation";
@@ -13,19 +13,23 @@ export default function SearchControls({
   setPage,
 }) {
   const searchParams = useSearchParams();
-  const heroQuery = searchParams?.get('q') || null;
-  
+  const heroQuery = searchParams?.get("q") || null;
+
   // Safe sessionStorage access
   const getStoredValue = (key, defaultValue) => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const stored = sessionStorage.getItem(key);
-      return stored ? (key === 'distance' ? parseFloat(stored) : stored) : defaultValue;
+      return stored
+        ? key === "distance"
+          ? parseFloat(stored)
+          : stored
+        : defaultValue;
     }
     return defaultValue;
   };
 
   const setStoredValue = (key, value) => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       sessionStorage.setItem(key, value);
     }
   };
@@ -39,10 +43,10 @@ export default function SearchControls({
     setIsClient(true);
     const storedQ = getStoredValue("query", "");
     const storedDistance = getStoredValue("distance", 2.5);
-    
+
     setQuery(storedQ);
     setDistance(storedDistance);
-    
+
     // Set initial results from storage
     const storedResults = getStoredValue("results", "[]");
     try {
@@ -57,9 +61,16 @@ export default function SearchControls({
     const performHeroQuery = async () => {
       if (heroQuery && isClient) {
         setQuery(heroQuery);
-        await handleSearch(null, heroQuery, distance, setResults, setLatitude, setLongitude);        
+        await handleSearch(
+          null,
+          heroQuery,
+          distance,
+          setResults,
+          setLatitude,
+          setLongitude
+        );
       }
-    }
+    };
     performHeroQuery();
   }, [heroQuery, isClient]);
 
@@ -150,16 +161,6 @@ export default function SearchControls({
         });
         const finalResults = Array.from(deduplicated.values());
 
-        finalResults.forEach((location) => {
-          location.distance = haversineDistance(
-            lat,
-            lon,
-            location.lat,
-            location.lon
-          );
-        });
-        finalResults.sort((a, b) => a.distance - b.distance);
-
         setResults(finalResults);
         setStoredValue("query", query);
         setStoredValue("results", JSON.stringify(finalResults));
@@ -174,32 +175,16 @@ export default function SearchControls({
 
   return (
     <div>
-      <div
-        style={{
-          width: 1050,
-          justifyContent: "center",
-          margin: "0 auto",
-          background: "white",
-          padding: 16,
-          borderRadius: 8,
-          borderBottom: "5px solid #D0D0D0",
-        }}
-      >
-        <SearchInput
-          query={query}
-          setQuery={setQuery}
-          onKeyDown={handleKeyDown}
-        />
+      <div className="w-130 h-40 bg-white rounded-md">
+        <div className="w-130 pl-5 pt-3 h-17 flex pr-7">
+          <SearchInput
+            query={query}
+            setQuery={setQuery}
+            onKeyDown={handleKeyDown}
+          />
 
-        <div
-          style={{
-            width: "100%",
-            justifyContent: "space-evenly",
-            display: "flex",
-            gap: 10,
-          }}
-        >
           <button
+            className="w-22 h-10 ml-2 bg-blue-600 text-white border-radius-8 rounded-md text-xs flex items-center justify-center"
             onClick={(e) =>
               handleSearch(
                 e,
@@ -210,45 +195,44 @@ export default function SearchControls({
                 setLongitude
               )
             }
-            style={{
-              background: "#3498db",
-              color: "white",
-              padding: 12,
-              borderRadius: 8,
-              border: "none",
-              fontWeight: "bold",
-            }}
           >
             Search
           </button>
+        </div>
 
-          <button
-            onClick={clearStorage}
-            style={{
-              background: "#3498db",
-              color: "white",
-              padding: 12,
-              borderRadius: 8,
-              border: "none",
-              fontWeight: "bold",
-            }}
-          >
-            Clear
-          </button>
+        {/* Bottom Half of Search Controls */}
+        <div className="flex flex-row h-25">
+          <div className="w-135 pl-1 flex flex-wrap">
+            <FilterButton
+              onQuickSearch={(newQuery) => {
+                setQuery(newQuery);
+                handleSearch(
+                  null,
+                  newQuery,
+                  distance,
+                  setResults,
+                  setLatitude,
+                  setLongitude
+                );
+              }}
+            />
+          </div>
 
-          <button
-            onClick={() => setShowFilters(true)}
-            style={{
-              background: "#3498db",
-              color: "white",
-              padding: 12,
-              borderRadius: 8,
-              border: "none",
-              fontWeight: "bold",
-            }}
-          >
-            Filters
-          </button>
+          <div className="w-35 justify-evenly items-center flex gap-5 flex-col pb-5 pt-3 pr-4">
+            <button
+              className="h-10 w-15 text-xs color-white rounded-lg bg-sky-500"
+              onClick={clearStorage}
+            >
+              Clear
+            </button>
+
+            <button
+              className="h-10 w-15 text-xs color-white rounded-lg bg-sky-500"
+              onClick={() => setShowFilters(true)}
+            >
+              Filters
+            </button>
+          </div>
         </div>
 
         <FilterSelect
