@@ -14,13 +14,16 @@ export default function ReviewForm({ location_id, location_name, hasReview }) {
     const [open, setOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [submitting, setSubmitting] = useState(false);
+    const [textLength, setTextLength] = useState(0);
+    const CHARACTER_LIMIT = 255;
 
     const handleOpen = () => setOpen(true);
-        const handleClose = () => {
+    const handleClose = () => {
         setOpen(false);
         setErrorMessage("");
         setFiles([]);
         setRating(null);
+        setTextLength(0);
     };
 
     const { getRootProps, getInputProps, acceptedFiles, fileRejections, isDragActive } = useDropzone({
@@ -138,7 +141,10 @@ export default function ReviewForm({ location_id, location_name, hasReview }) {
                                     aria-describedby="review-text-helper-text"
                                     multiline
                                     fullWidth
+                                    slotProps={{ htmlInput: { maxLength: CHARACTER_LIMIT }}}
+                                    helperText={`${textLength}/${CHARACTER_LIMIT}`}
                                     rows={4}
+                                    onChange={(e) => setTextLength(e.target.value.length)}
                                 /> 
                                 {/*Dropzone*/}
                                 <div {...getRootProps({className: "dropzone"})}>
