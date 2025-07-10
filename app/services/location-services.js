@@ -16,5 +16,6 @@ export async function GetRecommendedPlaces() {
     }
 
     const result = await response.json();
+    console.log("result data: ", result.data);
     return result.data || [];
 }

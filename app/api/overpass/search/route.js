@@ -56,7 +56,7 @@ export async function POST(req) {
         
         const locationsWithRating = data.elements.map(location => ({
             ...location,
-            rating: ratingMap.get(location.id.toString()) || null
+            rating: ratingMap.get(location.id.toString()) || null,
         }));
         
         return new Response(JSON.stringify({ ...data, elements: locationsWithRating }), { status: 200 });

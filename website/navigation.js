@@ -6,22 +6,40 @@ import { Menu, Accessibility, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { redirect } from "next/navigation"
 import { createClient } from "@/utils/supabase/client"
+import { signOut } from "@/app/services/account-services-client"
+import dynamic from "next/dynamic"
+
+// Disabling server side rendering with a wrapper to fix hydration error.
+// If it takes too long to load find a different solution
+const NavigationWrapper = dynamic(() => import("./navigation").then(mod => mod.Navigation), {
+    ssr: false,
+})
+
+export default function NavigationClientWrapper() {
+  return <NavigationWrapper />
+}
 
 export function Navigation() {
     const [isOpen, setIsOpen] = useState(false)
     const [signedIn, setSignedIn] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const reloadAfterSignout = async () => {
+        await signOut();
+    }
 
     useEffect(() => {
         const checkSignIn = async () => {
             const supabase = await createClient();
             const { data: { user } } = await supabase.auth.getUser();
-            console.log(user?.id);
+            console.log("Current user: ", user?.id);
             if (user) {
                 setSignedIn(true);
             }
+            setLoading(false); 
         }
         checkSignIn();
-    },[])
+    }, []);
+
 
     const navItems = [
         { href: "/search/map", label: "Map" },
@@ -42,6 +60,8 @@ export function Navigation() {
             document.body.style.overflow = "unset"
         }
     }, [isOpen])
+
+    if (loading) return null;
 
     return (
         <header className="sticky top-0 z-50 w-full bg-white shadow-md">
@@ -70,19 +90,25 @@ export function Navigation() {
 
                     {/* Right side content */}
                     <div className="flex items-center">
-                        {!signedIn && (
+                        {!signedIn ? (
                             <div className="hidden md:flex items-center space-x-4">
                                 <Button
                                     variant="outline"
-                                    className="border-brand-secondary text-brand-secondary hover:bg-brand-secondary hover:text-white"
+                                    className="border-brand-secondary text-brand-secondary hover:bg-brand-secondary hover:text-white hover:cursor-pointer"
                                     onClick={() => redirect("/search/map")}
                                 >
                                     Continue as Guest
                                 </Button>
-                                <Button className="bg-brand-primary hover:bg-brand-primary/90" onClick={() => redirect("/auth")}>
+                                <Button className="bg-brand-primary hover:cursor-pointer hover:bg-brand-primary/90" onClick={() => redirect("/auth")}>
                                     Login / Signup
                                 </Button>
                             </div>                        
+                        ) : (
+                            <Button 
+                                variant="outline"
+                                className="w-full bg-white hover:bg-brand-primary/90 border-1 border-gray-300 hover:cursor-pointer"
+                                onClick={reloadAfterSignout}
+                            >Logout</Button>
                         )}
 
                         {/* Mobile Navigation Button */}
@@ -127,29 +153,37 @@ export function Navigation() {
                                 {item.label}
                             </Link>
                         ))}
-                        {!signedIn && (
-                            <div className="flex flex-col space-y-2 pt-4 border-t border-gray-200 mt-2">
-                                <Button
+                        <div className="flex flex-col space-y-2 pt-4 border-t border-gray-200 mt-2">
+                            {!signedIn ? (
+                                <div>
+                                    <Button
+                                        variant="outline"
+                                        className="w-full border-brand-secondary text-brand-secondary hover:bg-brand-secondary hover:text-white"
+                                        onClick={() => {
+                                            redirect("/search/map")
+                                            setIsOpen(false)
+                                        }}
+                                    >
+                                        Continue as Guest
+                                    </Button>
+                                    <Button
+                                        className="w-full bg-brand-primary hover:bg-brand-primary/90"
+                                        onClick={() => {
+                                            redirect("/auth")
+                                            setIsOpen(false)
+                                        }}
+                                    >
+                                        Login / Signup
+                                    </Button>
+                                </div>
+                            ) : (
+                                <Button 
                                     variant="outline"
-                                    className="w-full border-brand-secondary text-brand-secondary hover:bg-brand-secondary hover:text-white"
-                                    onClick={() => {
-                                        redirect("/search/map")
-                                        setIsOpen(false)
-                                    }}
-                                >
-                                    Continue as Guest
-                                </Button>
-                                <Button
-                                    className="w-full bg-brand-primary hover:bg-brand-primary/90"
-                                    onClick={() => {
-                                        redirect("/auth")
-                                        setIsOpen(false)
-                                    }}
-                                >
-                                    Login / Signup
-                                </Button>
-                            </div>
-                        )}
+                                    className="w-full bg-white hover:bg-brand-primary/90 border-1 border-gray-300"
+                                    onClick={reloadAfterSignout}
+                                >Logout</Button>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

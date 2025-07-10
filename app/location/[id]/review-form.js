@@ -1,5 +1,5 @@
 'use client'
-import { FormHelperText, FormControl, InputLabel, Input, TextField, Rating, Box, Button, Modal, IconButton } from "@mui/material";
+import { CircularProgress, TextField, Rating, Box, Button, Modal, IconButton } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { useState, useEffect } from "react"
 import { CreateReview } from "@/app/services/review-services";
@@ -13,6 +13,7 @@ export default function ReviewForm({ location_id, location_name, hasReview }) {
     const [files, setFiles] = useState([]);
     const [open, setOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [submitting, setSubmitting] = useState(false);
 
     const handleOpen = () => setOpen(true);
         const handleClose = () => {
@@ -40,6 +41,7 @@ export default function ReviewForm({ location_id, location_name, hasReview }) {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setSubmitting(true);
         const formData = new FormData(event.target);
         const reviewId = Math.floor(100000 + Math.random() * 900000);
 
@@ -66,6 +68,7 @@ export default function ReviewForm({ location_id, location_name, hasReview }) {
                     console.log("There was an error when uploading the review images.");
                     setErrorMessage("There was an error when uploading the review images.");
                 }
+                setSubmitting(false);
                 return;
             }
         }
@@ -89,14 +92,16 @@ export default function ReviewForm({ location_id, location_name, hasReview }) {
             } else {
                 console.log("There was an error when submitting a review.");
             }
+            setSubmitting(false);
             return;
         }
         setErrorMessage("");
+        setSubmitting(false);
         window.location.reload();
     }
    
     return (
-        <>
+        <div>
             <Button variant="contained" onClick={handleOpen} disabled={hasReview}>
                 Create Review
             </Button>
@@ -208,7 +213,29 @@ export default function ReviewForm({ location_id, location_name, hasReview }) {
                     </form>
                 </Box>
             </Modal>
-        </>
+
+            {/*Modal from edit-review*/}
+            {submitting && (
+                <Modal open={submitting}>
+                    <Box sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: 2,
+                        bgcolor: 'white',
+                        p: 4,
+                        borderRadius: 2
+                    }}>
+                        <CircularProgress />
+                        <div>Submitting...</div>
+                    </Box>
+                </Modal>
+            )}
+        </div>
     );
 }
 
