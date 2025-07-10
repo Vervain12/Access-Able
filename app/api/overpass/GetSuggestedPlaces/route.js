@@ -1,22 +1,3 @@
-/*
-Step 1: Fetch user
-Step 2: Get users disability info
-Step 3: Find similar users (overlaps disability info - check GetRelatedReviews)
-Step 4: Get similar users reviews
-Step 5: Get overall rating of each location from those reviews
-Step 6: 
-Step : Query for all location id's 
-
-Query example (construct using string, replace id's with the proper node id's returned by review fetch)
-
-[out:json][timeout:25];
-(
-  node(480248463);
-  node(11563447509);
-  node(8418829868);
-);
-out body;
-*/
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 
@@ -34,6 +15,7 @@ export async function GET(request) {
       );
     }
   
+    //Fetching disability info
     const { data: currentUserProfile, error: profileError } = await supabase
       .from("profiles")
       .select("disability_info")
@@ -47,11 +29,11 @@ export async function GET(request) {
       );
     }
 
+    //Fetching similar users
     const { data: similarProfiles, error: similarError } = await supabase
       .from("profiles")
       .select("id")
-      .overlaps("disability_info", currentUserProfile.disability_info)
-      .neq("id", user_id);
+      .overlaps("disability_info", currentUserProfile.disability_info);
 
     if (similarError) {
       return NextResponse.json(
@@ -67,40 +49,49 @@ export async function GET(request) {
       return NextResponse.json({ data: [] }, { status: 200 });
     }
 
+    //Fetching location_id's and ratings from similar user reviews (rating above 3.5 to help with load-times)
     const { data: reviews, error: reviewError } = await supabase
       .from("reviews")
       .select("location_id, rating")
+      .gt("rating", 3.5)
       .in("user_id", similarUserIds);
 
     if (reviewError) {
+      console.error("Suggestion review fetch error: ", reviewError);
       return NextResponse.json(
         { error: "Error fetching reviews." },
         { status: 400 }
       );
     }
 
-    const ratingMap = new Map();
-    if (reviews && reviews.length > 0) {
-        const groupedRatings = reviews.reduce((acc, review) => {
-            if (!acc[review.location_id]) {
-                acc[review.location_id] = [];
-            }
-            acc[review.location_id].push(review.rating);
-            return acc;
-        }, {});
-        
-        Object.entries(groupedRatings).forEach(([locationId, ratings]) => {
-            const avg = ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
-            ratingMap.set(locationId, avg);
-        });
-    }
+    //Calculating avg rating for locations and querying overpass
+
+    const locationStats = Object.entries(
+      reviews.reduce((acc, review) => {
+        const { location_id, rating } = review;
+        if(!acc[location_id]) {
+          acc[location_id] = { count : 0, sum: 0}
+        }
+        acc[location_id].count += 1;
+        acc[location_id].sum += rating;
+        return acc;
+      }, {})
+    )
+    .map(([locationId, { count, sum }]) => ({
+      locationId,
+      avgRating: sum / count,
+      count,
+    }))
+    .filter(loc => loc.avgRating > 3.5)
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 10)
+
+    console.log("locationstats: ",locationStats)
 
     let locationsToFetch = "";
-    ratingMap.forEach((averageRating, locationId) => {
-      if (averageRating > 3.5) {
-        locationsToFetch += `node(${locationId});\n`
-      }
-    });
+    for (const loc of locationStats) {
+      locationsToFetch += `node(${loc.locationId});\n`;
+    }
 
     const query = `
       [out:json][timeout:25];
@@ -110,7 +101,7 @@ export async function GET(request) {
       out body;
       `;
 
-    console.log(query);
+    console.log("Suggestion query: ", query);
     
     if (locationsToFetch.length > 0) {
       const response = await fetch(apiUrl, {
@@ -122,7 +113,23 @@ export async function GET(request) {
       });
         
       const data = await response.json();
-      return NextResponse.json({ data }, { status: 200 });
+
+      const locationStatsMap = locationStats.reduce((acc, loc) => {
+        acc[loc.locationId] = loc;
+        return acc;
+      }, {});
+
+      const locationsWithRating = data.elements.map((element) => {
+        const ratingInfo = locationStatsMap[element.id];
+        return {
+          ...element,
+          rating: ratingInfo?.avgRating || null,
+          count: ratingInfo?.count || 0,
+        };
+      });
+
+      return NextResponse.json({ data: locationsWithRating }, { status: 200 });
+
     } else {
       return NextResponse.json({ data: [] }, { status: 200 });
     }

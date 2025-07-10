@@ -1,25 +1,11 @@
 'use client'
 
-import { signOut } from "../services/account-services-client"
-import { Button } from "@mui/material"
+import { createClient } from "@/utils/supabase/client"
 
 export default function ProfilePage() {
-    const reloadAfterSignout = async () => {
-        await signOut();
-    }
 
     return (
-        <Button 
-            variant="contained"
-            style={buttonStyle}
-            onClick={reloadAfterSignout}
-        >Sign Out</Button>
+        <div></div>
     )
 }
 
-const buttonStyle = {
-    width: '100px',
-    padding: '12px 24px',
-    marginTop: '8px',
-    whiteSpace: 'nowrap'
-};

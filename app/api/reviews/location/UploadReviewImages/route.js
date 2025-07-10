@@ -33,11 +33,14 @@ export async function POST(request) {
             }, { status: 400 });
         }
 
-        const results = await Promise.all(files.map(async (file) => {
+        const results = await Promise.all(files.map(async (file, index) => {
+
+          const fileName = file.name.split(" ");
+          
           const { data, error } = await supabase
             .storage
             .from('reviews')
-            .upload(`${reviewId}/${file.name}`, file);
+            .upload(`${reviewId}/${reviewId}-${fileName[0]}`, file);
           
           if (error) throw error;
           return data;

@@ -19,8 +19,8 @@ export default function MapView({
 
   const customIcon = new L.Icon({
     iconUrl: "/customMarker.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
+    iconSize: [30, 35],
+    iconAnchor: [10, 41],
     popupAnchor: [1, -34],
     shadowSize: [41, 41],
   });
@@ -57,6 +57,7 @@ export default function MapView({
                       value={item.rating || 0}
                       readOnly
                       size="small"
+                      precision={0.5}
                     />
                     <Button
                       onClick={() => handleClick(item)}

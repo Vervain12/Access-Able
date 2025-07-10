@@ -15,5 +15,5 @@ export async function signin(formData) {
         return error;
     }
 
-    window.location.href = "/search/list";
+    window.location.href = "/search/map";
 }
