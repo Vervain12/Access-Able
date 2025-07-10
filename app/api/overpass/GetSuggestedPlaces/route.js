@@ -33,8 +33,7 @@ export async function GET(request) {
     const { data: similarProfiles, error: similarError } = await supabase
       .from("profiles")
       .select("id")
-      .overlaps("disability_info", currentUserProfile.disability_info)
-      .neq("id", user_id);
+      .overlaps("disability_info", currentUserProfile.disability_info);
 
     if (similarError) {
       return NextResponse.json(

@@ -45,7 +45,7 @@ export default function EditReviewPopup({ reviewInfo, images }) {
         accept: {
             'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.bmp', '.webp']
         },
-        maxFiles: 5, 
+        maxFiles: 4, 
         maxSize: 5 * 1024 * 1024, //5MB file size
         onDrop: (acceptedFiles) => {
             setNewFiles(acceptedFiles);
@@ -231,7 +231,7 @@ export default function EditReviewPopup({ reviewInfo, images }) {
                                                 ))}
                                             </div>
                                         ) : (
-                                            <div>Upload your images here!</div>
+                                            <div>Upload your images! (Max 4)</div>
                                         )}
                                     </div>
                                 </div>

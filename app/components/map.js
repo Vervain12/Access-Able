@@ -63,6 +63,7 @@ export default function MapView({
                         value={item.rating || 0}
                         readOnly
                         size="small" 
+                        precision={0.5}
                     />
                     <Button
                       onClick={() => handleClick(item)}

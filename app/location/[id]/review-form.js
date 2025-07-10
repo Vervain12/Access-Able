@@ -30,7 +30,7 @@ export default function ReviewForm({ location_id, location_name, hasReview }) {
         accept: {
             'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.bmp', '.webp']
         },
-        maxFiles: 5, 
+        maxFiles: 4, 
         maxSize: 5 * 1024 * 1024, //5MB file size
         onDrop: (acceptedFiles) => {
             setFiles(acceptedFiles);
@@ -185,7 +185,7 @@ export default function ReviewForm({ location_id, location_name, hasReview }) {
                                                     ))}
                                                 </div>
                                             ) : (
-                                                <div>Upload your images here!</div>
+                                                <p>Upload your images! (Max 4)</p>
                                             )}
                                         </div>
                                     </div>

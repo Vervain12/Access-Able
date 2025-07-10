@@ -54,8 +54,9 @@ export default function SuggestionBox({ item }) {
                 value={item.rating || 0}
                 readOnly
                 size="small" 
+                precision={0.5}
             />
-            <p className="font-light text-sm">({item.count} review{item.count >= 2 && <p>s</p>})</p>
+            <p className="font-light text-sm">({item.count} review{item.count >= 2 && <>s</>})</p>
         </Box>
 
     </Box>

@@ -56,8 +56,15 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
         maxWidth: 400,
         height: "fit-content",
         flexShrink: 0,
+        position: "relative",
       }}
     >
+      {review.user_id === userId && (
+        <Box sx={{ position: "absolute", top: 8, right: 8, zIndex: 1 }}>
+          <EditReviewPopup reviewInfo={review} images={images} />
+        </Box>
+      )}
+      
       <CardContent>
         <Typography
           variant="subtitle1"
@@ -67,7 +74,7 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
         >
           {relatedBool && location_name && `User: ${review.display_name}`}
         </Typography>
-
+        
         <Typography
           variant="subtitle1"
           component="h2"
@@ -78,7 +85,7 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
             ? `Location: ${location_name}`
             : `User: ${review.display_name}`}
         </Typography>
-
+        
         <Rating
           name="rating"
           value={review.rating}
@@ -86,12 +93,11 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
           size="small"
           sx={{ mb: 1 }}
         />
-
+        
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <Typography variant="body1" sx={{ lineHeight: 1.6, m: 0 }}>
             {review.review_text}
           </Typography>
-
           <Box
             component="span"
             sx={{
@@ -107,34 +113,37 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
             🔊
           </Box>
         </Box>
-
+        
         <Typography variant="caption" color="text.secondary">
           {new Date(review.created_at).toLocaleDateString()}
         </Typography>
-
+        
         {images && images.length > 0 && (
-          <Box sx={{ mt: 2 }}>
+          <Box sx={{ mt: 2, display: "flex", gap: 1, flexWrap: "wrap" }}>
             {images.map((image, index) => (
-              <img
+              <Box
                 key={index}
-                src={image.url}
-                alt={`Review image ${index + 1}`}
-                style={{
-                  width: "auto",
-                  maxHeight: "200px",
-                  maxWidth: "100%",
-                  borderRadius: "4px",
-                  marginBottom: "8px",
+                sx={{
+                  width: "80px",
+                  height: "80px",
+                  flexShrink: 0,
                 }}
-              />
+              >
+                <img
+                  src={image.url}
+                  alt={`Review image ${index + 1}`}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    borderRadius: "4px",
+                  }}
+                />
+              </Box>
             ))}
           </Box>
         )}
       </CardContent>
-
-      {review.user_id === userId && (
-        <EditReviewPopup reviewInfo={review} images={images} />
-      )}
     </Card>
   );
 };

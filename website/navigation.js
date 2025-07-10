@@ -106,7 +106,7 @@ export function Navigation() {
                         ) : (
                             <Button 
                                 variant="outline"
-                                className="w-full bg-white hover:bg-brand-primary/90 border-1 border-gray-300 hover:cursor-pointer"
+                                className="w-full hidden md:flex bg-white hover:bg-brand-primary/90 border-1 border-gray-300 hover:cursor-pointer"
                                 onClick={reloadAfterSignout}
                             >Logout</Button>
                         )}
@@ -180,7 +180,10 @@ export function Navigation() {
                                 <Button 
                                     variant="outline"
                                     className="w-full bg-white hover:bg-brand-primary/90 border-1 border-gray-300"
-                                    onClick={reloadAfterSignout}
+                                    onClick={async () => {
+                                        await reloadAfterSignout()
+                                        setIsOpen(false)
+                                    }}
                                 >Logout</Button>
                             )}
                         </div>
