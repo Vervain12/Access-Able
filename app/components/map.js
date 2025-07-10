@@ -4,6 +4,7 @@ import { Button, Rating } from "@mui/material";
 import "leaflet/dist/leaflet.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import LocationPinIcon from '@mui/icons-material/LocationPin';
 export default function MapView({
   results,
   selectedLocation,
@@ -17,12 +18,16 @@ export default function MapView({
     router.push(`/location/${item.id}`);
   };
 
+  // Temporary icon until custom ones are created
   const customIcon = new L.Icon({
-    iconUrl: "/customMarker.png",
-    iconSize: [30, 35],
-    iconAnchor: [10, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
+    iconUrl: 'data:image/svg+xml;base64,' + btoa(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1e88e5" width="32" height="32">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+      </svg>
+    `),
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
   });
 
   return (

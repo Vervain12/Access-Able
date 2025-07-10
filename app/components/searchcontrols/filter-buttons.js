@@ -2,7 +2,7 @@
 
 export default function FilterButton({ onQuickSearch }) {
     // If we want to add recent searches to the buttons, this list would be how
-  const predefinedQueries = ["restaurants", "parks", "fast food"];
+  const predefinedQueries = ["restaurant", "park", "fast food"];
 
   return (
     <div className="flex flex-wrap gap-2 py-2 px-4">
