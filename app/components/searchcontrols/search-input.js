@@ -2,7 +2,7 @@ export default function SearchInput({ query, setQuery, onKeyDown }) {
   return (
     <div className="relative w-125">
       <input
-        className="w-full h-10 pl-8 pr-2 text-black rounded z-0 relative"
+        className="w-full h-10 pl-8 pr-2 text-black rounded z-0 relative border-1 border-gray-300"
         placeholder="Search for restaurants, parks, hotels..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}

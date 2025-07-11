@@ -16,6 +16,8 @@ export default function EditReviewPopup({ reviewInfo, images }) {
     const [filesToDelete, setFilesToDelete] = useState([]);
     const [newFiles, setNewFiles] = useState([]);
     const [updating, setUpdating] = useState(false);
+    const [textLength, setTextLength] = useState(reviewInfo.review_text.length);
+    const CHARACTER_LIMIT = 255;
     const handleOpen = () => setOpen(true);
     const handleCloseDelete = () => setOpenDelete(false);
     const handleOpenDelete = () => setOpenDelete(true);    
@@ -43,7 +45,7 @@ export default function EditReviewPopup({ reviewInfo, images }) {
         accept: {
             'image/*': ['.jpeg', '.jpg', '.png', '.gif', '.bmp', '.webp']
         },
-        maxFiles: 5, 
+        maxFiles: 4, 
         maxSize: 5 * 1024 * 1024, //5MB file size
         onDrop: (acceptedFiles) => {
             setNewFiles(acceptedFiles);
@@ -185,9 +187,11 @@ export default function EditReviewPopup({ reviewInfo, images }) {
                                 defaultValue={reviewInfo.review_text}
                                 multiline
                                 fullWidth
+                                slotProps={{ htmlInput: { maxLength: CHARACTER_LIMIT }}}
+                                helperText={`${textLength}/${CHARACTER_LIMIT}`}
                                 rows={4}
+                                onChange={(e) => setTextLength(e.target.value.length)}
                             /> 
-                            
                             {/*Dropzone*/}
                             <div {...getRootProps({className: "dropzone"})} style={{ width: '100%' }}>
                                 <input className="input-zone" {...getInputProps()} />
@@ -227,7 +231,7 @@ export default function EditReviewPopup({ reviewInfo, images }) {
                                                 ))}
                                             </div>
                                         ) : (
-                                            <div>Upload your images here!</div>
+                                            <div>Upload your images! (Max 4)</div>
                                         )}
                                     </div>
                                 </div>

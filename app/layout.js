@@ -1,8 +1,8 @@
 import { Geist, Geist_Mono, Inter, Outfit, JetBrains_Mono } from 'next/font/google';
 import "./globals.css";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
-import { Navigation } from "@/website/navigation"
 import { Footer } from "@/website/footer"
+import NavigationClientWrapper from '@/website/navigation';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,7 +42,7 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${outfit.variable} ${jetbrainsMono.variable} antialiased font-inter`}
       >
         <AppRouterCacheProvider>
-          <Navigation />
+          <NavigationClientWrapper />
           {children}
           <Footer />
         </AppRouterCacheProvider>

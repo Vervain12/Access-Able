@@ -7,7 +7,6 @@ import { BsFillChatDotsFill } from 'react-icons/bs';
 import { HiOutlineDocumentText } from 'react-icons/hi';
 import { MdReportProblem } from 'react-icons/md';
 
-
 export default function ProfilePage() {
   const reloadAfterSignout = async () => {
     await signOut();

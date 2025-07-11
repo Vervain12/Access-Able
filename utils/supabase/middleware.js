@@ -35,7 +35,8 @@ export async function updateSession(request) {
   if (
     !user &&
     (request.nextUrl.pathname.startsWith('/profile') || request.nextUrl.pathname.startsWith('/reviews') || request.nextUrl.pathname.startsWith('/api/user')
-    || request.nextUrl.pathname.startsWith('/api/reviews/location/PostLocationReview') || request.nextUrl.pathname.startsWith('/api/reviews/location/UploadReviewImages'))
+    || request.nextUrl.pathname.startsWith('/api/reviews/location/PostLocationReview') || request.nextUrl.pathname.startsWith('/api/reviews/location/UploadReviewImages')
+    || request.nextUrl.pathname.startsWith('/suggestions'))
   ) {
     // Redirect from profile page to login if no user
     const url = request.nextUrl.clone()
