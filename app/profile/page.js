@@ -2,10 +2,10 @@
 
 import { signOut } from "../services/account-services-client";
 import { Button, TextField, Switch } from "@mui/material";
-import { AiOutlineQuestionCircle } from 'react-icons/ai';
-import { BsFillChatDotsFill } from 'react-icons/bs';
-import { HiOutlineDocumentText } from 'react-icons/hi';
-import { MdReportProblem } from 'react-icons/md';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import ArticleIcon from '@mui/icons-material/Article';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 
 
 export default function ProfilePage() {
@@ -152,19 +152,19 @@ export default function ProfilePage() {
           <div className="bg-white h-80 flex flex-col gap-5">
             <h2 className="text-2xl pl-10 pt-5 font-bold">Support & Help</h2>
             <button className="w-180 h-10 border-1 border-gray-300 mx-10 flex items-center justify-start">
-              <AiOutlineQuestionCircle style={{fontSize: "20px", marginRight: "15px", marginLeft: "15px"}} />
+              <HelpOutlineIcon style={{fontSize: "20px", marginRight: "15px", marginLeft: "15px"}} />
               Help Center
             </button>
             <button className="w-180 h-10 border-1 border-gray-300 mx-10 flex items-center justify-start">
-              <BsFillChatDotsFill style={{fontSize: "20px", marginRight: "15px", marginLeft: "15px"}} />
+              <ChatBubbleOutlineIcon style={{fontSize: "20px", marginRight: "15px", marginLeft: "15px"}} />
               Contact Support
             </button>
             <button className="w-180 h-10 border-1 border-gray-300 mx-10 flex items-center justify-start">
-               <HiOutlineDocumentText style={{fontSize: "20px", marginRight: "15px", marginLeft: "15px"}} />
+               <ArticleIcon style={{fontSize: "20px", marginRight: "15px", marginLeft: "15px"}} />
               Terms & Privacy
             </button>
             <button className="w-180 h-10 border-1 border-gray-300 mx-10 flex items-center justify-start">
-              <MdReportProblem style={{fontSize: "20px", marginRight: "15px", marginLeft: "15px"}} />
+              <ReportProblemIcon style={{fontSize: "20px", marginRight: "15px", marginLeft: "15px"}} />
               Report an Issue
             </button>
           </div>
