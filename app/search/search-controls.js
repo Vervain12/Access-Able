@@ -3,6 +3,7 @@ import FilterButton from "../components/searchcontrols/filter-buttons";
 import FilterSelect from "../components/searchcontrols/filter-select";
 import SearchInput from "../components/searchcontrols/search-input";
 import { useSearchParams } from "next/navigation";
+import { runSearch } from "../services/search-services";
 
 export default function SearchControls({
   setResults,
@@ -11,6 +12,10 @@ export default function SearchControls({
   initialQuery,
   setLoading,
   setPage,
+  usePinMode,
+  setUsePinMode,
+  pinLat,
+  pinLon,
 }) {
   const searchParams = useSearchParams();
   const heroQuery = searchParams?.get("q") || null;
@@ -116,66 +121,53 @@ export default function SearchControls({
   };
 
   async function handleSearch(
-    e,
-    query,
-    distance,
-    setResults,
-    setLatitude,
-    setLongitude
-  ) {
-    setResults([]);
-    setLoading(true);
-    if (setPage !== null && setPage !== undefined) setPage(1);
+  e,
+  query,
+  distance,
+  setResults,
+  setLatitude,
+  setLongitude
+) {
+  setResults([]);
+  setLoading(true);
+  if (setPage !== null && setPage !== undefined) setPage(1);
 
-    if (query === "" || query === null) {
-      setLoading(false);
-      return;
-    }
+  if (!query) {
+    setLoading(false);
+    return;
+  }
 
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
-        setLatitude(lat);
-        setLongitude(lon);
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      const latToUse = usePinMode ? pinLat : position.coords.latitude;
+      const lonToUse = usePinMode ? pinLon : position.coords.longitude;
 
-        //Move this to a backend service component
-        const response = await fetch("/api/overpass/search", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            q: query,
-            distance: distance,
-            userLat: lat,
-            userLon: lon,
-          }),
-        });
+      setLatitude(latToUse);
+      setLongitude(lonToUse);
 
-        const queryResults = await response.json();
-
-        const deduplicated = new Map();
-        queryResults.elements.forEach((location) => {
-          deduplicated.set(location.id, location);
-        });
-        const finalResults = Array.from(deduplicated.values());
-
+      try {
+        const finalResults = await runSearch(query, distance, latToUse, lonToUse);
         setResults(finalResults);
         setStoredValue("query", query);
         setStoredValue("results", JSON.stringify(finalResults));
-        setLoading(false);
-      },
-      (error) => {
-        console.error("Geolocation error:", error);
-        setLoading(false);
+      } catch (err) {
+        console.error("Search failed:", err);
+        setResults([]);
       }
-    );
-  }
+
+      setLoading(false);
+    },
+    (error) => {
+      console.error("Geolocation error:", error);
+      setLoading(false);
+    }
+  );
+}
+
 
   return (
     <div>
-      <div className="w-130 h-40 bg-white rounded-md">
+      <div className="w-130 h-40 bg-white rounded-md drop-shadow-xl">
         <div className="w-130 pl-5 pt-3 h-17 flex pr-7">
           <SearchInput
             query={query}
@@ -197,6 +189,13 @@ export default function SearchControls({
             }
           >
             Search
+          </button>
+
+          <button
+            className="w-22 h-10 ml-2 bg-blue-600 text-white border-radius-8 rounded-md text-xs flex items-center justify-center"
+            onClick={() => setUsePinMode(!usePinMode)}
+          >
+            {usePinMode ? "Pin" : "User"}
           </button>
         </div>
 
