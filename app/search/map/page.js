@@ -11,7 +11,7 @@ import { useSearchParams } from "next/navigation";
 import DisabilityChoice from "@/app/components/disability-choice";
 import { Suspense } from "react";
 
-const DynamicMapView = loadDynamic(() => import("../../components/map"), {
+const DynamicMapView = loadDynamic(() => import("../../components/map/map"), {
   ssr: false,
 });
 
@@ -27,6 +27,9 @@ function MapContent() {
     setLongitude,
   } = useGetPosition();
 
+  const [usePinMode, setUsePinMode] = useState(false);
+  const [pinLat, setPinLat] = useState(null);
+  const [pinLon, setPinLon] = useState(null);
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
   const searchParams = useSearchParams();
@@ -47,6 +50,11 @@ function MapContent() {
             results={results}
             userLat={latitude}
             userLon={longitude}
+            pinLat={pinLat}
+            pinLon={pinLon}
+            setPinLat={setPinLat}
+            setPinLon={setPinLon}
+            usePinMode={usePinMode}
           />
         )}
       </div>
@@ -60,6 +68,10 @@ function MapContent() {
           setLongitude={setLongitude}
           setLoading={setLoading}
           setPage={null}
+          usePinMode={usePinMode}
+          setUsePinMode={setUsePinMode}
+          pinLat={pinLat}
+          pinLon={pinLon}
         />
       </div>
 
@@ -79,7 +91,6 @@ function MapContent() {
     </div>
   );
 }
-
 
 // Loading fallback component
 function MapLoading() {
