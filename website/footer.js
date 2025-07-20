@@ -99,9 +99,6 @@ export function Footer() {
                                     Accessibility Statement
                                 </Link>
                             </li>
-                            <li>
-                                <a href="https://www.flaticon.com/free-icons/marker" title="marker icons">Marker icons created by Dave Gandy - Flaticon (temporary)</a>
-                            </li>
                         </ul>
                     </div>
                 </div>
