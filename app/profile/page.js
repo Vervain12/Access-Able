@@ -61,7 +61,7 @@ export default function ProfilePage() {
         </div>
 
         <div className="h-300 flex flex-col gap-10">
-          <div className="bg-white w-200 h-120">
+          <div className="bg-white w-200 h-120 rounded-md">
             <h2 className="font-bold text-2xl pt-7 pl-8 pb-5">
               Account Settings
             </h2>
@@ -124,29 +124,29 @@ export default function ProfilePage() {
           </div>
 
           {/* Activity Overview Section*/}
-          <div className="bg-white h-55">
+          <div className="bg-white h-55 rounded-md">
             <h2 className="font-bold text-2xl p-5 pb-8">Activity Overview</h2>
 
             <div className="flex flex-row gap-20 justify-center">
-              <div className="w-50 h-25 bg-blue-200 flex flex-col justify-end items-center pb-5">
+              <div className="w-50 h-25 bg-blue-200 flex flex-col justify-end items-center pb-5 rounded-md">
                 <p>(# of reviews written)</p>
-                <p>Reviews Written</p>
+                <p className="text-gray-500">Reviews Written</p>
               </div>
 
-              <div className="w-50 h-25 bg-green-200 flex flex-col justify-end items-center pb-5">
+              <div className="w-50 h-25 bg-green-200 flex flex-col justify-end items-center pb-5 rounded-md">
                 <p>(# of places visited)</p>
-                <p>Places Visited</p>
+                <p className="text-gray-500">Places Visited</p>
               </div>
 
-              <div className="w-50 h-25 bg-purple-200 flex flex-col justify-end items-center pb-5">
+              <div className="w-50 h-25 bg-purple-200 flex flex-col justify-end items-center pb-5 rounded-md">
                 <p>(# of saved places)</p>
-                <p>Saved Places</p>
+                <p className="text-gray-500">Saved Places</p>
               </div>
             </div>
           </div>
 
           {/* Support and Help Section */}
-          <div className="bg-white h-80 flex flex-col gap-5">
+          <div className="bg-white h-80 flex flex-col gap-5 rounded-md">
             <h2 className="text-2xl pl-10 pt-5 font-bold">Support & Help</h2>
             <button className="w-180 h-10 border-1 border-gray-300 mx-10 flex items-center justify-start">
               <HelpOutlineIcon style={{fontSize: "20px", marginRight: "15px", marginLeft: "15px"}} />
