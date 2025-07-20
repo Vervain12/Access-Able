@@ -56,6 +56,7 @@ export function ReviewList({ location_id, setHasReview }) {
 
 export function UserReviewList({relatedBool}) {
     // Review list for the /reviews page
+    // Relatedbool will always be false, related no longer in use. Keeping the code just in case.
     const [loading, setLoading] = useState(true);
     const [reviews, setReviews] = useState([]);
     
@@ -66,7 +67,7 @@ export function UserReviewList({relatedBool}) {
                 const supabase = await createClient();
                 const { data: { user } } = await supabase.auth.getUser();
                 if (relatedBool) {
-                    const result = await getRelatedReviews(user.id);
+                    const result = await getRelatedReviews(user.id); //Defunct
                     setReviews(result);
                 } else {
                     const result = await GetUserReviews(user.id);

@@ -20,12 +20,12 @@ export async function signup (formData){
     const { data, error } = await supabase.auth.signUp(userData);
 
     if (error) {
-        redirect('/error');
+        return { error: error.message };
     }
 
     if (data.user) {
-        return true;
+        revalidatePath('/', 'layout');
+        return { success: true };
     }
 
-    revalidatePath('/', 'layout');
 }

@@ -1,9 +1,11 @@
 import { GetImages } from "../services/review-services";
-import { Box, Button, Card, CardContent, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Typography, Avatar } from "@mui/material";
 import { useState, useEffect } from "react";
 import { Rating } from "@mui/material";
 import { createClient } from "@/utils/supabase/client";
 import EditReviewPopup from "./edit-review";
+
+//I'm using location_name as a boolean, its existence signifies if we're on My Reviews or a location page
 
 export const ReviewComponent = ({ review, location_name, relatedBool }) => {
   const [images, setImages] = useState([]);
@@ -66,14 +68,17 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
       )}
       
       <CardContent>
-        <Typography
-          variant="subtitle1"
-          component="h2"
-          gutterBottom
-          sx={{ fontWeight: "bold" }}
-        >
-          {relatedBool && location_name && `User: ${review.display_name}`}
-        </Typography>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+          {!location_name && (
+            <Avatar
+              src={review.profile_picture}
+              alt={review.display_name}
+              sx={{ width: 40, height: 40 }}
+            >
+              {review.display_name?.charAt(0)}
+            </Avatar> 
+          )}
+        </Box>
         
         <Typography
           variant="subtitle1"

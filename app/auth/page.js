@@ -9,14 +9,21 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import SignupMessage from "../components/signup-message";
+import { Box, TextField } from "@mui/material";
 
 export default function LoginPage (){
 
     const [toggleSignup, setToggleSignup] = useState(true);
     const [showMessage, setShowMessage] = useState(false);
     const [signInError, setSignInError] = useState(false);
+    const [signUpError, setSignUpError] = useState(false);
+    const [signUpErrorMsg, setSignUpErrorMsg] = useState(false);
     const handleAuthToggle = () => {
         setToggleSignup(!toggleSignup);
+        setSignUpError(false);
+        setSignUpErrorMsg("");
+        setSignInError(false);
+        setShowMessage(false);
     }
 
     const handleSubmit = async (event) => {
@@ -25,7 +32,10 @@ export default function LoginPage (){
         
         if (toggleSignup) {
             const result = await signup(formData);
-            if (result) {
+            if (result?.error) {
+                setSignUpError(true);
+                setSignUpErrorMsg(result.error);
+            } else {
                 setShowMessage(true);
             }
         } else {
@@ -39,27 +49,27 @@ export default function LoginPage (){
     }
 
     return (
-        <div style={containerStyle}>
-            <div style={contentStyle}>
+        <Box style={containerStyle}>
+            <Box style={contentStyle}>
                 <h1 style={headingStyle}>Access Able</h1>
                 
                 <form style={formStyle} onSubmit={handleSubmit}>
                     {toggleSignup ?
-                    <div style={inputContainerStyle}>
+                    <Box style={inputContainerStyle}>
                         <label htmlFor="username" style={labelStyle}>Username:</label>
                         <input id="username" name="username" type="username" style={inputStyle} />
-                    </div>
+                    </Box>
                     : <></>}
                     
-                    <div style={inputContainerStyle}>
+                    <Box style={inputContainerStyle}>
                         <label htmlFor="email" style={labelStyle}>Email:</label>
                         <input id="email" name="email" type="email" required style={inputStyle} />
-                    </div>
+                    </Box>
                     
-                    <div style={inputContainerStyle}>
+                    <Box style={inputContainerStyle}>
                         <label htmlFor="password" style={labelStyle}>Password:</label>
                         <input id="password" name="password" type="password" required style={inputStyle} />
-                    </div>
+                    </Box>
                     
                     <Button 
                         variant="contained"
@@ -69,18 +79,19 @@ export default function LoginPage (){
                         {toggleSignup ? "Sign Up" : "Sign In"}
                     </Button>
                     <p style={errorStyle}>
-                        {!toggleSignup && signInError ? "Incorrect username and/or password." : ""}
+                        {!toggleSignup && signInError && "Incorrect username and/or password."}
+                        {toggleSignup && signUpError && signUpErrorMsg}
                     </p>
                 </form>
                 
-                <div style={toggleTextStyle} onClick={handleAuthToggle}>
+                <Box style={toggleTextStyle} onClick={handleAuthToggle}>
                     {toggleSignup ? "Already have an account? Sign in" : "No account? Sign up"}
-                </div>
-            </div>
-            {showMessage && (
+                </Box>
+            </Box>
+            {showMessage && !signUpError && (
                 <SignupMessage />
             )}
-        </div>
+        </Box>
     )
 }
 

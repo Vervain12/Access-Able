@@ -6,22 +6,20 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ArticleIcon from '@mui/icons-material/Article';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import PfpChange from "../components/pfp-change";
 
 export default function ProfilePage() {
-  const reloadAfterSignout = async () => {
-    await signOut();
-  };
 
   return (
     <div className="bg-gray-200 lg:pl-5 xl:pl-10 2xl:pl-20">
       <h1 className="font-bold text-2xl pt-10 pl-30">Profile Settings</h1>
 
       <div className="flex flex-row 2xl:pl-20 xl:pl-10 pt-10 gap-25">
-        <div className="bg-white rounded-md w-90 h-170 p-7 flex flex-col">
-          <h2 className="pb-10">Profile Information</h2>
+        <div className="bg-white rounded-md w-90 h-170 p-3 flex flex-col">
+          <h2 className="pb-5">Profile Information</h2>
           <div className="bg-white flex flex-col gap-10 items-center mb-5">
-            <p>Profile image circle here</p>
-            <button className="w-30 h-10 rounded-md text-white bg-blue-500">Change Photo</button>
+            {/*Profile Picture is here*/}
+            <PfpChange />
           </div>
           <div>
             <p className="pb-2">Username</p>
@@ -70,9 +68,9 @@ export default function ProfilePage() {
 
             <div className="flex flex-row p-5 border-b-2 border-gray-300 justify-between ml-5 mr-5">
               <div>
-                <h1 className="text-lg">Accessibility Preferences</h1>
+                <h1 className="text-lg">Disability Selection</h1>
                 <p className="text-sm text-gray-700">
-                  Manage your accessibility needs and preferences
+                  Manage your disability needs and preferences
                 </p>
               </div>
 
@@ -169,21 +167,7 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-
-      <Button
-        variant="contained"
-        style={buttonStyle}
-        onClick={reloadAfterSignout}
-      >
-        Sign Out
-      </Button>
     </div>
   );
 }
 
-const buttonStyle = {
-  width: "100px",
-  padding: "12px 24px",
-  marginTop: "8px",
-  whiteSpace: "nowrap",
-};

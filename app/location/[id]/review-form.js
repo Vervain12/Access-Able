@@ -51,6 +51,7 @@ export default function ReviewForm({ location_id, location_name, hasReview }) {
         const reviewText = formData.get('review_text');
         if (!reviewText || !rating) {
             setErrorMessage("Text and rating must be input to create a review.");
+            setSubmitting(false);
             return;
         }
 
