@@ -5,6 +5,7 @@ import { Box } from "@mui/material";
 import ReviewForm from "./review-form";
 import { ReviewList } from "@/app/components/review-list";
 import { CircularProgress, Rating } from "@mui/material";
+import { formatAddress } from "@/app/components/address-constructor";
 
 export default function LocationPage() {
     const [locationInfo, setLocationInfo] = useState(null);
@@ -55,6 +56,7 @@ export default function LocationPage() {
                                 {locationInfo.tags.phone && (
                                     <p>Phone: {locationInfo.tags.phone}</p>
                                 )}
+                                <p>Address: {formatAddress(locationInfo)}</p>
                             </div>
                         ) : (
                             <p>No location data found</p>

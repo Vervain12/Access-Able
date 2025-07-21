@@ -4,6 +4,7 @@ import { Button, Rating } from "@mui/material";
 import "leaflet/dist/leaflet.css";
 import { useRouter } from "next/navigation";
 import { icons } from "./map-icons";
+import { formatAddress } from "../address-constructor";
 
 // Determine icon based on rating
 const getIconByRating = (rating) => {
@@ -56,6 +57,7 @@ export default function MapView({
         />
 
         {/* Search result markers */}
+        {/* This entirely needs to be styled. */}
         {results
           .filter((place) => place.tags && place.tags.name)
           .map((item) =>
@@ -71,6 +73,9 @@ export default function MapView({
                   <h2 style={{ fontSize: 22, margin: 0 }}>
                     {item.tags?.name || "Unnamed Place"}
                   </h2>
+                  <h3 style={{ fontSize: 18, margin: 0 }}>
+                    {formatAddress(item)}
+                  </h3>
                   <Rating
                     name="rating"
                     value={item.rating || 0}
