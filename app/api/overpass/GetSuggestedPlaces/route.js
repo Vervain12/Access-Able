@@ -52,7 +52,7 @@ export async function GET(request) {
     //Fetching location_id's and ratings from similar user reviews (rating above 3.5 to help with load-times)
     const { data: reviews, error: reviewError } = await supabase
       .from("reviews")
-      .select("location_id, rating")
+      .select("location_id, rating, created_at")
       .gt("rating", 3.5)
       .in("user_id", similarUserIds);
 
@@ -65,25 +65,30 @@ export async function GET(request) {
     }
 
     //Calculating avg rating for locations and querying overpass
-
     const locationStats = Object.entries(
       reviews.reduce((acc, review) => {
-        const { location_id, rating } = review;
+        const { location_id, rating, created_at } = review;
         if(!acc[location_id]) {
-          acc[location_id] = { count : 0, sum: 0}
+          acc[location_id] = { count : 0, sum: 0, latestCreationTime: created_at}
         }
         acc[location_id].count += 1;
         acc[location_id].sum += rating;
+
+        if (new Date(created_at) > new Date(acc[location_id].latestCreationTime)) {
+          acc[location_id].latestCreationTime = created_at;
+        }
+
         return acc;
       }, {})
     )
-    .map(([locationId, { count, sum }]) => ({
+    .map(([locationId, { count, sum, latestCreationTime }]) => ({
       locationId,
       avgRating: sum / count,
       count,
+      latestCreationTime,
     }))
     .filter(loc => loc.avgRating > 3.5)
-    .sort((a, b) => b.count - a.count)
+    .sort((a, b) => new Date(b.latestCreationTime) - new Date(a.latestCreationTime))
     .slice(0, 10)
 
     console.log("locationstats: ",locationStats)

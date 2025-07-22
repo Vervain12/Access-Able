@@ -173,3 +173,20 @@ export async function DeleteSpecificImages(images) {
     const result = await response.json();
     return result || [];
 }
+
+export async function GetSummary(location_id) {
+    const response = await fetch(`/api/ai/GetLocationOverview?location_id=${location_id}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (!response.ok) {
+        console.error('Error fetching summary:', response.statusText);
+        return null;
+    }
+
+    const result = await response.json();
+    return result.data || "";
+}

@@ -22,11 +22,11 @@ export async function GET(request) {
             .eq('location_id', location_id);
             
         if (reviewsError) {
-            console.error('Reviews error:', reviewsError);
-            return NextResponse.json({ 
-                error: "Error fetching reviews.",
-                details: reviewsError.message 
-            }, { status: 400 });
+            console.error('Error fetching reviews:', reviewsError);
+            return NextResponse.json(
+                { error: 'Failed to fetch reviews' },
+                { status: 500 }
+            );
         }
       
         const userIds = [reviews.map(review => review.user_id)];
@@ -56,10 +56,6 @@ export async function GET(request) {
         return NextResponse.json({ data: [] }, { status: 200 });
 
     } catch (error) {
-        console.error('API error:', error);
-        return NextResponse.json({ 
-            error: 'Invalid request',
-            details: error.message 
-        }, { status: 500 });
+        return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     }
 }

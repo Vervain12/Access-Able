@@ -32,17 +32,42 @@ export async function updateSession(request) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (
-    !user &&
-    (request.nextUrl.pathname.startsWith('/profile') || request.nextUrl.pathname.startsWith('/reviews') || request.nextUrl.pathname.startsWith('/api/user')
-    || request.nextUrl.pathname.startsWith('/api/reviews/location/PostLocationReview') || request.nextUrl.pathname.startsWith('/api/reviews/location/UploadReviewImages')
-    || request.nextUrl.pathname.startsWith('/suggestions'))
-  ) {
-    // Redirect from profile page to login if no user
-    const url = request.nextUrl.clone()
-    url.pathname = '/auth'
-    return NextResponse.redirect(url)
+  if (!user) {
+    const pathname = request.nextUrl.pathname;
+
+    const protectedApiRoutes = [
+      '/api/user',
+      '/api/reviews/location/PostLocationReview',
+      '/api/reviews/location/UploadReviewImages',
+    ];
+
+    const protectedPageRoutes = [
+      '/profile',
+      '/reviews',
+      '/suggestions',
+    ];
+
+    const isApi = pathname.startsWith('/api/');
+    const matchesProtectedApi = protectedApiRoutes.some(route => pathname.startsWith(route));
+    const matchesProtectedPage = protectedPageRoutes.some(route => pathname.startsWith(route));
+
+    if (isApi && matchesProtectedApi) {
+      return new NextResponse(
+        JSON.stringify({ error: 'Unauthorized' }),
+        {
+          status: 401,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    if (matchesProtectedPage) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/auth';
+      return NextResponse.redirect(url);
+    }
   }
+
 
   return supabaseResponse
 }

@@ -49,7 +49,7 @@ export default function MapView({
     : [userLat, userLon];
 
   return (
-    <div className="w-full h-full m-30 m-auto border-2">
+    <div className="w-full h-full m-auto border-2">
       <MapContainer center={center} zoom={13} style={{ height: "100%", width: "100%" }}>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
