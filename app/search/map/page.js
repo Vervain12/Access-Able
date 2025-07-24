@@ -10,6 +10,8 @@ import SearchControls from "../search-controls";
 import { useSearchParams } from "next/navigation";
 import DisabilityChoice from "@/app/components/disability-choice";
 import { Suspense } from "react";
+import { createClient } from "@/utils/supabase/client";
+import { getProfilePicture } from "../../services/account-services-client";
 
 const DynamicMapView = loadDynamic(() => import("../../components/map/map"), {
   ssr: false,
@@ -34,8 +36,26 @@ function MapContent() {
   const [mounted, setMounted] = useState(false);
   const searchParams = useSearchParams();
   const fromConfirm = searchParams.get("fromConfirm");
+  const [profilePicture, setProfilePicture] = useState(null);
 
   useEffect(() => {
+    async function fetchPfp() {
+      const supabase = createClient();
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+      if (error) {
+        console.log(error);
+      } else {
+        if (user) {
+          const pfp = await getProfilePicture(user.id);
+          console.log("Pfp on page: ", pfp.data);
+          setProfilePicture(pfp.data);
+        }
+      }
+    }
+    fetchPfp();
     setMounted(true);
   }, []);
 
@@ -55,6 +75,7 @@ function MapContent() {
             setPinLat={setPinLat}
             setPinLon={setPinLon}
             usePinMode={usePinMode}
+            profilePicture={profilePicture}
           />
         )}
       </div>
@@ -72,6 +93,7 @@ function MapContent() {
           setUsePinMode={setUsePinMode}
           pinLat={pinLat}
           pinLon={pinLon}
+          profilePicture={profilePicture}
         />
       </div>
 

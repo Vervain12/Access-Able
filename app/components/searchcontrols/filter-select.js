@@ -1,7 +1,7 @@
 import React from "react";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import Slider from "@mui/material/Slider"; // import Slider here
+import Slider from "@mui/material/Slider";
 
 const style = {
   position: 'fixed',
@@ -56,23 +56,7 @@ export default function FilterSelect({
           <option value="accessible">Available soon</option>
         </select>
 
-        <div style={{ marginTop: 24 }}>
-          <label
-            htmlFor="distanceSlider"
-            style={{ color: "black", fontWeight: "bold", fontSize: "1rem" }}
-          >
-            Search Radius: {distance.toFixed(1)} km
-          </label>
-          <Slider
-            id="distanceSlider"
-            aria-label="Distance"
-            value={distance}
-            step={0.5}
-            min={0.5}
-            max={20}
-            onChange={(e, newValue) => setDistance(newValue)}
-          />
-        </div>
+        
 
         <button
           onClick={() => setShowFilters(false)}

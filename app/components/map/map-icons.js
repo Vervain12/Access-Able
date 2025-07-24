@@ -10,28 +10,26 @@ const createMaterialMapIcon = (color) => {
 
 export const icons = {
   green: new L.Icon({
-    iconUrl: createMaterialMapIcon('#4CAF50'), 
+    iconUrl: '/marker-icons/green.svg',
     iconSize: [32, 32],
     iconAnchor: [16, 32],
     popupAnchor: [0, -32],
   }),
   yellow: new L.Icon({
-    iconUrl: createMaterialMapIcon('#FFC107'), 
+    iconUrl: '/marker-icons/yellow.svg',
     iconSize: [32, 32],
     iconAnchor: [16, 32],
     popupAnchor: [0, -32],
   }),
   red: new L.Icon({
-    iconUrl: createMaterialMapIcon('#F44336'),
+    iconUrl: '/marker-icons/red.svg',
     iconSize: [32, 32],
     iconAnchor: [16, 32],
     popupAnchor: [0, -32],
   }),
   pin: new L.Icon({
-    iconUrl: '/marker-icons/pin-marker.png',
+    iconUrl: '/marker-icons/gray.svg',
     iconSize: [30, 45],
     iconAnchor: [15, 45],
   }),
 };
-
-// Got ai to change the icons until the proper ones are implemented. The ai genned smiley ones are gross & i wanted them gone ASAP

@@ -7,61 +7,58 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ArticleIcon from '@mui/icons-material/Article';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import PfpChange from "../components/pfp-change";
+import ThemeToggle from "./dark-mode";
 
 export default function ProfilePage() {
 
   return (
-    <div className="bg-gray-200 lg:pl-5 xl:pl-10 2xl:pl-20">
+    <div className="bg-gray-200 dark:bg-[var(--background)] lg:pl-5 xl:pl-10 2xl:pl-20">
       <h1 className="font-bold text-2xl pt-10 pl-30">Profile Settings</h1>
 
       <div className="flex flex-row 2xl:pl-20 xl:pl-10 pt-10 gap-25">
-        <div className="bg-white rounded-md w-90 h-170 p-3 flex flex-col">
-          <h2 className="pb-5">Profile Information</h2>
-          <div className="bg-white flex flex-col gap-10 items-center mb-5">
+        <div className="bg-white dark:bg-[var(--card)] border-1 border-white rounded-md w-90 h-170 p-3 flex flex-col">
+          <h2 className="font-bold text-2xl pt-3 pl-3 pb-8">Profile Information</h2>
+          <div className="bg-white dark:bg-[var(--card)] flex flex-col gap-10 items-center mb-5">
             {/*Profile Picture is here*/}
             <PfpChange />
           </div>
           <div>
-            <p className="pb-2">Username</p>
-            <TextField
-              id="full-name"
-              variant="outlined"
-              size="small"
-              className="h-15 w-75"
+            <p className="pb-2 ml-4">Username</p>
+            <input
+              type="text"
+              id="user-name"
+              className="h-10 w-75 mb-3 ml-4 rounded-md dark:text-white dark:bg-[var(--secondary)] dark:border-1 dark:border-white dark:text-white border-1 border-gray-300"
             />
 
-            <p className="pb-2">Email</p>
-            <TextField
+            <p className="pb-2 ml-4">Email</p>
+            <input
+              type="text"
               id="email"
-              variant="outlined"
-              size="small"
-              className="h-15 w-75"
+              className="h-10 w-75 mb-3 ml-4 rounded-md dark:text-white dark:bg-[var(--secondary)] dark:border-1 dark:border-white dark:text-white border-1 border-gray-300"
             />
 
-            <p className="pb-2">Phone</p>
-            <TextField
-              id="phone"
-              variant="outlined"
-              size="small"
-              className="h-15 w-75"
+            <p className="pb-2 ml-4">Phone</p>
+            <input
+              type="text"
+              id="Phone"
+              className="h-10 w-75 mb-3 ml-4 rounded-md dark:text-white dark:bg-[var(--secondary)] dark:border-1 dark:border-white dark:text-white border-1 border-gray-300"
             />
 
-            <p className="pb-2">Location</p>
-            <TextField
-              id="location"
-              variant="outlined"
-              size="small"
-              className="h-5 w-75"
+            <p className="pb-2 ml-4">Location</p>
+            <input
+              type="text"
+              id="Location"
+              className="h-10 w-75 mb-3 ml-4 rounded-md dark:text-white dark:bg-[var(--secondary)] dark:border-1 dark:border-white dark:text-white border-1 border-gray-300"
             />
           </div>
 
-          <button className="bg-blue-500 w-70 h-10 rounded-md text-white flex items-center justify-center ml-3 mt-15">
+          <button className="bg-blue-500 w-70 h-10 rounded-md text-white flex items-center justify-center ml-7 mt-15">
             Save Changes
           </button>
         </div>
 
         <div className="h-300 flex flex-col gap-10">
-          <div className="bg-white w-200 h-120 rounded-md">
+          <div className="bg-white w-200 h-120 rounded-md dark:bg-[var(--card)] border-white border-1">
             <h2 className="font-bold text-2xl pt-7 pl-8 pb-5">
               Account Settings
             </h2>
@@ -69,41 +66,30 @@ export default function ProfilePage() {
             <div className="flex flex-row p-5 border-b-2 border-gray-300 justify-between ml-5 mr-5">
               <div>
                 <h1 className="text-lg">Disability Selection</h1>
-                <p className="text-sm text-gray-700">
+                <p className="text-sm text-gray-700 dark:text-gray-400">
                   Manage your disability needs and preferences
                 </p>
               </div>
 
               <div className="flex items-center">
-                <button className="w-40 h-10 border-1 border-gray-200 ml-75">
+                <button className="w-40 h-10 border-1 border-gray-200 ml-75 bg-[var(--muted)] dark:bg-[var(--secondary)]">
                   Edit Preferences
                 </button>
               </div>
             </div>
 
-            <div className="flex flex-row p-5 border-b-2 border-gray-300 justify-between ml-5 mr-5">
-              <div>
-                <h1 className="text-lg">Dark Mode</h1>
-                <p className="text-sm text-gray-700">
-                  Toggle between light and dark themes
-                </p>
-              </div>
-
-              <div className="flex items-center">
-                <Switch />
-              </div>
-            </div>
+            <ThemeToggle />
 
             <div className="flex flex-row p-5 border-b-2 border-gray-300 justify-between ml-5 mr-5">
               <div>
                 <h1 className="text-lg">Language</h1>
-                <p className="text-sm text-gray-700">
+                <p className="text-sm text-gray-700 dark:text-gray-400">
                   Choose your preferred language
                 </p>
               </div>
 
               <div className="flex items-center">
-                <button className="w-25 h-10 border-1 border-gray-200 ml-75">
+                <button className="w-25 h-10 border-1 border-gray-200 ml-75 bg-[var(--muted)] dark:bg-[var(--secondary)]">
                   English
                 </button>
               </div>
@@ -112,7 +98,7 @@ export default function ProfilePage() {
             <div className="flex flex-row p-5 justify-between ml-5 mr-5">
               <div>
                 <h1 className="text-lg">Email Notifications</h1>
-                <p className="text-sm text-gray-700">
+                <p className="text-sm text-gray-700 dark:text-gray-400">
                   Receive updates about new reviews and places
                 </p>
               </div>
@@ -124,10 +110,10 @@ export default function ProfilePage() {
           </div>
 
           {/* Activity Overview Section*/}
-          <div className="bg-white h-55 rounded-md">
-            <h2 className="font-bold text-2xl p-5 pb-8">Activity Overview</h2>
+          <div className="bg-white dark:bg-[var(--card)] border-white border-1 h-55 rounded-md">
+            <h2 className="font-bold text-2xl pt-7 pl-8 pb-5">Activity Overview</h2>
 
-            <div className="flex flex-row gap-20 justify-center">
+            <div className="flex flex-row gap-15 justify-center">
               <div className="w-50 h-25 bg-blue-200 flex flex-col justify-end items-center pb-5 rounded-md">
                 <p>(# of reviews written)</p>
                 <p className="text-gray-500">Reviews Written</p>
@@ -146,21 +132,21 @@ export default function ProfilePage() {
           </div>
 
           {/* Support and Help Section */}
-          <div className="bg-white h-80 flex flex-col gap-5 rounded-md">
+          <div className="bg-white dark:bg-[var(--card)] border-1 border-white h-80 flex flex-col gap-5 rounded-md">
             <h2 className="text-2xl pl-10 pt-5 font-bold">Support & Help</h2>
-            <button className="w-180 h-10 border-1 border-gray-300 mx-10 flex items-center justify-start">
+            <button className="dark:bg-[var(--secondary)] w-180 h-10 border-1 border-gray-300 mx-10 flex items-center justify-start">
               <HelpOutlineIcon style={{fontSize: "20px", marginRight: "15px", marginLeft: "15px"}} />
               Help Center
             </button>
-            <button className="w-180 h-10 border-1 border-gray-300 mx-10 flex items-center justify-start">
+            <button className="dark:bg-[var(--secondary)] w-180 h-10 border-1 border-gray-300 mx-10 flex items-center justify-start">
               <ChatBubbleOutlineIcon style={{fontSize: "20px", marginRight: "15px", marginLeft: "15px"}} />
               Contact Support
             </button>
-            <button className="w-180 h-10 border-1 border-gray-300 mx-10 flex items-center justify-start">
+            <button className="dark:bg-[var(--secondary)] w-180 h-10 border-1 border-gray-300 mx-10 flex items-center justify-start">
                <ArticleIcon style={{fontSize: "20px", marginRight: "15px", marginLeft: "15px"}} />
               Terms & Privacy
             </button>
-            <button className="w-180 h-10 border-1 border-gray-300 mx-10 flex items-center justify-start">
+            <button className="dark:bg-[var(--secondary)] w-180 h-10 border-1 border-gray-300 mx-10 flex items-center justify-start">
               <ReportProblemIcon style={{fontSize: "20px", marginRight: "15px", marginLeft: "15px"}} />
               Report an Issue
             </button>

@@ -164,7 +164,7 @@
   color: #212121;
 }
 
-.text-brand-neutral-50 {
+.dark .text-brand-neutral-900 {
   color: #fafafa;
 }
 
@@ -290,4 +290,13 @@
 
 .hover\:border-brand-primary\/20:hover {
   border-color: rgba(30, 136, 229, 0.2);
+}
+
+.dark .leaflet-popup-content-wrapper {
+  background-color: var(--secondary);
+  color: white;
+}
+
+.dark .leaflet-popup-tip {
+  background-color: var(--secondary);
 }
