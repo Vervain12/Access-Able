@@ -55,7 +55,7 @@ function SearchSection() {
     }
 
     return (
-        <section className="py-12 bg-white">
+        <section className="py-12 bg-white dark:bg-[var(--background)]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="max-w-2xl mx-auto">
                     <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4">
@@ -98,21 +98,21 @@ function SearchSection() {
 
                 {/* Trust indicators */}
                 <div className="pt-12 mt-8 border-t border-brand-neutral-900/10">
-                    <p className="text-sm text-brand-neutral-900/60 mb-4 text-center">
+                    <p className="text-sm text-brand-neutral-900 text-brand-neutral-900/60 mb-4 text-center">
                         Trusted by thousands of people with disabilities
                     </p>
                     <div className="flex flex-wrap justify-center items-center gap-8 text-brand-neutral-900/40">
                         <div className="text-center">
                             <div className="text-2xl font-bold text-brand-primary">50K+</div>
-                            <div className="text-sm">Places reviewed</div>
+                            <div className="text-sm dark:text-white">Places reviewed</div>
                         </div>
                         <div className="text-center">
                             <div className="text-2xl font-bold text-brand-secondary">25K+</div>
-                            <div className="text-sm">Community members</div>
+                            <div className="text-sm dark:text-white">Community members</div>
                         </div>
                         <div className="text-center">
                             <div className="text-2xl font-bold text-brand-accent">100+</div>
-                            <div className="text-sm">Cities covered</div>
+                            <div className="text-sm dark:text-white">Cities covered</div>
                         </div>
                     </div>
                 </div>

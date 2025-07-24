@@ -52,13 +52,13 @@ export function FeaturesSection() {
     return (
         <>
             {/* Value Proposition Section */}
-            <section className="py-20 bg-white">
+            <section className="py-20 bg-white dark:bg-[var(--background)]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center space-y-6 mb-16">
                         <h2 className="text-3xl md:text-5xl font-display text-brand-neutral-900">
                             Faster, Stress-Free Decision Making
                         </h2>
-                        <p className="text-xl text-brand-neutral-900/70 max-w-3xl mx-auto">
+                        <p className="text-xl text-brand-neutral-900 text-brand-neutral-900/70 max-w-3xl mx-auto">
                             Our unique combination of crowdsourced data, AI summaries, and inclusive design empowers you to move
                             through the world with confidence
                         </p>
@@ -79,7 +79,7 @@ export function FeaturesSection() {
                                     <CardTitle className="text-xl font-medium text-brand-neutral-900">{feature.title}</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <CardDescription className="text-brand-neutral-900/70 text-base leading-relaxed">
+                                    <CardDescription className="text-brand-neutral-900/70 text-brand-neutral-900 text-base leading-relaxed">
                                         {feature.description}
                                     </CardDescription>
                                 </CardContent>
@@ -114,7 +114,7 @@ export function FeaturesSection() {
                                     <CardTitle className="text-lg font-medium text-brand-neutral-900">{type.title}</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <CardDescription className="text-brand-neutral-900/70 leading-relaxed">
+                                    <CardDescription className="text-brand-neutral-900/70 text-brand-neutral-900 leading-relaxed">
                                         {type.description}
                                     </CardDescription>
                                 </CardContent>

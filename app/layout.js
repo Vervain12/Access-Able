@@ -1,8 +1,15 @@
-import { Geist, Geist_Mono, Inter, Outfit, JetBrains_Mono } from 'next/font/google';
+import {
+  Geist,
+  Geist_Mono,
+  Inter,
+  Outfit,
+  JetBrains_Mono,
+} from "next/font/google";
 import "./globals.css";
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
-import { Footer } from "@/website/footer"
-import NavigationClientWrapper from '@/website/navigation';
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+import { Footer } from "@/website/footer";
+import NavigationClientWrapper from "@/website/navigation";
+import ThemeHydrationWrapper from "@/website/theme-wrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,7 +39,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata = {
   title: "Access Able - Discover Accessible Places",
-  description: "Find restaurants, parks, hotels, and more that are accessible to everyone",
+  description:
+    "Find restaurants, parks, hotels, and more that are accessible to everyone",
 };
 
 export default function RootLayout({ children }) {
@@ -42,9 +50,11 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${outfit.variable} ${jetbrainsMono.variable} antialiased font-inter`}
       >
         <AppRouterCacheProvider>
-          <NavigationClientWrapper />
-          {children}
-          <Footer />
+          <ThemeHydrationWrapper>
+            <NavigationClientWrapper />
+            {children}
+            <Footer />
+          </ThemeHydrationWrapper>
         </AppRouterCacheProvider>
       </body>
     </html>

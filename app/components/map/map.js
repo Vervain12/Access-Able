@@ -1,5 +1,11 @@
 "use client";
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMapEvents,
+} from "react-leaflet";
 import { Button, Rating } from "@mui/material";
 import "leaflet/dist/leaflet.css";
 import { useRouter } from "next/navigation";
@@ -34,6 +40,7 @@ export default function MapView({
   pinLon,
   setPinLat,
   setPinLon,
+  profilePicture,
 }) {
   const router = useRouter();
 
@@ -43,58 +50,82 @@ export default function MapView({
     router.push(`/location/${item.id}`);
   };
 
-  const center = usePinMode && pinLat !== null && pinLon !== null
-    ? [pinLat, pinLon]
-    : [userLat, userLon];
+  const center =
+    usePinMode && pinLat !== null && pinLon !== null
+      ? [pinLat, pinLon]
+      : [userLat, userLon];
 
   return (
     <div className="w-full h-full m-30 m-auto border-2">
-      <MapContainer center={center} zoom={13} style={{ height: "100%", width: "100%" }}>
+      <MapContainer
+        center={center}
+        zoom={13}
+        style={{ height: "100%", width: "100%" }}
+      >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
 
+        {!usePinMode && userLat && userLon && profilePicture && (
+          <Marker
+            position={[userLat, userLon]}
+            icon={L.divIcon({
+              html: `<img src="${profilePicture}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" />`,
+              className: "",
+              iconSize: [40, 40],
+              iconAnchor: [20, 20],
+            })}
+          />
+        )}
+
         {/* Search result markers */}
         {results
           .filter((place) => place.tags && place.tags.name)
-          .map((item) =>
-            item.lat &&
-            item.lon && (
-              <Marker
-                key={item.id}
-                position={[item.lat, item.lon]}
-                icon={getIconByRating(item.rating || 0)}
-                title={item.tags?.name}
-              >
-                <Popup className="flex flex-col gap-8 font-size-18 font-weight-bold align-items-center">
-                  <h2 style={{ fontSize: 22, margin: 0 }}>
-                    {item.tags?.name || "Unnamed Place"}
-                  </h2>
-                  <Rating
-                    name="rating"
-                    value={item.rating || 0}
-                    readOnly
-                    size="small"
-                    precision={0.5}
-                  />
-                  <Button
-                    onClick={() => handleClick(item)}
-                    variant="contained"
-                    size="small"
-                    style={{ textTransform: "none", alignSelf: "center" }}
-                  >
-                    More Info
-                  </Button>
-                </Popup>
-              </Marker>
-            )
+          .map(
+            (item) =>
+              item.lat &&
+              item.lon && (
+                <Marker
+                  key={item.id}
+                  position={[item.lat, item.lon]}
+                  icon={getIconByRating(item.rating || 0)}
+                  title={item.tags?.name}
+                >
+                  <Popup>
+                    <div className="flex flex-col gap-5 dark:bg-[var(--secondary)] font-size-18 font-weight-bold align-items-center">
+                      <h2 style={{ fontSize: 22, margin: 0 }}>
+                        {item.tags?.name || "Unnamed Place"}
+                      </h2>
+                      <Rating
+                        name="rating"
+                        value={item.rating || 0}
+                        readOnly
+                        size="small"
+                        precision={0.5}
+                      />
+                      <Button
+                        onClick={() => handleClick(item)}
+                        variant="contained"
+                        size="small"
+                        style={{ textTransform: "none", alignSelf: "center" }}
+                      >
+                        More Info
+                      </Button>
+                    </div>
+                  </Popup>
+                </Marker>
+              )
           )}
 
         {/* Pin dropping functionality */}
         {usePinMode && (
           <>
-            <PinDropper usePinMode={usePinMode} setPinLat={setPinLat} setPinLon={setPinLon} />
+            <PinDropper
+              usePinMode={usePinMode}
+              setPinLat={setPinLat}
+              setPinLon={setPinLon}
+            />
             {pinLat !== null && pinLon !== null && (
               <Marker
                 position={[pinLat, pinLon]}
@@ -107,8 +138,7 @@ export default function MapView({
                     setPinLon(lng);
                   },
                 }}
-              >
-              </Marker>
+              ></Marker>
             )}
           </>
         )}

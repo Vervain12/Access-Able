@@ -1,15 +1,10 @@
-// components/searchcontrols/quick-search-buttons.jsx
-
-export default function FilterButton({ onQuickSearch }) {
-    // If we want to add recent searches to the buttons, this list would be how
-  const predefinedQueries = ["restaurant", "park", "fast food"];
-
+export default function FilterButton({ onQuickSearch, queries = [] }) {
   return (
-    <div className="flex flex-wrap gap-2 py-2 px-4">
-      {predefinedQueries.map((label) => (
+    <div className="flex flex-wrap gap-2 py-2">
+      {queries.map((label) => (
         <button
           key={label}
-          className="h-7 text-xs bg-white text-black border-1 border-gray-300 px-3 py-2 rounded hover:bg-blue-700 transition flex items-center justify-center"
+          className="h-7 text-xs bg-white text-black dark:bg-[var(--secondary)] dark:text-white border-1 border-gray-300 px-3 py-2 rounded hover:bg-blue-700 transition flex items-center justify-center"
           onClick={() => onQuickSearch(label)}
         >
           {label.charAt(0).toUpperCase() + label.slice(1)}

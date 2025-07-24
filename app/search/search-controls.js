@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import FilterButton from "../components/searchcontrols/filter-buttons";
-import FilterSelect from "../components/searchcontrols/filter-select";
 import SearchInput from "../components/searchcontrols/search-input";
 import { useSearchParams } from "next/navigation";
 import { runSearch } from "../services/search-services";
+import Slider from "@mui/material/Slider";
 
 export default function SearchControls({
   setResults,
@@ -16,6 +16,7 @@ export default function SearchControls({
   setUsePinMode,
   pinLat,
   pinLon,
+  profilePicture,
 }) {
   const searchParams = useSearchParams();
   const heroQuery = searchParams?.get("q") || null;
@@ -42,6 +43,7 @@ export default function SearchControls({
   const [query, setQuery] = useState("");
   const [distance, setDistance] = useState(2.5);
   const [isClient, setIsClient] = useState(false);
+  const [recentSearches, setRecentSearches] = useState([]);
 
   // Initialize client-side values after hydration
   useEffect(() => {
@@ -121,62 +123,94 @@ export default function SearchControls({
   };
 
   async function handleSearch(
-  e,
-  query,
-  distance,
-  setResults,
-  setLatitude,
-  setLongitude
-) {
-  setResults([]);
-  setLoading(true);
-  if (setPage !== null && setPage !== undefined) setPage(1);
+    e,
+    query,
+    distance,
+    setResults,
+    setLatitude,
+    setLongitude
+  ) {
+    setResults([]);
+    setLoading(true);
+    if (setPage !== null && setPage !== undefined) setPage(1);
 
-  if (!query) {
-    setLoading(false);
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-    async (position) => {
-      const latToUse = usePinMode ? pinLat : position.coords.latitude;
-      const lonToUse = usePinMode ? pinLon : position.coords.longitude;
-
-      setLatitude(latToUse);
-      setLongitude(lonToUse);
-
-      try {
-        const finalResults = await runSearch(query, distance, latToUse, lonToUse);
-        setResults(finalResults);
-        setStoredValue("query", query);
-        setStoredValue("results", JSON.stringify(finalResults));
-      } catch (err) {
-        console.error("Search failed:", err);
-        setResults([]);
-      }
-
+    if (!query) {
       setLoading(false);
-    },
-    (error) => {
-      console.error("Geolocation error:", error);
-      setLoading(false);
+      return;
     }
-  );
-}
 
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const latToUse = usePinMode ? pinLat : position.coords.latitude;
+        const lonToUse = usePinMode ? pinLon : position.coords.longitude;
+
+        setLatitude(latToUse);
+        setLongitude(lonToUse);
+
+        try {
+          const finalResults = await runSearch(
+            query,
+            distance,
+            latToUse,
+            lonToUse
+          );
+          setResults(finalResults);
+          setStoredValue("query", query);
+          setStoredValue("results", JSON.stringify(finalResults));
+        } catch (err) {
+          console.error("Search failed:", err);
+          setResults([]);
+        }
+
+        // Update recent search buttons on search controls
+        if (query && !recentSearches.includes(query)) {
+          setRecentSearches((prev) => {
+            const updated = [query, ...prev.filter((q) => q !== query)];
+            return updated.slice(0, 5);
+          });
+        }
+
+        setLoading(false);
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        setLoading(false);
+      }
+    );
+  }
 
   return (
     <div>
-      <div className="w-130 h-40 bg-white rounded-md drop-shadow-xl">
-        <div className="w-130 pl-5 pt-3 h-17 flex pr-7">
+      <div className="w-150 h-40 bg-white flex rounded-md drop-shadow-xl dark:bg-[var(--background)]">
+        <div className="w-100 pl-5 pt-3 h-17 flex flex-col pr-7">
           <SearchInput
             query={query}
             setQuery={setQuery}
             onKeyDown={handleKeyDown}
           />
 
+          <div className="w-135 flex flex-wrap">
+            <FilterButton
+              queries={recentSearches}
+              onQuickSearch={(newQuery) => {
+                setQuery(newQuery);
+                handleSearch(
+                  null,
+                  newQuery,
+                  distance,
+                  setResults,
+                  setLatitude,
+                  setLongitude
+                );
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Bottom Half of Search Controls */}
+        <div className="flex flex-col h-40 gap-3 py-2 space-evenly ">
           <button
-            className="w-22 h-10 ml-2 bg-blue-600 text-white border-radius-8 rounded-md text-xs flex items-center justify-center"
+            className="w-22 h-10 ml-2 bg-blue-600 dark:bg-[var(--accent)] text-white border-1 border-radius-8 dark:border-white rounded-md text-xs flex items-center justify-center"
             onClick={(e) =>
               handleSearch(
                 e,
@@ -192,56 +226,44 @@ export default function SearchControls({
           </button>
 
           <button
-            className="w-22 h-10 ml-2 bg-blue-600 text-white border-radius-8 rounded-md text-xs flex items-center justify-center"
+            className="w-22 h-10 ml-2 bg-blue-600 dark:bg-[var(--secondary)] text-white border-radius-8 dark:border-white dark:border-1 rounded-md text-xs flex items-center justify-center"
             onClick={() => setUsePinMode(!usePinMode)}
           >
-            {usePinMode ? "Pin" : "User"}
+            <img
+              src={usePinMode ? "/marker-icons/gray.svg" : profilePicture}
+              alt={usePinMode ? "Pin Icon" : "Profile Picture"}
+              className="w-10 h-10"
+            />
+          </button>
+
+          <button
+            className="w-22 h-10 ml-2 bg-blue-600 dark:bg-[var(--secondary)] text-white border-radius-8 dark:border-white dark:border-1 rounded-md text-xs flex items-center justify-center"
+            onClick={clearStorage}
+          >
+            Clear
           </button>
         </div>
 
-        {/* Bottom Half of Search Controls */}
-        <div className="flex flex-row h-25">
-          <div className="w-135 pl-1 flex flex-wrap">
-            <FilterButton
-              onQuickSearch={(newQuery) => {
-                setQuery(newQuery);
-                handleSearch(
-                  null,
-                  newQuery,
-                  distance,
-                  setResults,
-                  setLatitude,
-                  setLongitude
-                );
-              }}
-            />
-          </div>
-
-          <div className="w-35 justify-evenly items-center flex gap-5 flex-col pb-5 pt-3 pr-4">
-            <button
-              className="h-10 w-15 text-xs color-white rounded-lg bg-sky-500"
-              onClick={clearStorage}
-            >
-              Clear
-            </button>
-
-            <button
-              className="h-10 w-15 text-xs color-white rounded-lg bg-sky-500"
-              onClick={() => setShowFilters(true)}
-            >
-              Filters
-            </button>
-          </div>
+        <div className="h-30 w-24 ml-1 mt-5 flex flex-col items-center">
+          <Slider
+            id="distanceSlider"
+            aria-label="Distance"
+            value={distance}
+            step={0.5}
+            min={0.5}
+            max={20}
+            orientation="vertical"
+            onChange={(e, newValue) => setDistance(newValue)}
+          />
+          <label
+            htmlFor="distanceSlider"
+            className="dark:text-white text-sm"
+          >
+            {distance.toFixed(1)} km
+          </label>
+          
         </div>
 
-        <FilterSelect
-          open={showFilters}
-          selectedFilter={selectedFilter}
-          setSelectedFilter={setSelectedFilter}
-          setShowFilters={setShowFilters}
-          distance={distance}
-          setDistance={setDistance}
-        />
       </div>
     </div>
   );
