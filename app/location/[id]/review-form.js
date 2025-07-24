@@ -15,7 +15,7 @@ export default function ReviewForm({ location_id, location_name, hasReview }) {
     const [errorMessage, setErrorMessage] = useState("");
     const [submitting, setSubmitting] = useState(false);
     const [textLength, setTextLength] = useState(0);
-    const CHARACTER_LIMIT = 255;
+    const CHARACTER_LIMIT = 300;
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => {

@@ -46,15 +46,14 @@ export default function SuggestionPage() {
 
             {!loading && amenities.map((amenity, index) => (
                 <div key={index} className="pb-6 w-full">
-                    <h4 className="font-bold pb-2 ">{amenity.charAt(0).toUpperCase() + amenity.slice(1)}s</h4>
-                    <div className="flex flex-row gap-4 w-full">
-                        {results.map((item) => (
-                            <div key={item.id}>
-                                {item.tags.amenity === amenity && (
-                                    <SuggestionBox item={item} />                            
-                                )}
-                            </div>
-                        ))}
+                    <h4 className="font-bold pb-2">{amenity.charAt(0).toUpperCase() + amenity.slice(1).replace("_", " ")}</h4>
+                    <div className="flex flex-row gap-4 w-full overflow-x-auto px-2 py-2">
+                        {results
+                            .filter(item => item.tags.amenity === amenity)
+                            .map((item) => (
+                                <SuggestionBox key={item.id} item={item} />                            
+                            ))
+                        }
                     </div>
                 </div>
             ))}

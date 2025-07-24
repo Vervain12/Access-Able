@@ -5,6 +5,8 @@ import { Box } from "@mui/material";
 import ReviewForm from "./review-form";
 import { ReviewList } from "@/app/components/review-list";
 import { CircularProgress, Rating } from "@mui/material";
+import { formatAddress } from "@/app/components/address-constructor";
+import ReviewSummary from "@/app/components/review-summary";
 
 export default function LocationPage() {
     const [locationInfo, setLocationInfo] = useState(null);
@@ -55,13 +57,15 @@ export default function LocationPage() {
                                 {locationInfo.tags.phone && (
                                     <p>Phone: {locationInfo.tags.phone}</p>
                                 )}
+                                <p>Address: {formatAddress(locationInfo)}</p>
                             </div>
                         ) : (
                             <p>No location data found</p>
                         )}
                     </Box>
                     <div>
-                        <ReviewForm location_id={locationInfo.id} hasReview={hasReview} location_name={locationInfo.tags.name}/>
+                        <ReviewForm location_id={locationInfo.id} hasReview={hasReview} location_name={locationInfo.tags.name} />
+                        <ReviewSummary location_id={locationInfo.id} />
                         <ReviewList location_id={locationInfo.id} setHasReview={setHasReview} />
                     </div>
                 </>

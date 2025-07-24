@@ -10,6 +10,7 @@ import { Button, Rating } from "@mui/material";
 import "leaflet/dist/leaflet.css";
 import { useRouter } from "next/navigation";
 import { icons } from "./map-icons";
+import { formatAddress } from "../address-constructor";
 
 // Determine icon based on rating
 const getIconByRating = (rating) => {
@@ -62,6 +63,7 @@ export default function MapView({
         zoom={13}
         style={{ height: "100%", width: "100%" }}
       >
+
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -80,6 +82,7 @@ export default function MapView({
         )}
 
         {/* Search result markers */}
+        {/* This entirely needs to be styled. */}
         {results
           .filter((place) => place.tags && place.tags.name)
           .map(
