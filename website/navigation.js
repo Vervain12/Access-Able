@@ -73,17 +73,21 @@ export function Navigation() {
         <div className="relative flex h-16 items-center justify-between">
           {/* Logo - Fixed left */}
           <Link href="/" className="flex items-center space-x-2">
+            {/* Light Mode Logo */}
             <img
-              src="/pfp/pp01.svg"
+              src="/images/logo-color.svg"
               alt="Access Able Logo"
-              style={{
-                width: "10%",
-                height: "10%",
-                objectFit: "cover",
-                borderRadius: "50%",
-              }}
+              className="block dark:hidden w-10 h-10"
             />
-            <span className="text-xl font-display text-brand-neutral-900">
+
+            {/* Dark Mode Logo */}
+            <img
+              src="/images/logo-white.svg"
+              alt="Access Able Logo (Dark)"
+              className="hidden dark:block w-10 h-10"
+            />
+
+            <span className="text-xl font-display text-brand-neutral-900 dark:text-white">
               Access Able
             </span>
           </Link>

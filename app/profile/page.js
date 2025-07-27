@@ -12,7 +12,7 @@ import ThemeToggle from "./dark-mode";
 export default function ProfilePage() {
 
   return (
-    <div className="bg-gray-200 dark:bg-[var(--background)] lg:pl-5 xl:pl-10 2xl:pl-20">
+    <div className="bg-gray-200 dark:bg-[var(--background)] lg:pl-5 xl:pl-5 2xl:pl-20">
       <h1 className="font-bold text-2xl pt-10 pl-30">Profile Settings</h1>
 
       <div className="flex flex-row 2xl:pl-20 xl:pl-10 pt-10 gap-25">
