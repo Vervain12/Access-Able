@@ -1,4 +1,10 @@
-export async function runSearch(query, distance, userLat, userLon) {
+export async function runSearch(
+  query,
+  distance,
+  userLat,
+  userLon,
+  minRating = 0
+) {
   const response = await fetch("/api/overpass/search", {
     method: "POST",
     headers: {
@@ -25,5 +31,17 @@ export async function runSearch(query, distance, userLat, userLon) {
     deduplicated.set(location.id, location);
   });
 
-  return Array.from(deduplicated.values());
+  const finalResults = Array.from(deduplicated.values());
+
+  // Filter by rating if present
+  const filteredResults = finalResults.filter((location) => {
+    if (typeof location.rating === "number") {
+      return location.rating >= minRating;
+    }
+
+    // If there's no rating, include it *only* when minRating is 0
+    return minRating === 0;
+  });
+
+  return filteredResults;
 }

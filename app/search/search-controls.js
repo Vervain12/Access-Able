@@ -3,7 +3,7 @@ import FilterButton from "../components/searchcontrols/filter-buttons";
 import SearchInput from "../components/searchcontrols/search-input";
 import { useSearchParams } from "next/navigation";
 import { runSearch } from "../services/search-services";
-import Slider from "@mui/material/Slider";
+import FilterSelect from "../components/searchcontrols/filter-select";
 
 export default function SearchControls({
   setResults,
@@ -44,6 +44,7 @@ export default function SearchControls({
   const [distance, setDistance] = useState(2.5);
   const [isClient, setIsClient] = useState(false);
   const [recentSearches, setRecentSearches] = useState([]);
+  const [rating, setRating] = useState(0);
 
   // Initialize client-side values after hydration
   useEffect(() => {
@@ -152,7 +153,8 @@ export default function SearchControls({
             query,
             distance,
             latToUse,
-            lonToUse
+            lonToUse,
+            rating
           );
           setResults(finalResults);
           setStoredValue("query", query);
@@ -166,7 +168,7 @@ export default function SearchControls({
         if (query && !recentSearches.includes(query)) {
           setRecentSearches((prev) => {
             const updated = [query, ...prev.filter((q) => q !== query)];
-            return updated.slice(0, 5);
+            return updated.slice(0, 10);
           });
         }
 
@@ -207,63 +209,63 @@ export default function SearchControls({
           </div>
         </div>
 
-        {/* Bottom Half of Search Controls */}
-        <div className="flex flex-col h-40 gap-3 py-2 space-evenly ">
-          <button
-            className="w-22 h-10 ml-2 bg-blue-600 dark:bg-[var(--accent)] text-white border-1 border-radius-8 dark:border-white rounded-md text-xs flex items-center justify-center"
-            onClick={(e) =>
-              handleSearch(
-                e,
-                query,
-                distance,
-                setResults,
-                setLatitude,
-                setLongitude
-              )
-            }
-          >
-            Search
-          </button>
+        {/* Button Section of Search Controls */}
+        <div className="flex flex-row h-40">
+          <div className="flex flex-col h-40 gap-12 items-center justify-center">
+            <button
+              className="w-22 h-12 bg-blue-600 dark:bg-[var(--accent)] text-white border-1 border-radius-8 dark:border-white rounded-md text-xs flex items-center justify-center"
+              onClick={(e) =>
+                handleSearch(
+                  e,
+                  query,
+                  distance,
+                  setResults,
+                  setLatitude,
+                  setLongitude
+                )
+              }
+            >
+              Search
+            </button>
 
-          <button
-            className="w-22 h-10 ml-2 bg-blue-600 dark:bg-[var(--secondary)] text-white border-radius-8 dark:border-white dark:border-1 rounded-md text-xs flex items-center justify-center"
-            onClick={() => setUsePinMode(!usePinMode)}
-          >
-            <img
-              src={usePinMode ? "/marker-icons/gray.svg" : profilePicture}
-              alt={usePinMode ? "Pin Icon" : "Profile Picture"}
-              className="w-10 h-10"
-            />
-          </button>
+            <button
+              className="w-22 h-12 bg-blue-600 dark:bg-[var(--secondary)] text-white border-radius-8 dark:border-white dark:border-1 rounded-md text-xs flex items-center justify-center"
+              onClick={() => setUsePinMode(!usePinMode)}
+            >
+              <img
+                src={usePinMode ? "/marker-icons/gray.svg" : profilePicture}
+                alt={usePinMode ? "Pin Icon" : "Profile Picture"}
+                className="w-8 h-8"
+              />
+            </button>
+          </div>
 
-          <button
-            className="w-22 h-10 ml-2 bg-blue-600 dark:bg-[var(--secondary)] text-white border-radius-8 dark:border-white dark:border-1 rounded-md text-xs flex items-center justify-center"
-            onClick={clearStorage}
-          >
-            Clear
-          </button>
-        </div>
+          <div className="flex flex-col h-40 gap-12 items-center justify-center">
+            <button
+              className="w-22 h-12 ml-2 bg-blue-600 dark:bg-[var(--secondary)] text-white border-radius-8 dark:border-white dark:border-1 rounded-md text-xs flex items-center justify-center"
+              onClick={clearStorage}
+            >
+              Clear
+            </button>
 
-        <div className="h-30 w-24 ml-1 mt-5 flex flex-col items-center">
-          <Slider
-            id="distanceSlider"
-            aria-label="Distance"
-            value={distance}
-            step={0.5}
-            min={0.5}
-            max={20}
-            orientation="vertical"
-            onChange={(e, newValue) => setDistance(newValue)}
+            <button
+              className="w-22 h-12 ml-2 bg-blue-600 dark:bg-[var(--secondary)] text-white border-radius-8 dark:border-white dark:border-1 rounded-md text-xs flex items-center justify-center"
+              onClick={() => setShowFilters(true)}
+            >
+              Filters
+            </button>
+          </div>
+          <FilterSelect
+            open={showFilters}
+            selectedFilter={selectedFilter}
+            setSelectedFilter={setSelectedFilter}
+            setShowFilters={setShowFilters}
+            distance={distance}
+            setDistance={setDistance}
+            rating={rating}
+            setRating={setRating}
           />
-          <label
-            htmlFor="distanceSlider"
-            className="dark:text-white text-sm"
-          >
-            {distance.toFixed(1)} km
-          </label>
-          
         </div>
-
       </div>
     </div>
   );
