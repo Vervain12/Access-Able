@@ -145,9 +145,6 @@ export default function SearchControls({
         const latToUse = usePinMode ? pinLat : position.coords.latitude;
         const lonToUse = usePinMode ? pinLon : position.coords.longitude;
 
-        setLatitude(latToUse);
-        setLongitude(lonToUse);
-
         try {
           const finalResults = await runSearch(
             query,
