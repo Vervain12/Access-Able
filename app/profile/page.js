@@ -1,6 +1,5 @@
 "use client";
 
-import { signOut } from "../services/account-services-client";
 import { Button, TextField, Switch } from "@mui/material";
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
@@ -8,8 +7,19 @@ import ArticleIcon from '@mui/icons-material/Article';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import PfpChange from "../components/pfp-change";
 import ThemeToggle from "./dark-mode";
+import DisabilityChoice from "../components/disability-choice";
+import { useState } from "react";
 
 export default function ProfilePage() {
+  const [showDisabilityModal, setShowDisabilityModal] = useState(false);
+
+  const handleDisabilityPopup = () => {
+    setShowDisabilityModal(true);
+  }
+
+  const handleDisabilityModalClose = () => {
+    setShowDisabilityModal(false);
+  }
 
   return (
     <div className="bg-gray-200 dark:bg-[var(--background)] lg:pl-5 xl:pl-5 2xl:pl-20">
@@ -52,9 +62,21 @@ export default function ProfilePage() {
             />
           </div>
 
-          <button className="bg-blue-500 w-70 h-10 rounded-md text-white flex items-center justify-center ml-7 mt-15">
+          <Button 
+            variant="contained" 
+            sx={{ 
+              width: '280px', 
+              height: '40px', 
+              mt: '60px',
+              ml: '28px',
+              backgroundColor: '#3b82f6',
+              '&:hover': {
+                backgroundColor: '#2563eb'
+              }
+            }}
+          >
             Save Changes
-          </button>
+          </Button>
         </div>
 
         <div className="h-300 flex flex-col gap-10">
@@ -72,9 +94,14 @@ export default function ProfilePage() {
               </div>
 
               <div className="flex items-center">
-                <button className="w-40 h-10 border-1 border-gray-200 ml-75 bg-[var(--muted)] dark:bg-[var(--secondary)]">
+                <Button 
+                  onClick={handleDisabilityPopup}
+                  variant="outlined"
+                  size="small"
+                  sx={{ width: '160px', height: '40px' }}
+                >
                   Edit Preferences
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -89,9 +116,13 @@ export default function ProfilePage() {
               </div>
 
               <div className="flex items-center">
-                <button className="w-25 h-10 border-1 border-gray-200 ml-75 bg-[var(--muted)] dark:bg-[var(--secondary)]">
+                <Button 
+                  variant="outlined"
+                  size="small"
+                  sx={{ width: '100px', height: '40px' }}
+                >
                   English
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -134,26 +165,70 @@ export default function ProfilePage() {
           {/* Support and Help Section */}
           <div className="bg-white dark:bg-[var(--card)] border-1 border-white h-80 flex flex-col gap-5 rounded-md">
             <h2 className="text-2xl pl-10 pt-5 font-bold">Support & Help</h2>
-            <button className="dark:bg-[var(--secondary)] w-180 h-10 border-1 border-gray-300 mx-10 flex items-center justify-start">
-              <HelpOutlineIcon style={{fontSize: "20px", marginRight: "15px", marginLeft: "15px"}} />
+            <Button 
+              variant="outlined"
+              startIcon={<HelpOutlineIcon />}
+              sx={{ 
+                width: '720px', 
+                height: '40px', 
+                justifyContent: 'flex-start',
+                textTransform: 'none',
+                mx: '40px',
+                mb: '20px'
+              }}
+            >
               Help Center
-            </button>
-            <button className="dark:bg-[var(--secondary)] w-180 h-10 border-1 border-gray-300 mx-10 flex items-center justify-start">
-              <ChatBubbleOutlineIcon style={{fontSize: "20px", marginRight: "15px", marginLeft: "15px"}} />
+            </Button>
+            <Button 
+              variant="outlined"
+              startIcon={<ChatBubbleOutlineIcon />}
+              sx={{ 
+                width: '720px', 
+                height: '40px', 
+                justifyContent: 'flex-start',
+                textTransform: 'none',
+                mx: '40px',
+                mb: '20px'
+              }}
+            >
               Contact Support
-            </button>
-            <button className="dark:bg-[var(--secondary)] w-180 h-10 border-1 border-gray-300 mx-10 flex items-center justify-start">
-               <ArticleIcon style={{fontSize: "20px", marginRight: "15px", marginLeft: "15px"}} />
+            </Button>
+            <Button 
+              variant="outlined"
+              startIcon={<ArticleIcon />}
+              sx={{ 
+                width: '720px', 
+                height: '40px', 
+                justifyContent: 'flex-start',
+                textTransform: 'none',
+                mx: '40px',
+                mb: '20px'
+              }}
+            >
               Terms & Privacy
-            </button>
-            <button className="dark:bg-[var(--secondary)] w-180 h-10 border-1 border-gray-300 mx-10 flex items-center justify-start">
-              <ReportProblemIcon style={{fontSize: "20px", marginRight: "15px", marginLeft: "15px"}} />
+            </Button>
+            <Button 
+              variant="outlined"
+              startIcon={<ReportProblemIcon />}
+              sx={{ 
+                width: '720px', 
+                height: '40px', 
+                justifyContent: 'flex-start',
+                textTransform: 'none',
+                mx: '40px'
+              }}
+            >
               Report an Issue
-            </button>
+            </Button>
           </div>
         </div>
       </div>
+
+      {/* DisabilityChoice Modal */}
+      <DisabilityChoice 
+        profileDisabilityOpen={showDisabilityModal} 
+        profileDisabilityClose={handleDisabilityModalClose}
+      />
     </div>
   );
 }
-

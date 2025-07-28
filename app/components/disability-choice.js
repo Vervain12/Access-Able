@@ -1,13 +1,13 @@
 // Popup for disability choice after email signup
 import options from '../data/disabilityOptions.json'
-import { updateDisabilityInfo } from '../services/account-services';
+import { updateDisabilityInfo } from '../services/account-services-client';
 import { Modal, Box, Button, Stack, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Checkbox } from "@mui/material";
 import { useEffect, useState } from "react";
 import { createClient } from '@/utils/supabase/client';
 
-export default function DisabilityChoice(){
+export default function DisabilityChoice({ profileDisabilityOpen, profileDisabilityClose, authOpen }){
     const [checked, setChecked] = useState([]);
-    const [openModalOne, setOpenModalOne] = useState(true);
+    const [openModalOne, setOpenModalOne] = useState(authOpen || false);
     const [openModalTwo, setOpenModalTwo] = useState(false);
     const [userId, setUserId] = useState("");
     const supabase = createClient();
@@ -18,8 +18,13 @@ export default function DisabilityChoice(){
         setOpenModalTwo(true);
         setOpenModalOne(false);
     }
-    const handleCloseModalTwo = () => setOpenModalTwo(false);
+    const handleCloseModalTwo = () => {
+        setOpenModalTwo(false);
+        if(profileDisabilityOpen) {
+            profileDisabilityClose();
+        }
 
+    }
     useEffect(() => {
         async function fetchUser() {
             const { data: { user }, error } = await supabase.auth.getUser();
@@ -47,7 +52,7 @@ export default function DisabilityChoice(){
     const handleSubmit = async (event) => {
         event.preventDefault();
         console.log("Disabilities: ", checked);
-        await updateDisabilityInfo(userId, checked);        
+        await updateDisabilityInfo(checked);        
         handleCloseModalTwo();
     }
 
@@ -70,30 +75,42 @@ export default function DisabilityChoice(){
             </Modal>
             {/*Second Modal*/}
             <Modal
-                open={openModalTwo}
-                onClose={handleCloseModalTwo}
+                open={openModalTwo || profileDisabilityOpen}
+                onClose={handleCloseModalTwo || profileDisabilityClose}
                 aria-labelledby="disability-selection">
                 <Box sx={modalStyle}>
                     <h2 style={headingStyle}>Select your Disabilities</h2>
-                    <p style={paragraphStyle}>Choose any that apply (optional)</p>
+                    <p style={paragraphStyle}>Choose any that apply</p>
                     
-                    {/*List of selectable disabilities*/}
+                    {/*List of selectable disabilities in two columns*/}
                     <Stack direction={"column"} spacing={2} justifyContent="center">
                         <List sx={listStyle}>
-                            {options.map(item => {
-                                return <ListItem key={item.value}>
-                                    <ListItemButton role={undefined} onClick={() => handleDisabilityToggle(item.value)} dense>
-                                        <ListItemIcon>
-                                            <Checkbox
-                                                edge="start"
-                                                checked={checked.includes(item.value)}
-                                                disableRipple
-                                            />
-                                        </ListItemIcon>
-                                        <ListItemText id={item.value} primary={item.label} sx={{ color: 'black' }}/>
-                                    </ListItemButton>
-                                </ListItem>
-                            })}
+                            {Array.from({ length: Math.ceil(options.length / 2) }, (_, rowIndex) => (
+                                <Box key={rowIndex} sx={{ display: 'flex', width: '100%' }}>
+                                    {[0, 1].map(colIndex => {
+                                        const itemIndex = rowIndex * 2 + colIndex;
+                                        const item = options[itemIndex];
+                                        if (!item) return null;
+                                        
+                                        return (
+                                            <Box key={item.value} sx={{ width: '50%' }}>
+                                                <ListItem>
+                                                    <ListItemButton role={undefined} onClick={() => handleDisabilityToggle(item.value)} dense>
+                                                        <ListItemIcon>
+                                                            <Checkbox
+                                                                edge="start"
+                                                                checked={checked.includes(item.value)}
+                                                                disableRipple
+                                                            />
+                                                        </ListItemIcon>
+                                                        <ListItemText id={item.value} primary={item.label} sx={{ color: 'black' }}/>
+                                                    </ListItemButton>
+                                                </ListItem>
+                                            </Box>
+                                        );
+                                    })}
+                                </Box>
+                            ))}
                         </List>
                         <Button onClick={handleSubmit} variant="contained">Save Disabilities</Button>                        
                     </Stack>
@@ -107,8 +124,8 @@ export default function DisabilityChoice(){
 
 const listStyle = {
     width: '100%',
-    maxWidth: 200,
-    maxHeight: 200,
+    maxWidth: 400,
+    maxHeight: 400,
     overflow: 'auto'
 }
 
@@ -118,7 +135,7 @@ const modalStyle = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: '30%',
-    height: 400,
+    height: '50%',
     bgcolor: 'background.paper',
     boxShadow: 24,
     p: 4,

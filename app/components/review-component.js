@@ -1,11 +1,20 @@
 import { GetImages } from "../services/review-services";
-import { Box, Button, Card, CardContent, Typography, Avatar, Modal, IconButton } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  Avatar,
+  Modal,
+  IconButton,
+} from "@mui/material";
 import { useState, useEffect } from "react";
 import { Rating } from "@mui/material";
 import { createClient } from "@/utils/supabase/client";
 import EditReviewPopup from "./edit-review";
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 //I'm using location_name as a boolean, its existence signifies if we're on My Reviews or a location page
 
@@ -56,8 +65,12 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
   };
 
   const getInitials = (name) => {
-    if (!name || typeof name !== 'string') return '';
-    return name.split(' ').map(n => n[0]).join('').toUpperCase();
+    if (!name || typeof name !== "string") return "";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase();
   };
 
   const formatSubmissionDate = (timestamp) => {
@@ -73,12 +86,15 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
     setOpenModal(false);
   };
 
+  // Why use this when https://mui.com/material-ui/react-tabs/ is an option?
   const handleNextImage = () => {
     setSelectedImageIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
 
   const handlePrevImage = () => {
-    setSelectedImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+    setSelectedImageIndex(
+      (prevIndex) => (prevIndex - 1 + images.length) % images.length
+    );
   };
 
   const displayMainName = location_name
@@ -89,13 +105,13 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
     <Card
       sx={{
         minWidth: 300,
-        width: '100%',
+        width: "100%",
         maxWidth: 750,
         height: "fit-content",
         flexShrink: 0,
         boxShadow: 3,
         borderRadius: 2,
-        position: 'relative',
+        position: "relative",
         p: 0,
       }}
     >
@@ -105,9 +121,15 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
         </Box>
       )}
 
-      <CardContent sx={{ p: 3, '&:last-child': { pb: 3 } }}>
-
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start", mb: 1 }}>
+      <CardContent sx={{ p: 3, "&:last-child": { pb: 3 } }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            mb: 1,
+          }}
+        >
           <Typography
             variant="subtitle1"
             component="h2"
@@ -131,17 +153,22 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "flex-start", mt: 2 }}>
-
           <Avatar
             src={review.profile_picture}
             alt={review.display_name}
-            sx={{ width: 40, height: 40, mr: 2, flexShrink: 0, bgcolor: 'primary.main', fontSize: '1rem' }}
+            sx={{
+              width: 40,
+              height: 40,
+              mr: 2,
+              flexShrink: 0,
+              bgcolor: "primary.main",
+              fontSize: "1rem",
+            }}
           >
             {getInitials(review.display_name)}
           </Avatar>
 
           <Box sx={{ flexGrow: 1, display: "flex", minWidth: 0 }}>
-
             <Box sx={{ flexGrow: 1, position: "relative", pr: 3 }}>
               <Typography variant="body1" sx={{ lineHeight: 1.6, m: 0 }}>
                 {review.review_text}
@@ -165,29 +192,31 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
             </Box>
 
             {images && images.length > 0 && (
-              <Box sx={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(2, 96px)',
-                gap: 1,
-                ml: 2,
-                flexShrink: 0,
-                width: '200px',
-              }}>
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, 96px)",
+                  gap: 1,
+                  ml: 2,
+                  flexShrink: 0,
+                  width: "200px",
+                }}
+              >
                 {images.slice(0, 4).map((image, index) => (
                   <Box
                     key={index}
                     sx={{
                       width: 96,
                       height: 96,
-                      overflow: 'hidden',
-                      borderRadius: '4px',
-                      border: '1px solid #e0e0e0',
+                      overflow: "hidden",
+                      borderRadius: "4px",
+                      border: "1px solid #e0e0e0",
                       cursor: "pointer",
-                      position: 'relative',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      bgcolor: '#f0f0f0',
+                      position: "relative",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      bgcolor: "#f0f0f0",
                     }}
                     onClick={() => handleOpenModal(index)}
                   >
@@ -203,19 +232,19 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
                     {index === 3 && images.length > 4 && (
                       <Box
                         sx={{
-                          position: 'absolute',
+                          position: "absolute",
                           top: 0,
                           left: 0,
-                          width: '100%',
-                          height: '100%',
-                          bgcolor: 'rgba(0,0,0,0.5)',
-                          color: 'white',
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          fontSize: '0.8rem',
-                          fontWeight: 'bold',
-                          borderRadius: '4px',
+                          width: "100%",
+                          height: "100%",
+                          bgcolor: "rgba(0,0,0,0.5)",
+                          color: "white",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          fontSize: "0.8rem",
+                          fontWeight: "bold",
+                          borderRadius: "4px",
                         }}
                       >
                         +{images.length - 4} more
@@ -238,24 +267,29 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
       >
         <Box
           sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '90%',
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "90%",
             maxWidth: 900,
-            maxHeight: '90vh',
-            bgcolor: 'background.paper',
-            border: '2px solid #000',
+            maxHeight: "90vh",
+            bgcolor: "background.paper",
+            border: "2px solid #000",
             boxShadow: 24,
             p: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'space-between',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
-          <Typography id="image-modal-title" variant="h6" component="h2" gutterBottom>
+          <Typography
+            id="image-modal-title"
+            variant="h6"
+            component="h2"
+            gutterBottom
+          >
             Review Images ({selectedImageIndex + 1} of {images.length})
           </Typography>
 
@@ -263,12 +297,12 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
             <Box
               sx={{
                 flexGrow: 1,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '100%',
-                position: 'relative',
-                overflow: 'hidden',
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                position: "relative",
+                overflow: "hidden",
                 mb: 2,
               }}
             >
@@ -276,11 +310,11 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
                 onClick={handlePrevImage}
                 disabled={images.length <= 1}
                 sx={{
-                  position: 'absolute',
+                  position: "absolute",
                   left: 0,
                   zIndex: 1,
-                  bgcolor: 'rgba(255,255,255,0.7)',
-                  '&:hover': { bgcolor: 'rgba(255,255,255,0.9)' },
+                  bgcolor: "rgba(255,255,255,0.7)",
+                  "&:hover": { bgcolor: "rgba(255,255,255,0.9)" },
                 }}
               >
                 <ArrowBackIosIcon />
@@ -290,9 +324,9 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
                 src={images.at(selectedImageIndex)?.url}
                 alt={`Review image ${selectedImageIndex + 1}`}
                 style={{
-                  maxWidth: '90%',
-                  maxHeight: '75vh',
-                  objectFit: 'contain',
+                  maxWidth: "90%",
+                  maxHeight: "75vh",
+                  objectFit: "contain",
                   flexShrink: 0,
                 }}
               />
@@ -301,11 +335,11 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
                 onClick={handleNextImage}
                 disabled={images.length <= 1}
                 sx={{
-                  position: 'absolute',
+                  position: "absolute",
                   right: 0,
                   zIndex: 1,
-                  bgcolor: 'rgba(255,255,255,0.7)',
-                  '&:hover': { bgcolor: 'rgba(255,255,255,0.9)' },
+                  bgcolor: "rgba(255,255,255,0.7)",
+                  "&:hover": { bgcolor: "rgba(255,255,255,0.9)" },
                 }}
               >
                 <ArrowForwardIosIcon />
