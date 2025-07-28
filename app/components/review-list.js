@@ -44,8 +44,8 @@ export function ReviewList({ location_id, setHasReview }) {
                 <CircularProgress />
             </Box> :
             <div>
-                {/* For ReviewList, ensure Stack is column too if you want vertical for location reviews */}
-                <Stack spacing={3} sx={{ alignItems: 'center', width: '100%' }}> {/* Adjusted spacing and added alignment */}
+                
+                <Stack spacing={3} sx={{ alignItems: 'center', width: '100%' }}> 
                     {reviews.map(item => (
                         <ReviewComponent key={item.review_id} review={item} />
                     ))}
@@ -57,6 +57,7 @@ export function ReviewList({ location_id, setHasReview }) {
 
 export function UserReviewList({ relatedBool }) {
     // Review list for the /reviews page
+     // Relatedbool will always be false, related no longer in use. Keeping the code just in case.
     const [loading, setLoading] = useState(true);
     const [reviews, setReviews] = useState([]);
 
@@ -64,19 +65,19 @@ export function UserReviewList({ relatedBool }) {
         setLoading(true);
         const fetchUserReviews = async () => {
             try {
-                const supabase = createClient(); // Call createClient
+                const supabase = createClient(); 
                 const { data: { user } } = await supabase.auth.getUser();
-                if (user) { // Only fetch if user is logged in
+                if (user) { 
                     if (relatedBool) {
-                        const result = await getRelatedReviews(user.id);
+                        const result = await getRelatedReviews(user.id);//Defunct
                         setReviews(result);
                     } else {
                         const result = await GetUserReviews(user.id);
                         setReviews(result);
                     }
                 } else {
-                    // Handle case where user is not logged in if necessary
-                    setReviews([]); // No reviews if not logged in
+                   
+                    setReviews([]); 
                 }
                 setLoading(false);
             } catch (error) {
@@ -104,9 +105,9 @@ export function UserReviewList({ relatedBool }) {
                 </Box>
             ) : (
                 <Box
-                    
+                   
                 >
-                    {/*   direction="column" on Stack  */}
+                    
                     <Stack spacing={3} direction="column" sx={{ alignItems: 'center', width: '100%' }}>
                         {reviews?.map(item => (
                             <ReviewComponent
