@@ -18,13 +18,8 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
 
   useEffect(() => {
     const FetchImagesAndUser = async () => {
-      if (review.images && Array.isArray(review.images) && review.images.length > 0) {
-        setImages(review.images);
-      } else {
-        const results = await GetImages(review.review_id);
-        setImages(results);
-      }
-
+      const results = await GetImages(review.review_id);
+      setImages(results);
       const supabase = await createClient();
       const {
         data: { user },
