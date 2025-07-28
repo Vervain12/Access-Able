@@ -17,7 +17,7 @@ export default function EditReviewPopup({ reviewInfo, images }) {
     const [newFiles, setNewFiles] = useState([]);
     const [updating, setUpdating] = useState(false);
     const [textLength, setTextLength] = useState(reviewInfo.review_text.length);
-    const CHARACTER_LIMIT = 255;
+    const CHARACTER_LIMIT = 300;
     const handleOpen = () => setOpen(true);
     const handleCloseDelete = () => setOpenDelete(false);
     const handleOpenDelete = () => setOpenDelete(true);    

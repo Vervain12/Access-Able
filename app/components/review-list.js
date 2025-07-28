@@ -26,7 +26,7 @@ export function ReviewList({ location_id, setHasReview }) {
         setReviews(result);
 
         // Checking if the user has a review already
-        const supabase = await createClient();
+        const supabase = createClient();
         const {
           data: { user },
         } = await supabase.auth.getUser();
@@ -49,7 +49,7 @@ export function ReviewList({ location_id, setHasReview }) {
     };
 
     fetchLocationReviews();
-  }, [location_id]);
+  }, [location_id, setHasReview]);
 
   return (
     <div>
@@ -59,7 +59,7 @@ export function ReviewList({ location_id, setHasReview }) {
         </Box>
       ) : (
         <div>
-          <Stack spacing={2}>
+          <Stack spacing={3} sx={{ alignItems: "center", width: "100%" }}>
             {reviews.map((item) => (
               <ReviewComponent key={item.review_id} review={item} />
             ))}
@@ -80,21 +80,25 @@ export function UserReviewList({ relatedBool }) {
     setLoading(true);
     const fetchUserReviews = async () => {
       try {
-        const supabase = await createClient();
+        const supabase = createClient();
         const {
           data: { user },
         } = await supabase.auth.getUser();
-        if (relatedBool) {
-          const result = await getRelatedReviews(user.id); //Defunct
-          setReviews(result);
+        if (user) {
+          if (relatedBool) {
+            const result = await getRelatedReviews(user.id); //Defunct
+            setReviews(result);
+          } else {
+            const result = await GetUserReviews(user.id);
+            setReviews(result);
+          }
         } else {
-          const result = await GetUserReviews(user.id);
-          setReviews(result);
+          setReviews([]);
         }
         setLoading(false);
       } catch (error) {
         console.log(
-          "An error has occurred when attempting to fetch location reviews."
+          "An error has occurred when attempting to fetch user/related reviews."
         );
         console.error(error);
         setLoading(false);
@@ -102,7 +106,7 @@ export function UserReviewList({ relatedBool }) {
     };
 
     fetchUserReviews();
-  }, []);
+  }, [relatedBool]);
 
   return (
     <Box sx={{ p: 2 }}>
@@ -113,26 +117,17 @@ export function UserReviewList({ relatedBool }) {
         </Box>
       ) : reviews.length === 0 && !relatedBool ? (
         <Box display="flex" justifyContent="center" p={4}>
-          <Typography
-            variant="body1"
-            sx={{
-              color: "text.secondary",
-              ".dark &": {
-                color: "#fff",
-              },
-            }}
-          >
+          <Typography variant="body1" color="text.secondary">
             No reviews yet, search a location to begin contributing!
           </Typography>
         </Box>
       ) : (
-        <Box
-          sx={{
-            overflowX: "auto",
-            pb: 1,
-          }}
-        >
-          <Stack spacing={2} direction="row" sx={{ minWidth: "max-content" }}>
+        <Box>
+          <Stack
+            spacing={3}
+            direction="column"
+            sx={{ alignItems: "center", width: "100%" }}
+          >
             {reviews?.map((item) => (
               <ReviewComponent
                 key={item.review_id}

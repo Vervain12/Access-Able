@@ -10,6 +10,26 @@ export async function signOut() {
     return error;
 }
 
+export async function updateDisabilityInfo(disabilities) {
+    const response = await fetch('/api/reviews/user/UpdateDisabilityInfo', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ disabilities }),
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+        console.log('Disabilities Updated Successfully:', result.data);
+        return true;
+    } else {
+        console.error('Disability Update Error:', result.error);
+        return false
+    }
+}
+
 export async function getProfilePicture(user_id){
     const response = await fetch(`/api/reviews/user/GetProfilePicture?user_id=${user_id}`, {
         method: 'GET',

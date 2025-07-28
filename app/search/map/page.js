@@ -100,7 +100,7 @@ function MapContent() {
       {/* DisabilityChoice overlay */}
       {fromConfirm && (
         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
-          <DisabilityChoice />
+          <DisabilityChoice authOpen={fromConfirm}/>
         </div>
       )}
 

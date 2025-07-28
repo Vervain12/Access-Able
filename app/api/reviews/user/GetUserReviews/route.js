@@ -21,6 +21,7 @@ export async function GET(request) {
             .from('reviews')
             .select('*')
             .eq('user_id', user_id)
+            .order('created_at', { ascending: false })
 
         if (error) {
             return NextResponse.json({ error: "Error fetching reviews." }, { status: 400 })
