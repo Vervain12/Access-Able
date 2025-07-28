@@ -11,6 +11,7 @@ import "leaflet/dist/leaflet.css";
 import { useRouter } from "next/navigation";
 import { icons } from "./map-icons";
 import { formatAddress } from "../address-constructor";
+import { haversineDistance } from "../location-distance";
 
 // Determine icon based on rating
 const getIconByRating = (rating) => {
@@ -63,7 +64,6 @@ export default function MapView({
         zoom={13}
         style={{ height: "100%", width: "100%" }}
       >
-
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -100,6 +100,17 @@ export default function MapView({
                       <h2 style={{ fontSize: 22, margin: 0 }}>
                         {item.tags?.name || "Unnamed Place"}
                       </h2>
+                      {userLat && userLon && (
+                        <p style={{ fontSize: 14, margin: 0 }}>
+                          {haversineDistance(
+                            userLat,
+                            userLon,
+                            item.lat,
+                            item.lon
+                          ).toFixed(2)}
+                          km away
+                        </p>
+                      )}
                       <Rating
                         name="rating"
                         value={item.rating || 0}

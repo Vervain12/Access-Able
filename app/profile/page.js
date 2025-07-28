@@ -1,18 +1,19 @@
 "use client";
 
 import { Button, TextField, Switch } from "@mui/material";
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import ArticleIcon from '@mui/icons-material/Article';
-import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import ArticleIcon from "@mui/icons-material/Article";
+import ReportProblemIcon from "@mui/icons-material/ReportProblem";
 import PfpChange from "../components/pfp-change";
 import ThemeToggle from "./dark-mode";
+import { useActivityStats } from "../components/activity-stats";
 import DisabilityChoice from "../components/disability-choice";
 import { useState } from "react";
 
 export default function ProfilePage() {
   const [showDisabilityModal, setShowDisabilityModal] = useState(false);
-
+  const { stats, loading } = useActivityStats();
   const handleDisabilityPopup = () => {
     setShowDisabilityModal(true);
   }
@@ -27,7 +28,9 @@ export default function ProfilePage() {
 
       <div className="flex flex-row 2xl:pl-20 xl:pl-10 pt-10 gap-25">
         <div className="bg-white dark:bg-[var(--card)] border-1 border-white rounded-md w-90 h-170 p-3 flex flex-col">
-          <h2 className="font-bold text-2xl pt-3 pl-3 pb-8">Profile Information</h2>
+          <h2 className="font-bold text-2xl pt-3 pl-3 pb-8">
+            Profile Information
+          </h2>
           <div className="bg-white dark:bg-[var(--card)] flex flex-col gap-10 items-center mb-5">
             {/*Profile Picture is here*/}
             <PfpChange />
@@ -142,21 +145,23 @@ export default function ProfilePage() {
 
           {/* Activity Overview Section*/}
           <div className="bg-white dark:bg-[var(--card)] border-white border-1 h-55 rounded-md">
-            <h2 className="font-bold text-2xl pt-7 pl-8 pb-5">Activity Overview</h2>
+            <h2 className="font-bold text-2xl pt-7 pl-8 pb-5">
+              Activity Overview
+            </h2>
 
             <div className="flex flex-row gap-15 justify-center">
-              <div className="w-50 h-25 bg-blue-200 flex flex-col justify-end items-center pb-5 rounded-md">
-                <p>(# of reviews written)</p>
+              <div className="w-50 h-25 bg-blue-200 flex flex-col justify-end items-center pb-5 rounded-md text-black">
+                <p>{loading ? "loading..." : stats.reviewsWritten}</p>
                 <p className="text-gray-500">Reviews Written</p>
               </div>
 
-              <div className="w-50 h-25 bg-green-200 flex flex-col justify-end items-center pb-5 rounded-md">
-                <p>(# of places visited)</p>
+              <div className="w-50 h-25 bg-green-200 flex flex-col justify-end items-center pb-5 rounded-md text-black">
+                <p>{loading ? "loading..." : stats.placesVisited}</p>
                 <p className="text-gray-500">Places Visited</p>
               </div>
 
-              <div className="w-50 h-25 bg-purple-200 flex flex-col justify-end items-center pb-5 rounded-md">
-                <p>(# of saved places)</p>
+              <div className="w-50 h-25 bg-purple-200 flex flex-col justify-end items-center pb-5 rounded-md text-black">
+                <p>{loading ? "loading..." : stats.savedPlaces}</p>
                 <p className="text-gray-500">Saved Places</p>
               </div>
             </div>
