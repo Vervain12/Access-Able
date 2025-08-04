@@ -57,7 +57,7 @@ export default function SuggestionBox({ item, userLat, userLon }) {
           size="small"
           precision={0.5}
         />
-        <p className="font-light text-sm">
+        <p className="text-black dark:text-white text-sm">
           ({item.count} review{item.count >= 2 && <>s</>})
         </p>
       </Box>

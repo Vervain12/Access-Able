@@ -47,10 +47,11 @@ function MapContent() {
       } = await supabase.auth.getUser();
       if (error) {
         console.log(error);
+        const guestPfp = "/pfp/pp01.svg";
+        setProfilePicture(guestPfp);
       } else {
         if (user) {
           const pfp = await getProfilePicture(user.id);
-          console.log("Pfp on page: ", pfp.data);
           setProfilePicture(pfp.data);
         }
       }
