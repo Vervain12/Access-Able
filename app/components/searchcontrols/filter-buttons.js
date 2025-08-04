@@ -1,6 +1,6 @@
 export default function FilterButton({ onQuickSearch, queries = [] }) {
   return (
-    <div className="flex flex-wrap gap-2 py-3 w-90">
+    <div className="flex flex-wrap gap-2 py-3">
       {queries.map((label) => (
         <button
           key={label}

@@ -4,6 +4,7 @@ import SearchInput from "../components/searchcontrols/search-input";
 import { useSearchParams } from "next/navigation";
 import { runSearch } from "../services/search-services";
 import FilterSelect from "../components/searchcontrols/filter-select";
+import TuneIcon from "@mui/icons-material/Tune";
 
 export default function SearchControls({
   setResults,
@@ -98,13 +99,6 @@ export default function SearchControls({
     }
   }, [initialQuery]);
 
-  function clearStorage() {
-    setStoredValue("query", "");
-    setStoredValue("results", JSON.stringify([]));
-    setQuery("");
-    setResults([]);
-  }
-
   function haversineDistance(lat1, lon1, lat2, lon2) {
     const toRad = (x) => (x * Math.PI) / 180;
     const R = 6371;
@@ -123,17 +117,9 @@ export default function SearchControls({
     }
   };
 
-  async function handleSearch(
-    e,
-    query,
-    distance,
-    setResults,
-    setLatitude,
-    setLongitude
-  ) {
+  async function handleSearch(e, query, distance, setResults) {
     setResults([]);
     setLoading(true);
-    if (setPage !== null && setPage !== undefined) setPage(1);
 
     if (!query) {
       setLoading(false);
@@ -165,7 +151,7 @@ export default function SearchControls({
         if (query && !recentSearches.includes(query)) {
           setRecentSearches((prev) => {
             const updated = [query, ...prev.filter((q) => q !== query)];
-            return updated.slice(0, 10);
+            return updated.slice(0, 7);
           });
         }
 
@@ -180,15 +166,66 @@ export default function SearchControls({
 
   return (
     <div>
-      <div className="w-150 h-40 bg-white flex rounded-md drop-shadow-xl dark:bg-[var(--background)]">
-        <div className="w-100 pl-5 pt-3 h-17 flex flex-col pr-7">
-          <SearchInput
-            query={query}
-            setQuery={setQuery}
-            onKeyDown={handleKeyDown}
-          />
+      <div className="w-150 h-18 bg-white flex flex-col rounded-md drop-shadow-xl dark:bg-[var(--background)]">
+        <div className="w-150 pl-5 pt-3 h-14 flex flex-row">
+          <div className="w-110 border-1 border-gray-300 flex flex-row items-center">
+            <SearchInput
+              query={query}
+              setQuery={setQuery}
+              onKeyDown={handleKeyDown}
+            />
 
-          <div className="w-135 flex flex-wrap">
+            <button
+              className="w-9 h-9 bg-blue-600 dark:bg-[var(--accent)] text-white border-1 border-radius-8 dark:border-white rounded-md text-xs flex items-center justify-center"
+              onClick={(e) =>
+                handleSearch(
+                  e,
+                  query,
+                  distance,
+                  setResults,
+                  setLatitude,
+                  setLongitude
+                )
+              }
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11 4a7 7 0 015.657 11.313l4.243 4.243a1 1 0 01-1.414 1.414l-4.243-4.243A7 7 0 1111 4z"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <button
+            className="ml-4 mr-4 w-11 h-11 bg-white text-blue-500 dark:bg-[var(--accent)] dark:text-white rounded-md text-xs flex items-center justify-center"
+            onClick={() => setUsePinMode(!usePinMode)}
+          >
+            <img
+              src={usePinMode ? "/marker-icons/blue.svg" : profilePicture}
+              alt={usePinMode ? "Pin Icon" : "Profile Picture"}
+              className="w-8 h-8 rounded-full"
+            />
+          </button>
+
+          <button
+            className="w-11 h-11 bg-white text-blue-500 dark:bg-[var(--accent)] dark:text-white rounded-md text-xs flex items-center justify-center"
+            onClick={() => setShowFilters(true)}
+          >
+            <TuneIcon />
+          </button>
+        </div>
+
+        {recentSearches.length > 0 && (
+          <div className="pl-5 w-150 h-20 rounded-md drop-shadow-xl dark:bg-[var(--background)]">
             <FilterButton
               queries={recentSearches}
               onQuickSearch={(newQuery) => {
@@ -204,54 +241,13 @@ export default function SearchControls({
               }}
             />
           </div>
-        </div>
+        )}
 
         {/* Button Section of Search Controls */}
         <div className="flex flex-row h-40">
-          <div className="flex flex-col h-40 gap-12 items-center justify-center">
-            <button
-              className="w-22 h-12 bg-blue-600 dark:bg-[var(--accent)] text-white border-1 border-radius-8 dark:border-white rounded-md text-xs flex items-center justify-center"
-              onClick={(e) =>
-                handleSearch(
-                  e,
-                  query,
-                  distance,
-                  setResults,
-                  setLatitude,
-                  setLongitude
-                )
-              }
-            >
-              Search
-            </button>
+          <div className="flex flex-col h-40 gap-12 items-center justify-center"></div>
 
-            <button
-              className="w-22 h-12 bg-blue-600 dark:bg-[var(--secondary)] text-white border-radius-8 dark:border-white dark:border-1 rounded-md text-xs flex items-center justify-center"
-              onClick={() => setUsePinMode(!usePinMode)}
-            >
-              <img
-                src={usePinMode ? "/marker-icons/gray.svg" : profilePicture}
-                alt={usePinMode ? "Pin Icon" : "Profile Picture"}
-                className="w-8 h-8"
-              />
-            </button>
-          </div>
-
-          <div className="flex flex-col h-40 gap-12 items-center justify-center">
-            <button
-              className="w-22 h-12 ml-2 bg-blue-600 dark:bg-[var(--secondary)] text-white border-radius-8 dark:border-white dark:border-1 rounded-md text-xs flex items-center justify-center"
-              onClick={clearStorage}
-            >
-              Clear
-            </button>
-
-            <button
-              className="w-22 h-12 ml-2 bg-blue-600 dark:bg-[var(--secondary)] text-white border-radius-8 dark:border-white dark:border-1 rounded-md text-xs flex items-center justify-center"
-              onClick={() => setShowFilters(true)}
-            >
-              Filters
-            </button>
-          </div>
+          <div className="flex flex-col h-40 gap-12 items-center justify-center"></div>
           <FilterSelect
             open={showFilters}
             selectedFilter={selectedFilter}
@@ -261,6 +257,8 @@ export default function SearchControls({
             setDistance={setDistance}
             rating={rating}
             setRating={setRating}
+            setResults={setResults}
+            setQuery={setQuery}
           />
         </div>
       </div>

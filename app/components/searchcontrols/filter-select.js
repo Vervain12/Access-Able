@@ -9,7 +9,27 @@ export default function FilterSelect({
   setDistance,
   rating,
   setRating,
+  setResults,
+  setQuery,
 }) {
+  function clearStorage() {
+    setStoredValue("query", "");
+    setStoredValue("results", JSON.stringify([]));
+    setQuery("");
+    setResults([]);
+  }
+
+  const setStoredValue = (key, value) => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem(key, value);
+    }
+  };
+
+  function clearFilters() {
+    setDistance(2.5);
+    setRating(0);
+  }
+
   return (
     <Modal
       open={open}
@@ -18,7 +38,7 @@ export default function FilterSelect({
     >
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40vw] bg-white dark:bg-[var(--background)] shadow-2xl p-4 rounded-md outline-none">
         <div>
-          <div className="pb-5">
+          <div className="pb-5 px-5">
             <label
               htmlFor="distanceSlider"
               className="text-black dark:text-white text-sm flex justify-center"
@@ -36,41 +56,49 @@ export default function FilterSelect({
               onChange={(e, newValue) => setDistance(newValue)}
             />
           </div>
-          
-          <label
-            htmlFor="ratingSlider"
-            className="text-black dark:text-white text-sm flex justify-center"
-          >
-            Target Score: {rating} / 5
-          </label>
 
-          <Slider
-            id="ratingSlider"
-            aria-label="Rating"
-            value={rating}
-            step={0.5}
-            min={0}
-            max={5}
-            onChange={(e, newValue) => setRating(newValue)}
-          />
+          <div className="px-5">
+            <label
+              htmlFor="ratingSlider"
+              className="text-black dark:text-white text-sm flex justify-center"
+            >
+              Target Score: {rating} / 5
+            </label>
+
+            <Slider
+              id="ratingSlider"
+              aria-label="Rating"
+              value={rating}
+              step={0.5}
+              min={0}
+              max={5}
+              onChange={(e, newValue) => setRating(newValue)}
+            />
+          </div>
         </div>
 
-        <button
-          onClick={() => setShowFilters(false)}
-          style={{
-            marginTop: 20,
-            background: "red",
-            color: "white",
-            padding: "10px 16px",
-            borderRadius: 8,
-            border: "none",
-            fontWeight: "bold",
-            cursor: "pointer",
-            width: "100%",
-          }}
-        >
-          Close
-        </button>
+        <div className="flex flex-row gap-5 px-5 pt-5">
+          <button
+            className="w-[15vw] h-10 ml-2 bg-blue-600 dark:bg-[var(--secondary)] text-white border-radius-8 dark:border-white dark:border-1 rounded-md text-xs flex items-center justify-center"
+            onClick={clearStorage}
+          >
+            Clear Map
+          </button>
+
+          <button
+            className="w-[15vw] h-10 ml-2 bg-blue-600 dark:bg-[var(--secondary)] text-white border-radius-8 dark:border-white dark:border-1 rounded-md text-xs flex items-center justify-center"
+            onClick={clearFilters}
+          >
+            Clear Filters
+          </button>
+
+          <button
+            onClick={() => setShowFilters(false)}
+            className="w-[15vw] h-10 ml-2 bg-red-600 dark:bg-red-800 text-white border-radius-8 dark:border-white dark:border-1 rounded-md text-xs flex items-center justify-center"
+          >
+            Close
+          </button>
+        </div>
       </div>
     </Modal>
   );

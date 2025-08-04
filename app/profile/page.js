@@ -168,8 +168,8 @@ export default function ProfilePage() {
           </div>
 
           {/* Support and Help Section */}
-          <div className="bg-white dark:bg-[var(--card)] border-1 border-white h-80 flex flex-col gap-5 rounded-md">
-            <h2 className="text-2xl pl-10 pt-5 font-bold">Support & Help</h2>
+          <div className="bg-white dark:bg-[var(--card)] border-1 border-white h-80 flex flex-col rounded-md">
+            <h2 className="text-2xl pl-10 mb-5 pt-5 font-bold">Support & Help</h2>
             <Button 
               variant="outlined"
               startIcon={<HelpOutlineIcon />}
