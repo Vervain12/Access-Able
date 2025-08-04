@@ -110,7 +110,7 @@ export function UserReviewList({ relatedBool }) {
 
   return (
     <Box sx={{ p: 2 }}>
-      {relatedBool ? <h2>Users Like You:</h2> : <h2>My Reviews:</h2>}
+      {relatedBool ? <h2>Users Like You:</h2> : <h2 className="font-bold pb-4 text-xl">My Reviews:</h2>}
       {loading ? (
         <Box display="flex" justifyContent="center" p={2}>
           <CircularProgress />
