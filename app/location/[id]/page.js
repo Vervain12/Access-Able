@@ -64,7 +64,7 @@ export default function LocationPage() {
 
             {locationInfo ? (
               <div className="dark:bg-[var(--background)] flex flex-col content-center pt-15">
-                <Box className="w-200 h-75 self-center bg-green-500"></Box>
+                <Box className="w-200 h-75 self-center bg-gray-500"></Box>
 
                 <div className="pl-20 pr-20 pt-3 self-center">
                   <div className="flex flex-row">

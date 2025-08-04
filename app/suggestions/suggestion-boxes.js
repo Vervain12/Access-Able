@@ -17,7 +17,7 @@ export default function SuggestionBox({ item, userLat, userLon }) {
   return (
     <Box
       key={item.id}
-      className="bg-white text-black dark: text-white dark:bg-[var(--card)] rounded-lg shadow-md hover:shadow-lg p-4 flex flex-col justify-between"
+      className="bg-white text-black dark:text-white dark:bg-[var(--card)] rounded-lg shadow-md hover:shadow-lg p-4 flex flex-col justify-between"
       sx={{
         width: 500,
         flexShrink: 0,

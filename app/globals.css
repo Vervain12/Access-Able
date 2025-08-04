@@ -295,6 +295,13 @@
 .dark .leaflet-popup-content-wrapper {
   background-color: var(--secondary);
   color: white;
+  max-width: none;
+}
+
+.dark .leaflet-popup-content {
+  max-width: none;
+  width: fit-content;
+  padding: 0;
 }
 
 .dark .leaflet-popup-tip {
