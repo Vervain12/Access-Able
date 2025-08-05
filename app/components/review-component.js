@@ -64,6 +64,8 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
     }
   };
 
+  const savedTheme = localStorage.getItem("theme");
+
   const getInitials = (name) => {
     if (!name || typeof name !== "string") return "";
     return name
@@ -113,6 +115,8 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
         borderRadius: 2,
         position: "relative",
         p: 0,
+        bgcolor: savedTheme === "dark" ? "oklch(0.279 0.041 260.031)" : "white",
+        color: savedTheme === "dark" ? "#fefefe" : "black",
       }}
     >
       {review.user_id === userId && (
@@ -125,12 +129,27 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
         <Box
           sx={{
             display: "flex",
-            flexDirection: "column",
+            flexDirection: "row",
             alignItems: "flex-start",
             mb: 1,
           }}
         >
-          <Typography
+          <Avatar
+            src={review.profile_picture}
+            alt={review.display_name}
+            sx={{
+              width: 40,
+              height: 40,
+              mr: 2,
+              flexShrink: 0,
+              bgcolor: "primary.main",
+              fontSize: "1rem",
+            }}
+          >
+            {getInitials(review.display_name)}
+          </Avatar>
+          <Box>
+            <Typography
             variant="subtitle1"
             component="h2"
             sx={{ fontWeight: "bold", gutterBottom: true }}
@@ -146,28 +165,15 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
               size="small"
               sx={{ mr: 1 }}
             />
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" sx={{color: savedTheme === "dark" ? "#fefefe" : "black"}}>
               {formatSubmissionDate(review.created_at)}
             </Typography>
           </Box>
+          </Box>
+          
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "flex-start", mt: 2 }}>
-          <Avatar
-            src={review.profile_picture}
-            alt={review.display_name}
-            sx={{
-              width: 40,
-              height: 40,
-              mr: 2,
-              flexShrink: 0,
-              bgcolor: "primary.main",
-              fontSize: "1rem",
-            }}
-          >
-            {getInitials(review.display_name)}
-          </Avatar>
-
           <Box sx={{ flexGrow: 1, display: "flex", minWidth: 0 }}>
             <Box sx={{ flexGrow: 1, position: "relative", pr: 3 }}>
               <Typography variant="body1" sx={{ lineHeight: 1.6, m: 0 }}>
@@ -180,7 +186,7 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
                   fontSize: "1.2rem",
                   userSelect: "none",
                   "&:hover": { opacity: 0.7 },
-                  ml: 1,
+                  ml: 84,
                   verticalAlign: "middle",
                 }}
                 onClick={() => toggleSpeech(review.review_text)}
