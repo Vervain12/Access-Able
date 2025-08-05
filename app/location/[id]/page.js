@@ -11,7 +11,7 @@ import ReviewSummary from "@/app/components/review-summary";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
 import LanguageIcon from "@mui/icons-material/Language";
-import PhoneIcon from '@mui/icons-material/Phone';
+import PhoneIcon from "@mui/icons-material/Phone";
 
 export default function LocationPage() {
   const [locationInfo, setLocationInfo] = useState(null);
@@ -39,9 +39,7 @@ export default function LocationPage() {
   }, []);
 
   return (
-    <div
-      style={{ backgroundColor: "white", color: "black", minHeight: "100vh" }}
-    >
+    <div className="bg-white dark:bg-[var(--background)] pb-10">
       {loading ? (
         <div>Loading...</div>
       ) : (
@@ -49,7 +47,7 @@ export default function LocationPage() {
           <Box>
             <div className="fixed top-16 left-0 right-0 z-50 h-15 text-xl flex items-center bg-blue-500 text-white">
               <Button
-              onClick={() => router.back()}
+                onClick={() => router.back()}
                 variant="text"
                 sx={{
                   width: "1px",
@@ -64,7 +62,7 @@ export default function LocationPage() {
 
             {locationInfo ? (
               <div className="dark:bg-[var(--background)] flex flex-col content-center pt-15">
-                <Box className="w-200 h-75 self-center bg-green-500"></Box>
+                <Box className="w-200 h-75 self-center bg-gray-500"></Box>
 
                 <div className="pl-20 pr-20 pt-3 self-center">
                   <div className="flex flex-row">
@@ -85,14 +83,17 @@ export default function LocationPage() {
                     </div>
                   </div>
 
-                  <p className="pl-1 dark:text-white">Looks like a description goes here</p>
-
                   {/* Location Info Section */}
                   <div className="flex flex-row">
                     <div className="flex flex-col">
                       <div className="flex flex-row pt-2 gap-2">
-                        <img src="/marker-icons/gray.svg" className="h-6 w-5 pl-1" />
-                        <p className="dark:text-white">Address: {formatAddress(locationInfo)}</p>
+                        <img
+                          src="/marker-icons/gray.svg"
+                          className="h-6 w-5 pl-1"
+                        />
+                        <p className="dark:text-white">
+                          Address: {formatAddress(locationInfo)}
+                        </p>
                       </div>
 
                       <div className="flex flex-row pt-5 gap-1 dark:text-white">
@@ -100,11 +101,18 @@ export default function LocationPage() {
 
                         <div className="flex flex-col">
                           {locationInfo.tags.opening_hours ? (
-                            <p>
-                              Opening Hours: {locationInfo.tags.opening_hours}
-                            </p>
+                            <div className="dark:text-white">
+                              <p className="font-semibold">Operating Hours:</p>
+                              {locationInfo.tags.opening_hours
+                                .split(/, |; /)
+                                .map((segment, index) => (
+                                  <p key={index}>{segment.trim()}</p>
+                                ))}
+                            </div>
                           ) : (
-                            <p className="dark:text-white">No hours of operation available</p>
+                            <p className="dark:text-white">
+                              No hours of operation available
+                            </p>
                           )}
                         </div>
                       </div>
@@ -135,19 +143,8 @@ export default function LocationPage() {
                     </div>
                   </div>
 
-                  {/* Accessibility Features Section */}
-                  <div className="mt-5 pt-5 border-t-2 border-t-black h-50 dark:text-white dark:border-t-gray-400">
-                    <p className="text-lg font-bold">Accessibility Features</p>
-                    <div>
-                      <p>
-                        Some functionality for the accessibility features will
-                        be here. or not idk
-                      </p>
-                    </div>
-                  </div>
-
                   {/* Recent Reviews Section */}
-                  <div className="pt-10 border-t-2 border-t-black dark:text-white dark:border-t-gray-400">
+                  <div className="mt-5 pt-10 border-t-2 border-t-black dark:text-white dark:border-t-gray-400">
                     <div className="flex flex-row pb-4">
                       <p className="text-bold text-lg mr-108">Recent Reviews</p>
                       <Button
