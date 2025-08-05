@@ -16,18 +16,18 @@ export default function ProfilePage() {
   const { stats, loading } = useActivityStats();
   const handleDisabilityPopup = () => {
     setShowDisabilityModal(true);
-  }
+  };
 
   const handleDisabilityModalClose = () => {
     setShowDisabilityModal(false);
-  }
+  };
 
   return (
-    <div className="bg-gray-200 dark:bg-[var(--background)] lg:pl-5 xl:pl-5 2xl:pl-20">
+    <div className="bg-gray-200 dark:bg-[var(--background)]">
       <h1 className="font-bold text-2xl pt-10 pl-30">Profile Settings</h1>
 
-      <div className="flex flex-row 2xl:pl-20 xl:pl-10 pt-10 gap-25">
-        <div className="bg-white dark:bg-[var(--card)] border-1 border-white rounded-md w-90 h-170 p-3 flex flex-col">
+      <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-10 pt-10 px-30">
+        <div className="bg-white dark:bg-[var(--card)] border border-white rounded-md max-w-md p-6 flex flex-col">
           <h2 className="font-bold text-2xl pt-3 pl-3 pb-8">
             Profile Information
           </h2>
@@ -36,46 +36,46 @@ export default function ProfilePage() {
             <PfpChange />
           </div>
           <div>
-            <p className="pb-2 ml-4">Username</p>
+            <p className="pb-2 ml-1">Username</p>
             <input
               type="text"
               id="user-name"
-              className="h-10 w-75 mb-3 ml-4 rounded-md dark:text-white dark:bg-[var(--secondary)] dark:border-1 dark:border-white dark:text-white border-1 border-gray-300"
+              className="h-10 w-75 mb-3 rounded-md dark:text-white dark:bg-[var(--secondary)] dark:border-1 dark:border-white dark:text-white border-1 border-gray-300"
             />
 
-            <p className="pb-2 ml-4">Email</p>
+            <p className="pb-2 ml-1">Email</p>
             <input
               type="text"
               id="email"
-              className="h-10 w-75 mb-3 ml-4 rounded-md dark:text-white dark:bg-[var(--secondary)] dark:border-1 dark:border-white dark:text-white border-1 border-gray-300"
+              className="h-10 w-75 mb-3 rounded-md dark:text-white dark:bg-[var(--secondary)] dark:border-1 dark:border-white dark:text-white border-1 border-gray-300"
             />
 
-            <p className="pb-2 ml-4">Phone</p>
+            <p className="pb-2 ml-1">Phone</p>
             <input
               type="text"
               id="Phone"
-              className="h-10 w-75 mb-3 ml-4 rounded-md dark:text-white dark:bg-[var(--secondary)] dark:border-1 dark:border-white dark:text-white border-1 border-gray-300"
+              className="h-10 w-75 mb-3 rounded-md dark:text-white dark:bg-[var(--secondary)] dark:border-1 dark:border-white dark:text-white border-1 border-gray-300"
             />
 
-            <p className="pb-2 ml-4">Location</p>
+            <p className="pb-2 ml-1">Location</p>
             <input
               type="text"
               id="Location"
-              className="h-10 w-75 mb-3 ml-4 rounded-md dark:text-white dark:bg-[var(--secondary)] dark:border-1 dark:border-white dark:text-white border-1 border-gray-300"
+              className="h-10 w-75 mb-3 rounded-md dark:text-white dark:bg-[var(--secondary)] dark:border-1 dark:border-white dark:text-white border-1 border-gray-300"
             />
           </div>
 
-          <Button 
-            variant="contained" 
-            sx={{ 
-              width: '280px', 
-              height: '40px', 
-              mt: '60px',
-              ml: '28px',
-              backgroundColor: '#3b82f6',
-              '&:hover': {
-                backgroundColor: '#2563eb'
-              }
+          <Button
+            variant="contained"
+            sx={{
+              width: "280px",
+              height: "40px",
+              mt: "60px",
+              mx: "auto",
+              backgroundColor: "#3b82f6",
+              "&:hover": {
+                backgroundColor: "#2563eb",
+              },
             }}
           >
             Save Changes
@@ -97,11 +97,11 @@ export default function ProfilePage() {
               </div>
 
               <div className="flex items-center">
-                <Button 
+                <Button
                   onClick={handleDisabilityPopup}
                   variant="outlined"
                   size="small"
-                  sx={{ width: '160px', height: '40px' }}
+                  sx={{ width: "160px", height: "40px" }}
                 >
                   Edit Preferences
                 </Button>
@@ -119,10 +119,10 @@ export default function ProfilePage() {
               </div>
 
               <div className="flex items-center">
-                <Button 
+                <Button
                   variant="outlined"
                   size="small"
-                  sx={{ width: '100px', height: '40px' }}
+                  sx={{ width: "100px", height: "40px" }}
                 >
                   English
                 </Button>
@@ -169,69 +169,75 @@ export default function ProfilePage() {
 
           {/* Support and Help Section */}
           <div className="bg-white dark:bg-[var(--card)] border-1 border-white h-80 flex flex-col rounded-md">
-            <h2 className="text-2xl pl-10 mb-5 pt-5 font-bold">Support & Help</h2>
-            <Button 
+            <h2 className="text-2xl pl-10 mb-5 pt-5 font-bold">
+              Support & Help
+            </h2>
+            <Button
               variant="outlined"
               startIcon={<HelpOutlineIcon />}
-              sx={{ 
-                width: '720px', 
-                height: '40px', 
-                justifyContent: 'flex-start',
-                textTransform: 'none',
-                mx: '40px',
-                mb: '20px'
+              sx={{
+                width: "720px",
+                height: "40px",
+                justifyContent: "flex-start",
+                textTransform: "none",
+                mx: "40px",
+                mb: "20px",
               }}
             >
               Help Center
             </Button>
-            <Button 
+            <Button
               variant="outlined"
               startIcon={<ChatBubbleOutlineIcon />}
-              sx={{ 
-                width: '720px', 
-                height: '40px', 
-                justifyContent: 'flex-start',
-                textTransform: 'none',
-                mx: '40px',
-                mb: '20px'
+              sx={{
+                width: "720px",
+                height: "40px",
+                justifyContent: "flex-start",
+                textTransform: "none",
+                mx: "40px",
+                mb: "20px",
               }}
             >
               Contact Support
             </Button>
-            <Button 
+            <Button
               variant="outlined"
               startIcon={<ArticleIcon />}
-              sx={{ 
-                width: '720px', 
-                height: '40px', 
-                justifyContent: 'flex-start',
-                textTransform: 'none',
-                mx: '40px',
-                mb: '20px'
+              sx={{
+                width: "720px",
+                height: "40px",
+                justifyContent: "flex-start",
+                textTransform: "none",
+                mx: "40px",
+                mb: "20px",
               }}
             >
               Terms & Privacy
             </Button>
-            <Button 
+            <Button
               variant="outlined"
               startIcon={<ReportProblemIcon />}
-              sx={{ 
-                width: '720px', 
-                height: '40px', 
-                justifyContent: 'flex-start',
-                textTransform: 'none',
-                mx: '40px'
+              sx={{
+                width: "720px",
+                height: "40px",
+                justifyContent: "flex-start",
+                textTransform: "none",
+                mx: "40px",
               }}
             >
               Report an Issue
             </Button>
           </div>
         </div>
+
+        <div className="bg-gray-200 dark:bg-[var(--background)] lg:w-86 lg:h-174 hidden lg:block p-6 lg:flex flex-col">
+          {/* This blank div exists to make centering the Account Settings easier */}
+        </div>
       </div>
 
       {/* DisabilityChoice Modal */}
-      <DisabilityChoice 
-        profileDisabilityOpen={showDisabilityModal} 
+      <DisabilityChoice
+        profileDisabilityOpen={showDisabilityModal}
         profileDisabilityClose={handleDisabilityModalClose}
       />
     </div>

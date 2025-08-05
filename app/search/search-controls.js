@@ -166,9 +166,9 @@ export default function SearchControls({
 
   return (
     <div>
-      <div className="w-150 h-18 bg-white flex flex-col rounded-md drop-shadow-xl dark:bg-[var(--background)]">
-        <div className="w-150 pl-5 pt-3 h-14 flex flex-row">
-          <div className="w-110 border-1 border-gray-300 flex flex-row items-center">
+      <div className="w-110 md:w-150 h-40 md:h-18 bg-white flex flex-col rounded-md drop-shadow-xl dark:bg-[var(--background)]">
+        <div className="w-110 md:w-150 pl-5 pt-3 h-14 flex flex-col md:flex-row">
+          <div className="w-100 md:w-110 border-1 border-gray-300 flex flex-row items-center">
             <SearchInput
               query={query}
               setQuery={setQuery}
@@ -206,7 +206,7 @@ export default function SearchControls({
           </div>
 
           <button
-            className="ml-4 mr-4 w-11 h-11 bg-white text-blue-500 dark:bg-[var(--accent)] dark:text-white rounded-md text-xs flex items-center justify-center"
+            className="md:ml-4 md:mr-4 sm:mt-2 md:mt-0 w-11 h-11 bg-white text-blue-500 dark:bg-[var(--accent)] dark:text-white rounded-md text-xs flex items-center justify-center"
             onClick={() => setUsePinMode(!usePinMode)}
           >
             <img
@@ -217,7 +217,7 @@ export default function SearchControls({
           </button>
 
           <button
-            className="w-11 h-11 bg-white text-blue-500 dark:bg-[var(--accent)] dark:text-white rounded-md text-xs flex items-center justify-center"
+            className="w-11 h-11 sm:mt-2 md:mt-0 bg-white text-blue-500 dark:bg-[var(--accent)] dark:text-white rounded-md text-xs flex items-center justify-center"
             onClick={() => setShowFilters(true)}
           >
             <TuneIcon />
@@ -225,7 +225,7 @@ export default function SearchControls({
         </div>
 
         {recentSearches.length > 0 && (
-          <div className="pl-5 w-150 h-20 rounded-md drop-shadow-xl dark:bg-[var(--background)]">
+          <div className="ml-20 md:ml-0 pl-5 w-90 md:w-150 h-20 rounded-md drop-shadow-xl dark:bg-[var(--background)]">
             <FilterButton
               queries={recentSearches}
               onQuickSearch={(newQuery) => {
