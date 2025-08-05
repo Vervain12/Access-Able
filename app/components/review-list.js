@@ -10,6 +10,7 @@ import {
   Rating,
   CircularProgress,
   Typography,
+  Button
 } from "@mui/material";
 import { ReviewComponent } from "./review-component";
 import { createClient } from "@/utils/supabase/client";
@@ -17,6 +18,7 @@ import { createClient } from "@/utils/supabase/client";
 export function ReviewList({ location_id, setHasReview }) {
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState([]);
+  const [loadAll, setLoadAll] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -51,6 +53,10 @@ export function ReviewList({ location_id, setHasReview }) {
     fetchLocationReviews();
   }, [location_id, setHasReview]);
 
+  const handleLoadAll = () => {
+    setLoadAll(true);
+  }
+
   return (
     <div>
       {loading ? (
@@ -59,8 +65,22 @@ export function ReviewList({ location_id, setHasReview }) {
         </Box>
       ) : (
         <div>
+          <div className="flex flex-row pb-4">
+            <p className="text-bold text-lg mr-108">Recent Reviews</p>
+            <Button
+              variant="contained"
+              sx={{
+                width: "200px",
+                height: "30px",
+                color: "white",
+              }}
+              onClick={() => handleLoadAll()}
+            >
+              View All Reviews
+            </Button>
+          </div>
           <Stack spacing={3} sx={{ alignItems: "center", width: "100%" }}>
-            {reviews.map((item) => (
+            {(loadAll ? reviews : reviews.slice(0, 5)).map((item) => (
               <ReviewComponent key={item.review_id} review={item} />
             ))}
           </Stack>
@@ -75,6 +95,7 @@ export function UserReviewList({ relatedBool }) {
   // Relatedbool will always be false, related no longer in use. Keeping the code just in case.
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState([]);
+  const [loadAll, setLoadAll] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -108,6 +129,10 @@ export function UserReviewList({ relatedBool }) {
     fetchUserReviews();
   }, [relatedBool]);
 
+  const handleLoadAll = () => {
+    setLoadAll(true);
+  }
+
   return (
     <Box sx={{ p: 2 }}>
       {relatedBool ? <h2>Users Like You:</h2> : <h2 className="font-bold pb-4 text-xl">My Reviews:</h2>}
@@ -128,7 +153,7 @@ export function UserReviewList({ relatedBool }) {
             direction="column"
             sx={{ alignItems: "center", width: "100%" }}
           >
-            {reviews?.map((item) => (
+            {(loadAll ? reviews : reviews.slice(0, 5))?.map((item) => (
               <ReviewComponent
                 key={item.review_id}
                 review={item}
@@ -137,6 +162,21 @@ export function UserReviewList({ relatedBool }) {
               />
             ))}
           </Stack>
+          {reviews.length > 5 && !loadAll && (
+            <div className="flex justify-center pt-4">
+              <Button
+                variant="contained"
+                sx={{
+                  width: "200px",
+                  height: "30px",
+                  color: "white",
+                }}
+                onClick={() => handleLoadAll()}
+              >
+                View All Reviews
+              </Button>
+            </div>
+          )}
         </Box>
       )}
     </Box>

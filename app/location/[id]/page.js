@@ -62,7 +62,7 @@ export default function LocationPage() {
 
             {locationInfo ? (
               <div className="dark:bg-[var(--background)] flex flex-col content-center pt-15">
-                <Box className="w-200 h-75 self-center bg-gray-500"></Box>
+                <Box className="w-200 h-75 self-center bg-gray-300"></Box>
 
                 <div className="pl-20 pr-20 pt-3 self-center">
                   <div className="flex flex-row">
@@ -145,19 +145,7 @@ export default function LocationPage() {
 
                   {/* Recent Reviews Section */}
                   <div className="mt-5 pt-10 border-t-2 border-t-black dark:text-white dark:border-t-gray-400">
-                    <div className="flex flex-row pb-4">
-                      <p className="text-bold text-lg mr-108">Recent Reviews</p>
-                      <Button
-                        variant="contained"
-                        sx={{
-                          width: "200px",
-                          height: "30px",
-                          color: "white",
-                        }}
-                      >
-                        View All Reviews
-                      </Button>
-                    </div>
+                    
 
                     <ReviewList
                       location_id={locationInfo.id}

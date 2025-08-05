@@ -139,7 +139,7 @@ export default function ReviewForm({ location_id, location_name, hasReview }) {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: 400,
+            width: 600,
             bgcolor:
               savedTheme === "dark" ? "oklch(0.279 0.041 260.031)" : "white",
             border: "2px solid #000",
