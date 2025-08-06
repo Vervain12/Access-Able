@@ -152,7 +152,7 @@ export default function MapView({
                       {/* Button */}
                       <div className="h-20 p-2 bg-white rounded-lg dark:bg-[var(--secondary)] flex items-center justify-center">
                         <button
-                          className="border h-9 w-40 border-gray-300 text-black bg-white font-medium rounded hover:bg-blue-400 hover:text-white transition-colors"
+                          className="border h-9 w-40 border-gray-300 text-black bg-white font-medium rounded hover:bg-blue-400 hover:text-white hover:cursor-pointer transition-colors"
                           onClick={() => handleClick(item)}
                         >
                           More Info

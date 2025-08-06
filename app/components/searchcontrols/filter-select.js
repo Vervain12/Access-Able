@@ -79,14 +79,14 @@ export default function FilterSelect({
 
         <div className="flex flex-row gap-5 px-5 pt-5">
           <button
-            className="w-[15vw] h-10 ml-2 bg-blue-600 dark:bg-[var(--secondary)] text-white border-radius-8 dark:border-white dark:border-1 rounded-md text-xs flex items-center justify-center"
+            className="w-[15vw] h-10 ml-2 bg-blue-600 dark:bg-[var(--secondary)] hover:cursor-pointer text-white border-radius-8 dark:border-white dark:border-1 rounded-md text-xs flex items-center justify-center"
             onClick={clearStorage}
           >
             Clear Map
           </button>
 
           <button
-            className="w-[15vw] h-10 ml-2 bg-blue-600 dark:bg-[var(--secondary)] text-white border-radius-8 dark:border-white dark:border-1 rounded-md text-xs flex items-center justify-center"
+            className="w-[15vw] h-10 ml-2 bg-blue-600 dark:bg-[var(--secondary)] hover:cursor-pointer text-white border-radius-8 dark:border-white dark:border-1 rounded-md text-xs flex items-center justify-center"
             onClick={clearFilters}
           >
             Clear Filters
@@ -94,7 +94,7 @@ export default function FilterSelect({
 
           <button
             onClick={() => setShowFilters(false)}
-            className="w-[15vw] h-10 ml-2 bg-red-600 dark:bg-red-800 text-white border-radius-8 dark:border-white dark:border-1 rounded-md text-xs flex items-center justify-center"
+            className="w-[15vw] h-10 ml-2 bg-red-600 dark:bg-red-800 hover:cursor-pointer text-white border-radius-8 dark:border-white dark:border-1 rounded-md text-xs flex items-center justify-center"
           >
             Close
           </button>

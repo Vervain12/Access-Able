@@ -174,94 +174,98 @@ export const ReviewComponent = ({ review, location_name, relatedBool }) => {
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "flex-start", mt: 2 }}>
-          <Box sx={{ flexGrow: 1, display: "flex", minWidth: 0 }}>
-            <Box sx={{ flexGrow: 1, position: "relative", pr: 3 }}>
-              <Typography variant="body1" sx={{ lineHeight: 1.6, m: 0 }}>
-                {review.review_text}
-              </Typography>
-              <Box
-                component="span"
-                sx={{
-                  cursor: "pointer",
-                  fontSize: "1.2rem",
-                  userSelect: "none",
-                  "&:hover": { opacity: 0.7 },
-                  ml: 84,
-                  verticalAlign: "middle",
-                }}
-                onClick={() => toggleSpeech(review.review_text)}
-                aria-label="Read review out loud"
-                role="button"
-              >
-                🔊
-              </Box>
-            </Box>
+  <Box sx={{ flexGrow: 1, display: "flex", minWidth: 0, minHeight: 210 }}>
+    <Box sx={{ flexGrow: 1, position: "relative", pr: 3 }}>
+      <Typography variant="body1" sx={{ lineHeight: 1.6, m: 0 }}>
+        {review.review_text}
+      </Typography>
+      <Box
+        component="span"
+        sx={{
+          cursor: "pointer",
+          fontSize: "1.2rem",
+          userSelect: "none",
+          "&:hover": { opacity: 0.7 },
+          verticalAlign: "middle",
+          mt: 1,
+          display: "inline-block",
+        }}
+        onClick={() => toggleSpeech(review.review_text)}
+        aria-label="Read review out loud"
+        role="button"
+      >
+        🔊
+      </Box>
+    </Box>
 
-            {images && images.length > 0 && (
+    {images && images.length > 0 && (
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 96px)",
+          gridAutoRows: "96px",
+          gap: 1,
+          ml: 2,
+          flexShrink: 0,
+          width: 200,
+          minHeight: 200,
+        }}
+      >
+        {images.slice(0, 4).map((image, index) => (
+          <Box
+            key={index}
+            sx={{
+              width: 96,
+              height: 96,
+              overflow: "hidden",
+              borderRadius: "4px",
+              border: "1px solid #e0e0e0",
+              cursor: "pointer",
+              position: "relative",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              bgcolor: "#f0f0f0",
+            }}
+            onClick={() => handleOpenModal(index)}
+          >
+            <img
+              src={image.url}
+              alt={`Review image ${index + 1}`}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+            {index === 3 && images.length > 4 && (
               <Box
                 sx={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(2, 96px)",
-                  gap: 1,
-                  ml: 2,
-                  flexShrink: 0,
-                  width: "200px",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  bgcolor: "rgba(0,0,0,0.5)",
+                  color: "white",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  fontSize: "0.8rem",
+                  fontWeight: "bold",
+                  borderRadius: "4px",
                 }}
               >
-                {images.slice(0, 4).map((image, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      width: 96,
-                      height: 96,
-                      overflow: "hidden",
-                      borderRadius: "4px",
-                      border: "1px solid #e0e0e0",
-                      cursor: "pointer",
-                      position: "relative",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      bgcolor: "#f0f0f0",
-                    }}
-                    onClick={() => handleOpenModal(index)}
-                  >
-                    <img
-                      src={image.url}
-                      alt={`Review image ${index + 1}`}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
-                    {index === 3 && images.length > 4 && (
-                      <Box
-                        sx={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          width: "100%",
-                          height: "100%",
-                          bgcolor: "rgba(0,0,0,0.5)",
-                          color: "white",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          fontSize: "0.8rem",
-                          fontWeight: "bold",
-                          borderRadius: "4px",
-                        }}
-                      >
-                        +{images.length - 4} more
-                      </Box>
-                    )}
-                  </Box>
-                ))}
+                +{images.length - 4} more
               </Box>
             )}
           </Box>
-        </Box>
+        ))}
+      </Box>
+    )}
+  </Box>
+</Box>
+
       </CardContent>
 
       {/* Image Modal */}
