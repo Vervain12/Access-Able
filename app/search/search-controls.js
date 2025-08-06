@@ -176,7 +176,7 @@ export default function SearchControls({
             />
 
             <button
-              className="w-9 h-9 bg-blue-600 dark:bg-[var(--accent)] text-white border-1 border-radius-8 dark:border-white rounded-md text-xs flex items-center justify-center"
+              className="w-9 h-9 bg-blue-600 dark:bg-[var(--accent)] hover:cursor-pointer text-white border-1 border-radius-8 dark:border-white rounded-md text-xs flex items-center justify-center"
               onClick={(e) =>
                 handleSearch(
                   e,
@@ -206,7 +206,7 @@ export default function SearchControls({
           </div>
 
           <button
-            className="md:ml-4 md:mr-4 sm:mt-2 md:mt-0 w-11 h-11 bg-white text-blue-500 dark:bg-[var(--accent)] dark:text-white rounded-md text-xs flex items-center justify-center"
+            className="md:ml-4 md:mr-4 sm:mt-2 md:mt-0 w-11 h-11 bg-white text-blue-500 dark:bg-[var(--accent)] hover:cursor-pointer dark:text-white rounded-md text-xs flex items-center justify-center"
             onClick={() => setUsePinMode(!usePinMode)}
           >
             <img
@@ -217,7 +217,7 @@ export default function SearchControls({
           </button>
 
           <button
-            className="w-11 h-11 sm:mt-2 md:mt-0 bg-white text-blue-500 dark:bg-[var(--accent)] dark:text-white rounded-md text-xs flex items-center justify-center"
+            className="w-11 h-11 sm:mt-2 md:mt-0 bg-white text-blue-500 dark:bg-[var(--accent)] hover:cursor-pointer dark:text-white rounded-md text-xs flex items-center justify-center"
             onClick={() => setShowFilters(true)}
           >
             <TuneIcon />
