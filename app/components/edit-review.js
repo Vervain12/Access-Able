@@ -31,7 +31,7 @@ export default function EditReviewPopup({ reviewInfo, images }) {
   const [newFiles, setNewFiles] = useState([]);
   const [updating, setUpdating] = useState(false);
   const [textLength, setTextLength] = useState(reviewInfo.review_text.length);
-  const CHARACTER_LIMIT = 300;
+  const CHARACTER_LIMIT = 500;
   const handleOpen = () => setOpen(true);
   const handleCloseDelete = () => setOpenDelete(false);
   const handleOpenDelete = () => setOpenDelete(true);
@@ -224,7 +224,7 @@ export default function EditReviewPopup({ reviewInfo, images }) {
                 fullWidth
                 slotProps={{ htmlInput: { maxLength: CHARACTER_LIMIT } }}
                 helperText={`${textLength}/${CHARACTER_LIMIT}`}
-                rows={4}
+                rows={8}
                 onChange={(e) => setTextLength(e.target.value.length)}
                 sx={{
                   // Text Color

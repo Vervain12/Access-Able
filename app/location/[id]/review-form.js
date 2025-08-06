@@ -23,7 +23,7 @@ export default function ReviewForm({ location_id, location_name, hasReview }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [textLength, setTextLength] = useState(0);
-  const CHARACTER_LIMIT = 300;
+  const CHARACTER_LIMIT = 500;
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -167,7 +167,7 @@ export default function ReviewForm({ location_id, location_name, hasReview }) {
                   fullWidth
                   slotProps={{ htmlInput: { maxLength: CHARACTER_LIMIT } }}
                   helperText={`${textLength}/${CHARACTER_LIMIT}`}
-                  rows={4}
+                  rows={8}
                   onChange={(e) => setTextLength(e.target.value.length)}
                   sx={{
                     "& .MuiInputBase-input": {
