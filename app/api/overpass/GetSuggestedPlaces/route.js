@@ -53,7 +53,6 @@ export async function GET(request) {
     const { data: reviews, error: reviewError } = await supabase
       .from("reviews")
       .select("location_id, rating, created_at")
-      .gt("rating", 3.5)
       .in("user_id", similarUserIds);
 
     if (reviewError) {

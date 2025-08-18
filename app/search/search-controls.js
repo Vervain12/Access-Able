@@ -176,7 +176,7 @@ export default function SearchControls({
             />
 
             <button
-              className="w-9 h-9 bg-blue-600 dark:bg-[var(--accent)] text-white border-1 border-radius-8 dark:border-white rounded-md text-xs flex items-center justify-center"
+              className="w-9 h-9 bg-blue-600 dark:bg-[var(--accent)] hover:cursor-pointer text-white border-1 border-radius-8 dark:border-white rounded-md text-xs flex items-center justify-center"
               onClick={(e) =>
                 handleSearch(
                   e,
