@@ -205,23 +205,25 @@ export default function SearchControls({
             </button>
           </div>
 
-          <button
-            className="md:ml-4 md:mr-4 sm:mt-2 md:mt-0 w-11 h-11 bg-white text-blue-500 dark:bg-[var(--accent)] dark:text-white rounded-md text-xs flex items-center justify-center"
-            onClick={() => setUsePinMode(!usePinMode)}
-          >
-            <img
-              src={usePinMode ? "/marker-icons/blue.svg" : profilePicture}
-              alt={usePinMode ? "Pin Icon" : "Profile Picture"}
-              className="w-8 h-8 rounded-full"
-            />
-          </button>
+          <div className="flex sm:flex-col md:flex-row">
+            <button
+              className="md:ml-4 md:mr-4 sm:mt-1 md:mt-0 w-11 h-11 bg-white text-blue-500 dark:bg-[var(--accent)] dark:text-white rounded-md text-xs flex items-center justify-center"
+              onClick={() => setUsePinMode(!usePinMode)}
+            >
+              <img
+                src={usePinMode ? "/marker-icons/blue.svg" : profilePicture}
+                alt={usePinMode ? "Pin Icon" : "Profile Picture"}
+                className="w-8 h-8 rounded-full"
+              />
+            </button>
 
-          <button
-            className="w-11 h-11 sm:mt-2 md:mt-0 bg-white text-blue-500 dark:bg-[var(--accent)] dark:text-white rounded-md text-xs flex items-center justify-center"
-            onClick={() => setShowFilters(true)}
-          >
-            <TuneIcon />
-          </button>
+            <button
+              className="w-11 h-11 sm:mt-2 md:mt-0 bg-white text-blue-500 dark:bg-[var(--accent)] dark:text-white rounded-md text-xs flex items-center justify-center"
+              onClick={() => setShowFilters(true)}
+            >
+              <TuneIcon />
+            </button>
+          </div>
         </div>
 
         {recentSearches.length > 0 && (
@@ -243,11 +245,8 @@ export default function SearchControls({
           </div>
         )}
 
-        {/* Button Section of Search Controls */}
-        <div className="flex flex-row h-40">
-          <div className="flex flex-col h-40 gap-12 items-center justify-center"></div>
-
-          <div className="flex flex-col h-40 gap-12 items-center justify-center"></div>
+        {/* Filter Modal */}
+        <div className="flex flex-row h-1">
           <FilterSelect
             open={showFilters}
             selectedFilter={selectedFilter}
