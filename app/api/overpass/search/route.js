@@ -53,14 +53,14 @@ export async function POST(req) {
             Object.entries(groupedReviews).forEach(([locationId, ratings]) => {
                 const avg = ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
                 ratingMap.set(locationId, avg);
-                reviewCountMap.set(locationId, ratings.length); // Add review count
+                reviewCountMap.set(locationId, ratings.length); 
             });
         }
         
         const locationsWithRating = data.elements.map(location => ({
             ...location,
             rating: ratingMap.get(location.id.toString()) || null,
-            reviewCount: reviewCountMap.get(location.id.toString()) || 0, // Add review count
+            reviewCount: reviewCountMap.get(location.id.toString()) || 0, 
         }));
         
         return new Response(JSON.stringify({ ...data, elements: locationsWithRating }), { status: 200 });
