@@ -171,7 +171,7 @@ export default function MapView({
         {/* Pin dropping functionality */}
         {usePinMode && (
           <>
-            <PinDropder
+            <PinDropper
               usePinMode={usePinMode}
               setPinLat={setPinLat}
               setPinLon={setPinLon}
