@@ -8,6 +8,7 @@ import {
 import "./globals.css";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { Footer } from "@/website/footer";
+import { FooterWrapper } from "@/website/footer-wrapper";
 import NavigationClientWrapper from "@/website/navigation";
 import ThemeHydrationWrapper from "@/website/theme-wrapper";
 
@@ -53,7 +54,7 @@ export default function RootLayout({ children }) {
           <ThemeHydrationWrapper>
             <NavigationClientWrapper />
             {children}
-            <Footer />
+            <FooterWrapper />
           </ThemeHydrationWrapper>
         </AppRouterCacheProvider>
       </body>
