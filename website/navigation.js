@@ -165,7 +165,7 @@ export function Navigation() {
 
         {/* Slide-out menu */}
         <div
-          className={`fixed right-0 top-0 h-full w-[300px] bg-white border-l border-gray-200 p-6 transform transition-transform duration-300 ease-in-out ${
+          className={`fixed right-0 top-0 h-full w-[300px] bg-white dark:bg-[var(--accent)] border-l border-gray-200 p-6 transform transition-transform duration-300 ease-in-out ${
             isOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
@@ -184,7 +184,7 @@ export function Navigation() {
           </div>
 
           {/* Navigation items */}
-          <div className="flex flex-col space-y-4">
+          <div className="flex flex-col space-y-4 ">
             {navItems.map((item) => (
               <Link
                 key={item.href}
