@@ -31,7 +31,7 @@ export async function POST(req) {
         const data = await response.json();
         const locationIds = data.elements.map(location => location.id.toString());
         
-        const { data: avgRatings, error } = await supabase
+        const { data: reviews, error } = await supabase
             .from('reviews')
             .select('location_id, rating')
             .in('location_id', locationIds);
@@ -39,8 +39,10 @@ export async function POST(req) {
         if (error) throw error;
         
         const ratingMap = new Map();
-        if (avgRatings && avgRatings.length > 0) {
-            const groupedRatings = avgRatings.reduce((acc, review) => {
+        const reviewCountMap = new Map();
+        
+        if (reviews && reviews.length > 0) {
+            const groupedReviews = reviews.reduce((acc, review) => {
                 if (!acc[review.location_id]) {
                     acc[review.location_id] = [];
                 }
@@ -48,15 +50,17 @@ export async function POST(req) {
                 return acc;
             }, {});
             
-            Object.entries(groupedRatings).forEach(([locationId, ratings]) => {
+            Object.entries(groupedReviews).forEach(([locationId, ratings]) => {
                 const avg = ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
                 ratingMap.set(locationId, avg);
+                reviewCountMap.set(locationId, ratings.length); // Add review count
             });
         }
         
         const locationsWithRating = data.elements.map(location => ({
             ...location,
             rating: ratingMap.get(location.id.toString()) || null,
+            reviewCount: reviewCountMap.get(location.id.toString()) || 0, // Add review count
         }));
         
         return new Response(JSON.stringify({ ...data, elements: locationsWithRating }), { status: 200 });

@@ -83,7 +83,6 @@ export default function MapView({
         )}
 
         {/* Search result markers */}
-        {/* This entirely needs to be styled. */}
         {results
           .filter((place) => place.tags && place.tags.name)
           .map(
@@ -103,13 +102,13 @@ export default function MapView({
                       </div>
 
                       {/* Location Name */}
-                      <div className="w-70 h-28 overflow-hidden bg-white text-black dark:text-white dark:bg-[var(--secondary)]">
-                        <h4 className="text-lg truncate pt-2 pl-4">
+                      <div className="w-70 bg-white text-black dark:text-white dark:bg-[var(--secondary)] pb-2">
+                        <h4 className="text-lg truncate pt-2 pl-4 mb-1">
                           {item.tags.name}
                         </h4>
 
                         {/* Rating and Review Count */}
-                        <div className="flex flex-col w-70 h-15 px-4">
+                        <div className="flex flex-col w-70 px-4">
                           <div
                             style={{
                               margin: 0,
@@ -131,20 +130,25 @@ export default function MapView({
                                 padding: 0,
                               }}
                             />
-
-                            {/* Distance to Location */}
-                            <div className="w-35">
-                              <p className="text-sm w-35 flex justify-center">
-                                {userLat && userLon
-                                  ? `${haversineDistance(
-                                      userLat,
-                                      userLon,
-                                      item.lat,
-                                      item.lon
-                                    ).toFixed(2)} km away`
-                                  : "Distance unknown"}
-                              </p>
-                            </div>
+                            
+                            {/* Review Count Display */}
+                            <span className="text-sm text-gray-600 dark:text-gray-400">
+                              ({item.reviewCount || 0} {item.reviewCount === 1 ? 'review' : 'reviews'})
+                            </span>
+                          </div>
+                          
+                          {/* Distance to Location */}
+                          <div className="mt-1">
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              {userLat && userLon
+                                ? `${haversineDistance(
+                                    userLat,
+                                    userLon,
+                                    item.lat,
+                                    item.lon
+                                  ).toFixed(2)} km away`
+                                : "Distance unknown"}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -167,7 +171,7 @@ export default function MapView({
         {/* Pin dropping functionality */}
         {usePinMode && (
           <>
-            <PinDropper
+            <PinDropder
               usePinMode={usePinMode}
               setPinLat={setPinLat}
               setPinLon={setPinLon}
