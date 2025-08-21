@@ -28,7 +28,7 @@ export const icons = {
     popupAnchor: [0, -32],
   }),
   pin: new L.Icon({
-    iconUrl: '/marker-icons/gray.svg',
+    iconUrl: '/marker-icons/blue.svg',
     iconSize: [30, 45],
     iconAnchor: [15, 45],
   }),
