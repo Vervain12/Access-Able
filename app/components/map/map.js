@@ -59,7 +59,7 @@ export default function MapView({
       : [userLat, userLon];
 
   return (
-    <div className="w-full h-full m-30 m-auto border-2">
+    <div className="w-screen h-screen">
       <MapContainer
         center={center}
         zoom={13}
